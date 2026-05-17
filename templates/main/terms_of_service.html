@@ -1,0 +1,442 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "شروط الخدمة" %} - {{ site_settings.site_name_ar }}{% endblock %}
+{% block description %}{% trans "شروط وأحكام استخدام موقع جمعية نسائم فلسطين الخيرية" %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .terms-hero {
+        background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+        color: white;
+        padding: 100px 0 50px;
+    }
+    
+    .terms-content {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        padding: 40px;
+        margin-bottom: 30px;
+        position: relative;
+    }
+    
+    .terms-content::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 5px;
+        height: 100%;
+        background: linear-gradient(to bottom, var(--accent-color), var(--secondary-color));
+        border-radius: 5px;
+    }
+    
+    .section-title {
+        color: var(--accent-color);
+        font-weight: 700;
+        margin-bottom: 20px;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+    }
+    
+    .section-title i {
+        margin-left: 15px;
+        font-size: 1.3rem;
+        color: var(--secondary-color);
+    }
+    
+    .terms-content p {
+        line-height: 1.8;
+        margin-bottom: 15px;
+        color: #555;
+    }
+    
+    .terms-content ul, .terms-content ol {
+        padding-right: 25px;
+        margin-bottom: 20px;
+    }
+    
+    .terms-content li {
+        margin-bottom: 10px;
+        color: #555;
+        line-height: 1.7;
+    }
+    
+    .important-notice {
+        background: linear-gradient(135deg, rgba(92,64,51,0.1), rgba(255,215,0,0.1));
+        border-radius: 10px;
+        padding: 25px;
+        margin: 25px 0;
+        border-right: 4px solid var(--accent-color);
+    }
+    
+    .effective-date {
+        background: var(--accent-color);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        display: inline-block;
+        margin-bottom: 30px;
+    }
+    
+    .table-of-contents {
+        background: var(--bg-light);
+        border-radius: 10px;
+        padding: 25px;
+        margin-bottom: 30px;
+        position: sticky;
+        top: 100px;
+    }
+    
+    .toc-link {
+        color: var(--accent-color);
+        text-decoration: none;
+        padding: 8px 15px;
+        display: block;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+        margin-bottom: 5px;
+    }
+    
+    .toc-link:hover, .toc-link.active {
+        background: var(--accent-color);
+        color: white;
+        transform: translateX(10px);
+    }
+    
+    .warning-box {
+        background: rgba(255, 193, 7, 0.1);
+        border: 2px solid var(--secondary-color);
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px 0;
+    }
+    
+    .warning-box .warning-icon {
+        color: var(--secondary-color);
+        font-size: 1.5rem;
+        margin-left: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="terms-hero text-center">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-4" data-aos="fade-up">{% trans "شروط الخدمة" %}</h1>
+        <p class="lead" data-aos="fade-up" data-aos-delay="200">
+            {% trans "الشروط والأحكام التي تنظم استخدام موقعنا وخدماتنا" %}
+        </p>
+        <div class="effective-date" data-aos="fade-up" data-aos-delay="400">
+            <i class="fas fa-calendar-check me-2"></i>
+            {% trans "ساري المفعول من: 15 ديسمبر 2024" %}
+        </div>
+    </div>
+</section>
+
+<!-- Content Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <!-- Table of Contents -->
+            <div class="col-lg-3 mb-4">
+                <div class="table-of-contents" data-aos="fade-right">
+                    <h5 class="mb-3">
+                        <i class="fas fa-list me-2"></i>
+                        {% trans "المحتويات" %}
+                    </h5>
+                    <a href="#acceptance" class="toc-link">{% trans "قبول الشروط" %}</a>
+                    <a href="#definitions" class="toc-link">{% trans "التعريفات" %}</a>
+                    <a href="#website-use" class="toc-link">{% trans "استخدام الموقع" %}</a>
+                    <a href="#user-responsibilities" class="toc-link">{% trans "مسؤوليات المستخدم" %}</a>
+                    <a href="#donations" class="toc-link">{% trans "التبرعات" %}</a>
+                    <a href="#intellectual-property" class="toc-link">{% trans "الملكية الفكرية" %}</a>
+                    <a href="#limitation-liability" class="toc-link">{% trans "حدود المسؤولية" %}</a>
+                    <a href="#changes" class="toc-link">{% trans "تعديل الشروط" %}</a>
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="col-lg-9">
+                <!-- Acceptance -->
+                <div id="acceptance" class="terms-content" data-aos="fade-up">
+                    <h2 class="section-title">
+                        <i class="fas fa-handshake"></i>
+                        {% trans "قبول الشروط" %}
+                    </h2>
+                    <p>
+                        {% trans "مرحباً بك في موقع جمعية نسائم فلسطين الخيرية. باستخدامك لموقعنا، فإنك توافق على الالتزام بهذه الشروط والأحكام. إذا كنت لا توافق على أي من هذه الشروط، يرجى عدم استخدام الموقع." %}
+                    </p>
+                    <div class="important-notice">
+                        <i class="fas fa-exclamation-triangle warning-icon"></i>
+                        <strong>{% trans "مهم:" %}</strong>
+                        {% trans "هذه الشروط تشكل اتفاقية ملزمة قانونياً بينك وبين الجمعية." %}
+                    </div>
+                </div>
+
+                <!-- Definitions -->
+                <div id="definitions" class="terms-content" data-aos="fade-up">
+                    <h2 class="section-title">
+                        <i class="fas fa-book"></i>
+                        {% trans "التعريفات" %}
+                    </h2>
+                    <ul>
+                        <li><strong>{% trans "الجمعية:" %}</strong> {% trans "جمعية نسائم فلسطين الخيرية" %}</li>
+                        <li><strong>{% trans "الموقع:" %}</strong> {% trans "موقع الجمعية الإلكتروني وجميع صفحاته الفرعية" %}</li>
+                        <li><strong>{% trans "المستخدم:" %}</strong> {% trans "أي شخص يدخل أو يستخدم الموقع" %}</li>
+                        <li><strong>{% trans "الخدمات:" %}</strong> {% trans "جميع الخدمات المقدمة من خلال الموقع" %}</li>
+                        <li><strong>{% trans "المحتوى:" %}</strong> {% trans "جميع النصوص والصور والفيديوهات الموجودة على الموقع" %}</li>
+                    </ul>
+                </div>
+
+                <!-- Website Use -->
+                <div id="website-use" class="terms-content" data-aos="fade-up">
+                    <h2 class="section-title">
+                        <i class="fas fa-globe"></i>
+                        {% trans "استخدام الموقع" %}
+                    </h2>
+                    <h4>{% trans "الاستخدام المسموح:" %}</h4>
+                    <ul>
+                        <li>{% trans "تصفح محتوى الموقع للأغراض الشخصية والتعليمية" %}</li>
+                        <li>{% trans "التواصل مع الجمعية من خلال النماذج المخصصة" %}</li>
+                        <li>{% trans "مشاركة روابط الموقع على وسائل التواصل الاجتماعي" %}</li>
+                        <li>{% trans "التبرع للجمعية من خلال القنوات المخصصة" %}</li>
+                    </ul>
+                    
+                    <h4>{% trans "الاستخدام المحظور:" %}</h4>
+                    <ul>
+                        <li>{% trans "استخدام الموقع لأي أغراض غير قانونية" %}</li>
+                        <li>{% trans "محاولة اختراق أو إتلاف الموقع" %}</li>
+                        <li>{% trans "نسخ أو إعادة توزيع المحتوى دون إذن" %}</li>
+                        <li>{% trans "إرسال فيروسات أو برامج ضارة" %}</li>
+                        <li>{% trans "استخدام الموقع لإرسال رسائل غير مرغوب فيها" %}</li>
+                    </ul>
+                </div>
+
+                <!-- User Responsibilities -->
+                <div id="user-responsibilities" class="terms-content" data-aos="fade-up">
+                    <h2 class="section-title">
+                        <i class="fas fa-user-check"></i>
+                        {% trans "مسؤوليات المستخدم" %}
+                    </h2>
+                    <p>{% trans "عند استخدام موقعنا، فإنك تتعهد بما يلي:" %}</p>
+                    <ol>
+                        <li>{% trans "تقديم معلومات صحيحة ودقيقة" %}</li>
+                        <li>{% trans "عدم انتحال شخصية أو تمثيل جهات أخرى" %}</li>
+                        <li>{% trans "احترام حقوق الآخرين وخصوصيتهم" %}</li>
+                        <li>{% trans "الامتثال لجميع القوانين المحلية والدولية" %}</li>
+                        <li>{% trans "عدم إساءة استخدام خدمات الموقع" %}</li>
+                    </ol>
+                    
+                    <div class="warning-box">
+                        <i class="fas fa-exclamation-triangle warning-icon"></i>
+                        <strong>{% trans "تنبيه:" %}</strong>
+                        {% trans "أي مخالفة لهذه المسؤوليات قد تؤدي إلى منع الوصول للموقع واتخاذ الإجراءات القانونية اللازمة." %}
+                    </div>
+                </div>
+
+                <!-- Donations -->
+                <div id="donations" class="terms-content" data-aos="fade-up">
+                    <h2 class="section-title">
+                        <i class="fas fa-heart"></i>
+                        {% trans "التبرعات" %}
+                    </h2>
+                    <h4>{% trans "شروط التبرع:" %}</h4>
+                    <ul>
+                        <li>{% trans "جميع التبرعات طوعية ولا يمكن استردادها" %}</li>
+                        <li>{% trans "يجب أن يكون المتبرع أهلاً للتبرع قانونياً" %}</li>
+                        <li>{% trans "الجمعية تحتفظ بالحق في رفض أي تبرع" %}</li>
+                        <li>{% trans "التبرعات تُستخدم وفقاً لأهداف الجمعية" %}</li>
+                    </ul>
+                    
+                    <h4>{% trans "الشفافية:" %}</h4>
+                    <p>{% trans "نلتزم بتوفير تقارير دورية عن استخدام التبرعات وتوجيهها للمشاريع المخصصة لها." %}</p>
+                    
+                    <div class="important-notice">
+                        <strong>{% trans "إيصالات التبرع:" %}</strong>
+                        {% trans "سيتم إصدار إيصالات رسمية لجميع التبرعات لاستخدامها في الإعفاءات الضريبية حسب القانون المعمول به." %}
+                    </div>
+                </div>
+
+                <!-- Intellectual Property -->
+                <div id="intellectual-property" class="terms-content" data-aos="fade-up">
+                    <h2 class="section-title">
+                        <i class="fas fa-copyright"></i>
+                        {% trans "الملكية الفكرية" %}
+                    </h2>
+                    <h4>{% trans "حقوق الجمعية:" %}</h4>
+                    <ul>
+                        <li>{% trans "جميع حقوق الطبع والنشر للمحتوى محفوظة للجمعية" %}</li>
+                        <li>{% trans "الشعار والعلامات التجارية مملوكة للجمعية" %}</li>
+                        <li>{% trans "التصاميم والرسوميات حقوق محفوظة" %}</li>
+                    </ul>
+                    
+                    <h4>{% trans "الاستخدام المسموح:" %}</h4>
+                    <ul>
+                        <li>{% trans "يمكن مشاركة المحتوى مع ذكر المصدر" %}</li>
+                        <li>{% trans "الاقتباس للأغراض التعليمية مسموح بحدود معقولة" %}</li>
+                        <li>{% trans "استخدام الصور لأغراض إعلامية بإذن مسبق" %}</li>
+                    </ul>
+                    
+                    <h4>{% trans "انتهاك حقوق الطبع:" %}</h4>
+                    <p>{% trans "إذا كنت تعتقد أن حقوق الطبع والنشر الخاصة بك قد تم انتهاكها، يرجى التواصل معنا فوراً." %}</p>
+                </div>
+
+                <!-- Limitation of Liability -->
+                <div id="limitation-liability" class="terms-content" data-aos="fade-up">
+                    <h2 class="section-title">
+                        <i class="fas fa-shield-alt"></i>
+                        {% trans "حدود المسؤولية" %}
+                    </h2>
+                    <h4>{% trans "إخلاء المسؤولية:" %}</h4>
+                    <ul>
+                        <li>{% trans "الموقع متاح 'كما هو' دون ضمانات" %}</li>
+                        <li>{% trans "لا نضمن عدم انقطاع الخدمة أو خلوها من الأخطاء" %}</li>
+                        <li>{% trans "لا نتحمل مسؤولية الأضرار الناتجة عن استخدام الموقع" %}</li>
+                    </ul>
+                    
+                    <h4>{% trans "الروابط الخارجية:" %}</h4>
+                    <p>{% trans "قد يحتوي موقعنا على روابط لمواقع أخرى. نحن غير مسؤولين عن محتوى أو سياسات هذه المواقع." %}</p>
+                    
+                    <div class="warning-box">
+                        <i class="fas fa-exclamation-triangle warning-icon"></i>
+                        <strong>{% trans "تنبيه قانوني:" %}</strong>
+                        {% trans "هذه القيود تطبق في الحد الأقصى المسموح به قانونياً في منطقتك." %}
+                    </div>
+                </div>
+
+                <!-- Changes to Terms -->
+                <div id="changes" class="terms-content" data-aos="fade-up">
+                    <h2 class="section-title">
+                        <i class="fas fa-edit"></i>
+                        {% trans "تعديل الشروط" %}
+                    </h2>
+                    <p>{% trans "نحتفظ بالحق في تعديل هذه الشروط في أي وقت. التعديلات ستكون فعالة فور نشرها على الموقع." %}</p>
+                    
+                    <h4>{% trans "الإشعار بالتعديلات:" %}</h4>
+                    <ul>
+                        <li>{% trans "سيتم الإعلان عن التعديلات المهمة على الموقع" %}</li>
+                        <li>{% trans "سيتم تحديث تاريخ 'آخر تعديل' في أعلى الصفحة" %}</li>
+                        <li>{% trans "قد نرسل إشعارات بالبريد الإلكتروني للتعديلات الجوهرية" %}</li>
+                    </ul>
+                    
+                    <p>{% trans "استمرار استخدامك للموقع بعد التعديلات يعني قبولك للشروط الجديدة." %}</p>
+                </div>
+
+                <!-- Governing Law -->
+                <div class="terms-content" data-aos="fade-up">
+                    <h2 class="section-title">
+                        <i class="fas fa-balance-scale"></i>
+                        {% trans "القانون الحاكم" %}
+                    </h2>
+                    <p>{% trans "هذه الشروط محكومة بقوانين دولة فلسطين. أي نزاع ينشأ عن هذه الشروط سيخضع لاختصاص المحاكم الفلسطينية." %}</p>
+                    
+                    <h4>{% trans "حل النزاعات:" %}</h4>
+                    <ol>
+                        <li>{% trans "نشجع على حل النزاعات ودياً أولاً" %}</li>
+                        <li>{% trans "التواصل المباشر مع إدارة الجمعية" %}</li>
+                        <li>{% trans "اللجوء للوساطة إذا لزم الأمر" %}</li>
+                        <li>{% trans "اللجوء للمحاكم كحل أخير" %}</li>
+                    </ol>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="terms-content" data-aos="fade-up">
+                    <h2 class="section-title">
+                        <i class="fas fa-phone"></i>
+                        {% trans "معلومات التواصل" %}
+                    </h2>
+                    <p>{% trans "للاستفسارات حول هذه الشروط والأحكام:" %}</p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>{% trans "البريد الإلكتروني:" %}</strong><br>{{ site_settings.email }}</p>
+                            <p><strong>{% trans "الهاتف:" %}</strong><br>{{ site_settings.phone }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>{% trans "العنوان:" %}</strong><br>{{ site_settings.address_ar }}</p>
+                            <p><strong>{% trans "ساعات العمل:" %}</strong><br>{% trans "الأحد - الخميس: 8:00 - 16:00" %}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Agreement Section -->
+<section class="py-5" style="background: linear-gradient(135deg, var(--accent-color), var(--primary-color)); color: white;">
+    <div class="container text-center" data-aos="fade-up">
+        <h2 class="display-6 fw-bold mb-4">{% trans "هل توافق على هذه الشروط؟" %}</h2>
+        <p class="lead mb-4">
+            {% trans "باستخدامك لموقعنا، فإنك تؤكد قراءتك وفهمك وموافقتك على جميع الشروط والأحكام المذكورة أعلاه" %}
+        </p>
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a href="{% url 'main:home' %}" class="btn btn-warning btn-lg">
+                <i class="fas fa-check me-2"></i>{% trans "أوافق وأريد المتابعة" %}
+            </a>
+            <a href="{% url 'contact:contact' %}" class="btn btn-outline-light btn-lg">
+                <i class="fas fa-question-circle me-2"></i>{% trans "لدي استفسار" %}
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Same TOC functionality as privacy policy
+document.querySelectorAll('.toc-link').forEach(link => {
+    link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href').substring(1);
+        const targetElement = document.getElementById(targetId);
+        
+        if (targetElement) {
+            const offset = 100;
+            const targetPosition = targetElement.offsetTop - offset;
+            
+            window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+            });
+            
+            document.querySelectorAll('.toc-link').forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
+        }
+    });
+});
+
+window.addEventListener('scroll', function() {
+    const sections = document.querySelectorAll('[id]');
+    const tocLinks = document.querySelectorAll('.toc-link');
+    
+    let currentSection = '';
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop - 150;
+        if (window.scrollY >= sectionTop) {
+            currentSection = section.getAttribute('id');
+        }
+    });
+    
+    tocLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${currentSection}`) {
+            link.classList.add('active');
+        }
+    });
+});
+
+// Track terms acceptance
+document.querySelector('a[href*="home"]').addEventListener('click', function() {
+    localStorage.setItem('terms_accepted', new Date().toISOString());
+    sessionStorage.setItem('user_agreed_to_terms', 'true');
+});
+</script>
+{% endblock %}
+              

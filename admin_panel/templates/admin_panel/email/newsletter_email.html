@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ type_label }} — {{ site_name }}</title>
+<style>
+  body { font-family: 'Segoe UI', Arial, sans-serif; background:#f5f5f5; margin:0; padding:0; direction:rtl; }
+  .wrapper { max-width:600px; margin:0 auto; background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,.08); }
+  .header  { background:linear-gradient(135deg,#6B8E23,#4a6318); color:#fff; padding:32px 24px; text-align:center; }
+  .header h1 { margin:0 0 6px; font-size:1.6rem; }
+  .header p  { margin:0; opacity:.85; font-size:.95rem; }
+  .body    { padding:28px 24px; }
+  .section { margin-bottom:24px; }
+  .section h2 { color:#6B8E23; font-size:1.1rem; border-bottom:2px solid #f0f0f0; padding-bottom:8px; margin-bottom:14px; }
+  .stat-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .stat-card { background:#f9f9f9; border-radius:8px; padding:14px; text-align:center; }
+  .stat-card .num { font-size:1.8rem; font-weight:700; color:#6B8E23; }
+  .stat-card .lbl { font-size:.8rem; color:#888; margin-top:2px; }
+  .story-box { background:#fffbf0; border-right:4px solid #FFD700; border-radius:8px; padding:16px; }
+  .cta-grid  { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:20px; }
+  .cta-btn   { display:block; text-align:center; padding:12px; border-radius:8px; text-decoration:none; font-weight:600; font-size:.95rem; }
+  .cta-green { background:#6B8E23; color:#fff !important; }
+  .cta-gold  { background:#FFD700; color:#333 !important; }
+  .footer    { background:#f5f5f5; padding:18px 24px; text-align:center; font-size:.8rem; color:#999; }
+  .footer a  { color:#6B8E23; text-decoration:none; }
+  @media(max-width:480px){ .stat-grid,.cta-grid{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  {# Header #}
+  <div class="header">
+    <h1>{{ site_name }}</h1>
+    <p>{{ type_label }} — {{ now|date:"Y/m/d" }}</p>
+  </div>
+
+  <div class="body">
+
+    {# تحية #}
+    <div class="section">
+      <p>السلام عليكم ورحمة الله وبركاته،<br>
+      أخي/أختي الكريم/ة <strong>{{ subscriber_name }}</strong>،</p>
+      <p>نُسعد بمشاركتك آخر أخبار ومستجدات <strong>{{ site_name }}</strong>،
+         حيث نعمل بجد لخدمة أبناء شعبنا الفلسطيني.</p>
+    </div>
+
+    {# الإحصائيات #}
+    <div class="section">
+      <h2>📊 أرقام تتحدث</h2>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="num">{{ stats.orphans_free }}</div>
+          <div class="lbl">يتيم ينتظر كافلاً</div>
+        </div>
+        <div class="stat-card">
+          <div class="num">{{ stats.families_free }}</div>
+          <div class="lbl">أسرة تحتاج مساعدة</div>
+        </div>
+        <div class="stat-card">
+          <div class="num">{{ stats.specials_free }}</div>
+          <div class="lbl">ذوو احتياجات بلا رعاية</div>
+        </div>
+        <div class="stat-card">
+          <div class="num">{{ stats.projects_active }}</div>
+          <div class="lbl">مشروع نشط نحتاج دعمك</div>
+        </div>
+      </div>
+      <p style="text-align:center;color:#888;font-size:.85rem;margin-top:10px">
+        أتممنا {{ stats.projects_completed }} مشروعاً بفضل دعم أمثالك 🙏
+      </p>
+    </div>
+
+    {# قصة مؤثرة #}
+    {% if stats.story %}
+    <div class="section">
+      <h2>💛 قصة من الميدان</h2>
+      <div class="story-box">
+        <strong>{{ stats.story.get_full_name }}</strong> —
+        {{ stats.story.story|truncatechars:200 }}
+        <br><br>
+        <em style="color:#888;font-size:.85rem">
+          يمكنك أن تكون سبباً في تغيير حياة هذا الطفل بكفالة بسيطة.
+        </em>
+      </div>
+    </div>
+    {% endif %}
+
+    {# أبرز مشروع #}
+    {% if stats.top_project %}
+    <div class="section">
+      <h2>🚀 أبرز مشروع</h2>
+      <div style="border:1px solid #eee;border-radius:8px;padding:16px">
+        <strong>{{ stats.top_project.title_ar }}</strong>
+        <p style="color:#666;font-size:.9rem;margin:8px 0">
+          {{ stats.top_project.summary_ar|truncatechars:150 }}
+        </p>
+        <a href="{{ site_url }}{{ stats.top_project.get_absolute_url }}"
+           style="color:#6B8E23;font-size:.9rem">قراءة المزيد ←</a>
+      </div>
+    </div>
+    {% endif %}
+
+    {# نداء للعمل #}
+    <div class="section">
+      <h2>🤝 شارك في عمل الخير</h2>
+      <p style="color:#555">
+        كل تبرع — مهما كان صغيراً — يُحدث فرقاً حقيقياً في حياة طفل أو أسرة.
+        لا تؤجل فعل الخير.
+      </p>
+      <div class="cta-grid">
+        <a href="{{ donate_url }}" class="cta-btn cta-green">
+          💚 تبرع الآن
+        </a>
+        <a href="{{ sponsor_url }}" class="cta-btn cta-gold">
+          ⭐ كفّل يتيماً
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  {# Footer #}
+  <div class="footer">
+    <p>{{ site_name }} — نعمل من أجل غد أفضل لأبناء فلسطين</p>
+    <p>
+      <a href="{{ site_url }}">زيارة الموقع</a> ·
+      <a href="{{ unsubscribe_url }}">إلغاء الاشتراك</a>
+    </p>
+    <p style="font-size:.75rem;margin-top:8px">
+      إذا لم تشترك في هذه النشرة، يُرجى
+      <a href="{{ unsubscribe_url }}">إلغاء الاشتراك</a> فوراً.
+    </p>
+  </div>
+
+</div>
+</body>
+</html>

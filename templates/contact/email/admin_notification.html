@@ -1,0 +1,353 @@
+
+{% load custom_filters %}
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% trans "رسالة تواصل جديدة - إشعار الإدارة" %}</title>
+
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #6b8e23, #5c4033);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .content {
+            padding: 30px 25px;
+        }
+        
+        .alert {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #856404;
+        }
+        
+        .alert .priority-high {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        
+        .alert .priority-urgent {
+            background: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+        }
+        
+        .message-info {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .info-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .info-label {
+            font-weight: bold;
+            color: #495057;
+            font-size: 14px;
+        }
+        
+        .info-value {
+            color: #6b8e23;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .message-content {
+            background: #fff;
+            border: 2px solid #6b8e23;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+        
+        .attachment-info {
+            background: #e7f3ff;
+            border: 1px solid #b8daff;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        
+        .attachment-info i {
+            font-size: 24px;
+            color: #0066cc;
+            margin-bottom: 5px;
+        }
+        
+        .actions {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            margin: 5px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #6b8e23;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5c4033;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-reply {
+            background: #28a745;
+            color: white;
+        }
+        
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        .footer p {
+            margin: 0;
+            font-size: 12px;
+            color: #6c757d;
+        }
+        
+        .system-info {
+            background: #f1f3f4;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .priority-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .priority-normal { background: #28a745; color: white; }
+        .priority-high { background: #ffc107; color: #212529; }
+        .priority-urgent { background: #dc3545; color: white; }
+        
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px;
+                border-radius: 5px;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .info-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .info-value {
+                margin-top: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🔔 {% trans "رسالة تواصل جديدة" %}</h1>
+            <p>{% trans "جمعية نسائم فلسطين الخيرية - نظام إدارة الرسائل" %}</p>
+        </div>
+
+```
+    <!-- Content -->
+    <div class="content">
+        <!-- Priority Alert -->
+        {% if message.priority == 'urgent' %}
+            <div class="alert priority-urgent">
+                <strong>⚠️ {% trans "رسالة عاجلة!" %}</strong> {% trans "يرجى الرد على هذه الرسالة في أقرب وقت ممكن." %}
+            </div>
+        {% elif message.priority == 'high' %}
+            <div class="alert priority-high">
+                <strong>📌 {% trans "رسالة مهمة" %}</strong> {% trans "تحتاج إلى اهتمام خاص." %}
+            </div>
+        {% endif %}
+        
+        <!-- Message Information -->
+        <div class="message-info">
+            <div class="info-row">
+                <span class="info-label">👤 {% trans "اسم المرسل:" %}</span>
+                <span class="info-value">{{ message.name }}</span>
+            </div>
+            
+            <div class="info-row">
+                <span class="info-label">📧 {% trans "البريد الإلكتروني:" %}</span>
+                <span class="info-value">{{ message.email }}</span>
+            </div>
+            
+            {% if message.phone %}
+            <div class="info-row">
+                <span class="info-label">📱 {% trans "رقم الهاتف:" %}</span>
+                <span class="info-value">{{ message.phone }}</span>
+            </div>
+            {% endif %}
+            
+            <div class="info-row">
+                <span class="info-label">📝 {% trans "الموضوع:" %}</span>
+                <span class="info-value">{{ message.subject }}</span>
+            </div>
+            
+            <div class="info-row">
+                <span class="info-label">⏰ {% trans "وقت الإرسال:" %}</span>
+                <span class="info-value">{{ message.created_at|date:"d/m/Y H:i" }}</span>
+            </div>
+            
+            <div class="info-row">
+                <span class="info-label">🏷️ {% trans "الأولوية:" %}</span>
+                <span class="priority-badge priority-{{ message.priority }}">
+                    {% if message.priority == 'urgent' %}{% trans "عاجلة" %}
+                    {% elif message.priority == 'high' %}{% trans "عالية" %}
+                    {% elif message.priority == 'low' %}{% trans "منخفضة" %}
+                    {% else %}{% trans "عادية" %}{% endif %}
+                </span>
+            </div>
+            
+            <div class="info-row">
+                <span class="info-label">📊 {% trans "رقم الرسالة:" %}</span>
+                <span class="info-value">#{{ message.id }}</span>
+            </div>
+        </div>
+        
+        <!-- Message Content -->
+        <div class="message-content">
+            <h3 style="color: #6b8e23; margin-top: 0;">💬 {% trans "نص الرسالة:" %}</h3>
+            <p>{{ message.message|linebreaksbr }}</p>
+        </div>
+        
+        <!-- Attachment Info -->
+        {% if message.attachment %}
+            <div class="attachment-info">
+                <div style="font-size: 24px; margin-bottom: 8px;">📎</div>
+                <strong>{% trans "مرفق متوفر" %}</strong><br>
+                <span style="font-size: 12px; color: #666;">
+                    {% trans "يرجى تحميل المرفق من لوحة التحكم" %}
+                </span>
+            </div>
+        {% endif %}
+        
+        <!-- Action Buttons -->
+        <div class="actions">
+            <a href="{{ site_url }}/admin/contact/contactmessage/{{ message.id }}/change/" 
+               class="btn btn-primary">
+                🔗 {% trans "فتح في لوحة التحكم" %}
+            </a>
+            
+            <a href="mailto:{{ message.email }}?subject=Re: {{ message.subject }}" 
+               class="btn btn-reply">
+                📧 {% trans "رد مباشر" %}
+            </a>
+            
+            <a href="{{ site_url }}/admin/contact/contactmessage/" 
+               class="btn btn-secondary">
+                📋 {% trans "جميع الرسائل" %}
+            </a>
+        </div>
+        
+        <!-- System Information -->
+        <div class="system-info">
+            <h4 style="margin-top: 0; font-size: 14px; color: #495057;">{% trans "معلومات تقنية:" %}</h4>
+            <p><strong>{% trans "عنوان IP:" %}</strong> {{ message.ip_address|default:"غير متوفر" }}</p>
+            <p><strong>{% trans "متصفح المستخدم:" %}</strong> {{ message.user_agent|default:"غير متوفر"|truncatechars:100 }}</p>
+            <p><strong>{% trans "معرف الرسالة:" %}</strong> {{ message.id }}</p>
+            <p><strong>{% trans "الحالة:" %}</strong> {{ message.get_status_display }}</p>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        <p>
+            {% trans "هذه رسالة تلقائية من نظام إدارة الرسائل" %}<br>
+            {% trans "جمعية نسائم فلسطين الخيرية" %}<br>
+            <a href="{{ site_url }}" style="color: #6b8e23;">{{ site_url }}</a>
+        </p>
+    </div>
+</div>
+
+
+</body>
+</html>
+

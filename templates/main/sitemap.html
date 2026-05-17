@@ -1,0 +1,708 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "خريطة الموقع" %} - {{ site_settings.site_name_ar }}{% endblock %}
+{% block description %}{% trans "خريطة موقع جمعية نسائم فلسطين الخيرية - دليل شامل لجميع صفحات الموقع" %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .sitemap-hero {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 100px 0 50px;
+    }
+    
+    .sitemap-section {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 25px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        border-top: 4px solid var(--primary-color);
+    }
+    
+    .sitemap-section:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+    
+    .section-title {
+        color: var(--primary-color);
+        font-weight: 700;
+        margin-bottom: 20px;
+        font-size: 1.4rem;
+        display: flex;
+        align-items: center;
+    }
+    
+    .section-title i {
+        margin-left: 15px;
+        font-size: 1.3rem;
+        color: var(--secondary-color);
+        width: 30px;
+        text-align: center;
+    }
+    
+    .sitemap-link {
+        display: block;
+        color: #666;
+        text-decoration: none;
+        padding: 12px 20px;
+        margin-bottom: 8px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        border-right: 3px solid transparent;
+        position: relative;
+    }
+    
+    .sitemap-link:hover {
+        background: var(--bg-light);
+        color: var(--primary-color);
+        border-right-color: var(--primary-color);
+        transform: translateX(10px);
+    }
+    
+    .sitemap-link i {
+        margin-left: 10px;
+        color: var(--secondary-color);
+        width: 20px;
+        text-align: center;
+    }
+    
+    .page-description {
+        font-size: 0.85rem;
+        color: #999;
+        margin-top: 5px;
+        margin-right: 30px;
+    }
+    
+    .stats-grid {
+        background: var(--bg-light);
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+    
+    .stat-item {
+        text-align: center;
+        padding: 20px;
+    }
+    
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: var(--primary-color);
+        display: block;
+        margin-bottom: 5px;
+    }
+    
+    .stat-label {
+        color: #666;
+        font-size: 0.9rem;
+    }
+    
+    .search-section {
+        background: linear-gradient(135deg, rgba(107,142,35,0.1), rgba(255,215,0,0.1));
+        border-radius: 15px;
+        padding: 30px;
+        text-align: center;
+        margin: 30px 0;
+    }
+    
+    .search-form {
+        max-width: 500px;
+        margin: 0 auto;
+        position: relative;
+    }
+    
+    .search-input {
+        width: 100%;
+        padding: 15px 50px 15px 25px;
+        border: 2px solid var(--primary-color);
+        border-radius: 50px;
+        font-size: 1rem;
+        outline: none;
+        transition: all 0.3s ease;
+    }
+    
+    .search-input:focus {
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 20px rgba(107,142,35,0.2);
+    }
+    
+    .search-btn {
+        position: absolute;
+        left: 5px;
+        top: 5px;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+    
+    .search-btn:hover {
+        background: var(--secondary-color);
+        color: var(--dark-color);
+        transform: scale(1.1);
+    }
+    
+    .breadcrumb-section {
+        background: var(--bg-light);
+        padding: 15px 0;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .quick-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 20px;
+        justify-content: center;
+    }
+    
+    .quick-link {
+        background: var(--primary-color);
+        color: white;
+        padding: 8px 15px;
+        border-radius: 20px;
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .quick-link:hover {
+        background: var(--secondary-color);
+        color: var(--dark-color);
+        transform: translateY(-2px);
+    }
+    
+    @media (max-width: 768px) {
+        .sitemap-section {
+            padding: 20px;
+        }
+        .stats-grid {
+            padding: 20px;
+        }
+        .stat-number {
+            font-size: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="sitemap-hero text-center">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-4" data-aos="fade-up">{% trans "خريطة الموقع" %}</h1>
+        <p class="lead" data-aos="fade-up" data-aos-delay="200">
+            {% trans "دليل شامل لجميع صفحات وأقسام موقع جمعية نسائم فلسطين الخيرية" %}
+        </p>
+    </div>
+</section>
+
+<!-- Site Statistics -->
+<section class="py-5">
+    <div class="container">
+        <div class="stats-grid" data-aos="fade-up">
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-item">
+                        <span class="stat-number" id="pagesCount">15</span>
+                        <div class="stat-label">{% trans "صفحة رئيسية" %}</div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-item">
+                        <span class="stat-number" id="projectsCount">{{ total_projects|default:0 }}</span>
+                        <div class="stat-label">{% trans "مشروع" %}</div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-item">
+                        <span class="stat-number" id="sectionsCount">8</span>
+                        <div class="stat-label">{% trans "قسم رئيسي" %}</div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-item">
+                        <span class="stat-number" id="languagesCount">2</span>
+                        <div class="stat-label">{% trans "لغة متاحة" %}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Section -->
+        <div class="search-section" data-aos="fade-up">
+            <h3 class="mb-4">{% trans "ابحث في الموقع" %}</h3>
+            <div class="search-form">
+                <form method="get" action="{% url 'main:search' %}">
+                    <input type="text" name="q" class="search-input" placeholder="{% trans 'ابحث عن صفحة أو محتوى...' %}">
+                    <button type="submit" class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+            </div>
+            <div class="quick-links">
+                <a href="?q={% trans 'مشاريع' %}" class="quick-link">{% trans "المشاريع" %}</a>
+                <a href="?q={% trans 'تبرعات' %}" class="quick-link">{% trans "التبرعات" %}</a>
+                <a href="?q={% trans 'أهداف' %}" class="quick-link">{% trans "الأهداف" %}</a>
+                <a href="?q={% trans 'مجلس إدارة' %}" class="quick-link">{% trans "مجلس الإدارة" %}</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Sitemap Content -->
+<section class="pb-5">
+    <div class="container">
+        <div class="row">
+            <!-- Main Pages -->
+            <div class="col-lg-6 mb-4">
+                <div class="sitemap-section" data-aos="fade-up">
+                    <h3 class="section-title">
+                        <i class="fas fa-home"></i>
+                        {% trans "الصفحات الرئيسية" %}
+                    </h3>
+                    <a href="{% url 'main:home' %}" class="sitemap-link">
+                        <i class="fas fa-home"></i>
+                        {% trans "الصفحة الرئيسية" %}
+                        <div class="page-description">{% trans "الصفحة الرئيسية مع السلايدر والإحصائيات" %}</div>
+                    </a>
+                    <a href="{% url 'main:about' %}" class="sitemap-link">
+                        <i class="fas fa-info-circle"></i>
+                        {% trans "من نحن" %}
+                        <div class="page-description">{% trans "نبذة تعريفية عن الجمعية ورسالتها" %}</div>
+                    </a>
+                    <a href="{% url 'main:vision' %}" class="sitemap-link">
+                        <i class="fas fa-eye"></i>
+                        {% trans "رؤيتنا ورسالتنا" %}
+                        <div class="page-description">{% trans "رؤية ورسالة وقيم الجمعية" %}</div>
+                    </a>
+                    <a href="{% url 'main:goals' %}" class="sitemap-link">
+                        <i class="fas fa-bullseye"></i>
+                        {% trans "الأهداف" %}
+                        <div class="page-description">{% trans "أهداف الجمعية الاستراتيجية" %}</div>
+                    </a>
+                    <a href="{% url 'main:board' %}" class="sitemap-link">
+                        <i class="fas fa-users"></i>
+                        {% trans "مجلس الإدارة" %}
+                        <div class="page-description">{% trans "أعضاء مجلس إدارة الجمعية" %}</div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Projects Section -->
+            <div class="col-lg-6 mb-4">
+                <div class="sitemap-section" data-aos="fade-up" data-aos-delay="100">
+                    <h3 class="section-title">
+                        <i class="fas fa-project-diagram"></i>
+                        {% trans "المشاريع والبرامج" %}
+                    </h3>
+                    <a href="{% url 'projects:all_projects' %}" class="sitemap-link">
+                        <i class="fas fa-list"></i>
+                        {% trans "جميع المشاريع" %}
+                        <div class="page-description">{% trans "قائمة شاملة بجميع مشاريع الجمعية" %}</div>
+                    </a>
+                    {% for category in nav_categories %}
+                    <a href="/projects/category/{{ category.slug }}/" class="sitemap-link">
+                        <i class="{{ category.icon|default:'fas fa-folder' }}"></i>
+                        {{ category.name }}
+                        <div class="page-description">{{ category.projects_count }} {% trans "مشروع" %}</div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Contact & Support -->
+            <div class="col-lg-6 mb-4">
+                <div class="sitemap-section" data-aos="fade-up" data-aos-delay="200">
+                    <h3 class="section-title">
+                        <i class="fas fa-phone"></i>
+                        {% trans "التواصل والدعم" %}
+                    </h3>
+                    <a href="{% url 'contact:contact' %}" class="sitemap-link">
+                        <i class="fas fa-envelope"></i>
+                        {% trans "اتصل بنا" %}
+                        <div class="page-description">{% trans "نموذج التواصل مع الجمعية" %}</div>
+                    </a>
+                    <a href="{% url 'main:location' %}" class="sitemap-link">
+                        <i class="fas fa-map-marker-alt"></i>
+                        {% trans "موقعنا على الخريطة" %}
+                        <div class="page-description">{% trans "عنوان الجمعية والطرق للوصول" %}</div>
+                    </a>
+                    <a href="{% url 'main:faq' %}" class="sitemap-link">
+                        <i class="fas fa-question-circle"></i>
+                        {% trans "الأسئلة الشائعة" %}
+                        <div class="page-description">{% trans "إجابات للأسئلة الأكثر شيوعاً" %}</div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Tools & Resources -->
+            <div class="col-lg-6 mb-4">
+                <div class="sitemap-section" data-aos="fade-up" data-aos-delay="300">
+                    <h3 class="section-title">
+                        <i class="fas fa-tools"></i>
+                        {% trans "الأدوات والموارد" %}
+                    </h3>
+                    <a href="{% url 'main:search' %}" class="sitemap-link">
+                        <i class="fas fa-search"></i>
+                        {% trans "البحث في الموقع" %}
+                        <div class="page-description">{% trans "محرك البحث للعثور على المحتوى" %}</div>
+                    </a>
+                    <a href="/sitemap.xml" class="sitemap-link" target="_blank">
+                        <i class="fas fa-sitemap"></i>
+                        {% trans "خريطة الموقع XML" %}
+                        <div class="page-description">{% trans "خريطة الموقع لمحركات البحث" %}</div>
+                    </a>
+                    <a href="{% url 'main:sitemap_page' %}" class="sitemap-link">
+                        <i class="fas fa-map"></i>
+                        {% trans "خريطة الموقع التفاعلية" %}
+                        <div class="page-description">{% trans "هذه الصفحة - دليل شامل للموقع" %}</div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Legal Pages -->
+            <div class="col-lg-6 mb-4">
+                <div class="sitemap-section" data-aos="fade-up" data-aos-delay="400">
+                    <h3 class="section-title">
+                        <i class="fas fa-balance-scale"></i>
+                        {% trans "الصفحات القانونية" %}
+                    </h3>
+                    <a href="{% url 'main:privacy_policy' %}" class="sitemap-link">
+                        <i class="fas fa-user-shield"></i>
+                        {% trans "سياسة الخصوصية" %}
+                        <div class="page-description">{% trans "كيف نحمي ونستخدم بياناتك" %}</div>
+                    </a>
+                    <a href="{% url 'main:terms_of_service' %}" class="sitemap-link">
+                        <i class="fas fa-file-contract"></i>
+                        {% trans "شروط الخدمة" %}
+                        <div class="page-description">{% trans "الشروط والأحكام لاستخدام الموقع" %}</div>
+                    </a>
+                    <a href="/robots.txt" class="sitemap-link" target="_blank">
+                        <i class="fas fa-robot"></i>
+                        {% trans "ملف Robots.txt" %}
+                        <div class="page-description">{% trans "توجيهات لمحركات البحث" %}</div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Social Media -->
+            <div class="col-lg-6 mb-4">
+                <div class="sitemap-section" data-aos="fade-up" data-aos-delay="500">
+                    <h3 class="section-title">
+                        <i class="fas fa-share-alt"></i>
+                        {% trans "وسائل التواصل الاجتماعي" %}
+                    </h3>
+                    {% if site_settings.facebook_url %}
+                    <a href="{{ site_settings.facebook_url }}" class="sitemap-link" target="_blank">
+                        <i class="fab fa-facebook-f"></i>
+                        {% trans "صفحة الفيسبوك" %}
+                        <div class="page-description">{% trans "تابعنا على فيسبوك للآخر الأخبار" %}</div>
+                    </a>
+                    {% endif %}
+                    {% if site_settings.twitter_url %}
+                    <a href="{{ site_settings.twitter_url }}" class="sitemap-link" target="_blank">
+                        <i class="fab fa-twitter"></i>
+                        {% trans "حساب تويتر" %}
+                        <div class="page-description">{% trans "آخر التحديثات على تويتر" %}</div>
+                    </a>
+                    {% endif %}
+                    {% if site_settings.instagram_url %}
+                    <a href="{{ site_settings.instagram_url }}" class="sitemap-link" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                        {% trans "حساب انستغرام" %}
+                        <div class="page-description">{% trans "صور ومقاطع فيديو من أنشطتنا" %}</div>
+                    </a>
+                    {% endif %}
+                    {% if site_settings.youtube_url %}
+                    <a href="{{ site_settings.youtube_url }}" class="sitemap-link" target="_blank">
+                        <i class="fab fa-youtube"></i>
+                        {% trans "قناة يوتيوب" %}
+                        <div class="page-description">{% trans "فيديوهات المشاريع والأنشطة" %}</div>
+                    </a>
+                    {% endif %}
+                    {% if site_settings.whatsapp_number %}
+                    <a href="https://wa.me/{{ site_settings.whatsapp_number }}" class="sitemap-link" target="_blank">
+                        <i class="fab fa-whatsapp"></i>
+                        {% trans "واتساب" %}
+                        <div class="page-description">{% trans "تواصل مباشر عبر واتساب" %}</div>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Error Pages -->
+            <div class="col-lg-6 mb-4">
+                <div class="sitemap-section" data-aos="fade-up" data-aos-delay="600">
+                    <h3 class="section-title">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        {% trans "صفحات الأخطاء" %}
+                    </h3>
+                    <a href="/404-example/" class="sitemap-link" onclick="event.preventDefault(); alert('هذا مثال على صفحة 404');">
+                        <i class="fas fa-search-minus"></i>
+                        {% trans "صفحة 404 - غير موجودة" %}
+                        <div class="page-description">{% trans "تظهر عند البحث عن صفحة غير موجودة" %}</div>
+                    </a>
+                    <a href="#" class="sitemap-link" onclick="event.preventDefault(); alert('هذا مثال على صفحة 500');">
+                        <i class="fas fa-server"></i>
+                        {% trans "صفحة 500 - خطأ خادم" %}
+                        <div class="page-description">{% trans "تظهر عند حدوث خطأ في الخادم" %}</div>
+                    </a>
+                    <a href="#" class="sitemap-link" onclick="event.preventDefault(); alert('هذا مثال على صفحة 403');">
+                        <i class="fas fa-ban"></i>
+                        {% trans "صفحة 403 - غير مصرح" %}
+                        <div class="page-description">{% trans "تظهر عند عدم وجود صلاحية للوصول" %}</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Website Navigation Help -->
+        <div class="search-section" data-aos="fade-up">
+            <h3 class="mb-4">{% trans "نصائح للتنقل في الموقع" %}</h3>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-lightbulb fa-2x me-3" style="color: var(--secondary-color);"></i>
+                        <div>
+                            <h5 class="mb-1">{% trans "استخدم شريط البحث" %}</h5>
+                            <p class="mb-0 small text-muted">{% trans "للعثور بسرعة على المحتوى المطلوب" %}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-mobile-alt fa-2x me-3" style="color: var(--primary-color);"></i>
+                        <div>
+                            <h5 class="mb-1">{% trans "متوافق مع الجوال" %}</h5>
+                            <p class="mb-0 small text-muted">{% trans "يمكن تصفح الموقع من أي جهاز" %}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-language fa-2x me-3" style="color: var(--accent-color);"></i>
+                        <div>
+                            <h5 class="mb-1">{% trans "متعدد اللغات" %}</h5>
+                            <p class="mb-0 small text-muted">{% trans "متوفر باللغتين العربية والإنجليزية" %}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-universal-access fa-2x me-3" style="color: var(--secondary-color);"></i>
+                        <div>
+                            <h5 class="mb-1">{% trans "سهل الاستخدام" %}</h5>
+                            <p class="mb-0 small text-muted">{% trans "مصمم ليكون سهل التنقل للجميع" %}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Last Updated -->
+        <div class="text-center mt-4">
+            <div class="breadcrumb-section">
+                <small class="text-muted">
+                    <i class="fas fa-calendar-alt me-2"></i>
+                    {% trans "آخر تحديث لخريطة الموقع:" %} 
+                    <strong>{% now "d F Y" %}</strong>
+                    <br>
+                    {% trans "عدد الصفحات المدرجة:" %} <strong id="totalLinksCount">0</strong>
+                </small>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Quick Access -->
+<section class="py-5" style="background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); color: white;">
+    <div class="container text-center" data-aos="fade-up">
+        <h2 class="display-6 fw-bold mb-4">{% trans "وصول سريع" %}</h2>
+        <p class="lead mb-4">{% trans "الصفحات الأكثر زيارة في موقعنا" %}</p>
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a href="{% url 'main:home' %}" class="btn btn-warning btn-lg">
+                <i class="fas fa-home me-2"></i>{% trans "الرئيسية" %}
+            </a>
+            <a href="{% url 'projects:all_projects' %}" class="btn btn-outline-light btn-lg">
+                <i class="fas fa-project-diagram me-2"></i>{% trans "المشاريع" %}
+            </a>
+            <a href="{% url 'contact:contact' %}" class="btn btn-outline-light btn-lg">
+                <i class="fas fa-envelope me-2"></i>{% trans "اتصل بنا" %}
+            </a>
+            <a href="{% url 'main:about' %}" class="btn btn-outline-light btn-lg">
+                <i class="fas fa-info-circle me-2"></i>{% trans "من نحن" %}
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Count and animate statistics
+document.addEventListener('DOMContentLoaded', function() {
+    // Count total links
+    const totalLinks = document.querySelectorAll('.sitemap-link').length;
+    document.getElementById('totalLinksCount').textContent = totalLinks;
+    
+    // Animate numbers
+    function animateNumber(element, finalNumber, duration = 2000) {
+        const startNumber = 0;
+        const increment = finalNumber / (duration / 16);
+        let currentNumber = startNumber;
+        
+        const timer = setInterval(() => {
+            currentNumber += increment;
+            element.textContent = Math.floor(currentNumber);
+            
+            if (currentNumber >= finalNumber) {
+                element.textContent = finalNumber;
+                clearInterval(timer);
+            }
+        }, 16);
+    }
+    
+    // Animate stats when visible
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const statNumbers = entry.target.querySelectorAll('.stat-number');
+                statNumbers.forEach(stat => {
+                    const finalNumber = parseInt(stat.textContent);
+                    animateNumber(stat, finalNumber);
+                });
+                observer.unobserve(entry.target);
+            }
+        });
+    });
+    
+    const statsGrid = document.querySelector('.stats-grid');
+    if (statsGrid) {
+        observer.observe(statsGrid);
+    }
+    
+    // Search form enhancement
+    const searchInput = document.querySelector('.search-input');
+    const quickLinks = document.querySelectorAll('.quick-link');
+    
+    if (searchInput) {
+        // Auto-complete suggestions
+        const suggestions = [
+            'مشاريع', 'تبرعات', 'أهداف', 'مجلس الإدارة',
+            'من نحن', 'رؤيتنا', 'اتصل بنا', 'موقعنا',
+            'كفالة الأيتام', 'مساعدة الفقراء', 'تحفيظ القرآن'
+        ];
+        
+        searchInput.addEventListener('input', function() {
+            const value = this.value.toLowerCase();
+            quickLinks.forEach(link => {
+                const linkText = link.textContent.toLowerCase();
+                if (linkText.includes(value) && value.length > 0) {
+                    link.style.opacity = '1';
+                    link.style.transform = 'scale(1.05)';
+                } else {
+                    link.style.opacity = value.length > 0 ? '0.5' : '1';
+                    link.style.transform = 'scale(1)';
+                }
+            });
+        });
+    }
+    
+    // Smooth scroll for sitemap links
+    document.querySelectorAll('.sitemap-link[href^="#"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href').substring(1);
+            const targetElement = document.getElementById(targetId);
+            
+            if (targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+    
+    // Track link clicks for analytics
+    document.querySelectorAll('.sitemap-link').forEach(link => {
+        link.addEventListener('click', function() {
+            const linkText = this.textContent.trim();
+            const linkUrl = this.getAttribute('href');
+            
+            // Analytics tracking (replace with your analytics code)
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'sitemap_click', {
+                    'link_text': linkText,
+                    'link_url': linkUrl
+                });
+            }
+            
+            console.log('Sitemap link clicked:', linkText, linkUrl);
+        });
+    });
+    
+    // Highlight external links
+    document.querySelectorAll('a[target="_blank"]').forEach(link => {
+        const icon = document.createElement('i');
+        icon.className = 'fas fa-external-link-alt';
+        icon.style.fontSize = '0.7rem';
+        icon.style.marginRight = '5px';
+        icon.style.opacity = '0.6';
+        link.appendChild(icon);
+    });
+});
+
+// Keyboard navigation
+document.addEventListener('keydown', function(e) {
+    // Alt + S for search
+    if (e.altKey && e.key === 's') {
+        e.preventDefault();
+        const searchInput = document.querySelector('.search-input');
+        if (searchInput) {
+            searchInput.focus();
+            searchInput.select();
+        }
+    }
+    
+    // Alt + H for home
+    if (e.altKey && e.key === 'h') {
+        e.preventDefault();
+        window.location.href = '{% url "main:home" %}';
+    }
+});
+
+// Add loading states
+document.querySelectorAll('.sitemap-link').forEach(link => {
+    link.addEventListener('click', function() {
+        if (!this.getAttribute('href').startsWith('#') && 
+            !this.getAttribute('onclick') && 
+            !this.getAttribute('target')) {
+            
+            this.style.opacity = '0.6';
+            this.style.pointerEvents = 'none';
+            
+            const originalContent = this.innerHTML;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>' + 
+                           this.textContent.split('\n')[0];
+        }
+    });
+});
+</script>
+{% endblock %}
+                        

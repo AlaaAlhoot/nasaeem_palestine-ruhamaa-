@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% load custom_filters %}
+{% block title %}{% trans "الصفحة غير موجودة" %} - 404{% endblock %}
+{% block description %}{% trans "الصفحة التي تبحث عنها غير موجودة أو تم نقلها" %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .error-page {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, var(--bg-light), white);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .error-content {
+        text-align: center;
+        max-width: 600px;
+        padding: 40px;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        position: relative;
+        z-index: 2;
+    }
+    
+    .error-number {
+        font-size: 8rem;
+        font-weight: 900;
+        color: var(--primary-color);
+        line-height: 1;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        animation: bounce 2s infinite;
+    }
+    
+    .error-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--accent-color);
+        margin-bottom: 20px;
+    }
+    
+    .error-message {
+        font-size: 1.2rem;
+        color: #666;
+        margin-bottom: 30px;
+        line-height: 1.6;
+    }
+    
+    .error-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 30px;
+    }
+    
+    .floating-shape {
+        position: absolute;
+        opacity: 0.1;
+        color: var(--primary-color);
+        font-size: 4rem;
+        animation: float 6s ease-in-out infinite;
+    }
+    
+    .floating-shape:nth-child(1) {
+        top: 20%;
+        left: 10%;
+        animation-delay: 0s;
+    }
+    
+    .floating-shape:nth-child(2) {
+        top: 60%;
+        right: 15%;
+        animation-delay: 2s;
+    }
+    
+    .floating-shape:nth-child(3) {
+        bottom: 30%;
+        left: 20%;
+        animation-delay: 4s;
+    }
+    
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {
+            transform: translateY(0);
+        }
+        40% {
+            transform: translateY(-20px);
+        }
+        60% {
+            transform: translateY(-10px);
+        }
+    }
+    
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0px) rotate(0deg);
+        }
+        50% {
+            transform: translateY(-30px) rotate(180deg);
+        }
+    }
+    
+    .search-form {
+        background: var(--bg-light);
+        border-radius: 50px;
+        padding: 5px;
+        margin-top: 30px;
+    }
+    
+    .search-input {
+        border: none;
+        padding: 15px 25px;
+        background: transparent;
+        width: 100%;
+        outline: none;
+        font-size: 1rem;
+    }
+    
+    .search-btn {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        padding: 15px 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .search-btn:hover {
+        background: var(--secondary-color);
+        color: var(--dark-color);
+    }
+    
+    @media (max-width: 768px) {
+        .error-number {
+            font-size: 5rem;
+        }
+        .error-title {
+            font-size: 2rem;
+        }
+        .error-actions {
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="error-page">
+    <!-- Floating Shapes -->
+    <div class="floating-shape">
+        <i class="fas fa-question-circle"></i>
+    </div>
+    <div class="floating-shape">
+        <i class="fas fa-search"></i>
+    </div>
+    <div class="floating-shape">
+        <i class="fas fa-home"></i>
+    </div>
+    
+    <div class="error-content" data-aos="zoom-in">
+        <div class="error-number">404</div>
+        <h1 class="error-title">{% trans "الصفحة غير موجودة!" %}</h1>
+        <p class="error-message">
+            {% trans "عذراً، الصفحة التي تبحث عنها غير موجودة أو تم نقلها إلى مكان آخر." %}
+            <br>
+            {% trans "يمكنك العودة إلى الصفحة الرئيسية أو البحث عما تريد." %}
+        </p>
+        
+        <!-- Quick Search -->
+        <div class="search-form">
+            <form method="get" action="{% url 'main:search' %}" class="d-flex">
+                <input type="text" name="q" class="search-input" placeholder="{% trans 'ابحث عما تريد...' %}">
+                <button type="submit" class="search-btn">
+                    <i class="fas fa-search me-2"></i>{% trans "بحث" %}
+                </button>
+            </form>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="error-actions">
+            <a href="{% url 'main:home' %}" class="btn btn-primary btn-lg">
+                <i class="fas fa-home me-2"></i>{% trans "الصفحة الرئيسية" %}
+            </a>
+            <a href="javascript:history.back()" class="btn btn-outline-primary btn-lg">
+                <i class="fas fa-arrow-right me-2"></i>{% trans "العودة للخلف" %}
+            </a>
+            <a href="{% url 'projects:all_projects' %}" class="btn btn-outline-secondary btn-lg">
+                <i class="fas fa-project-diagram me-2"></i>{% trans "المشاريع" %}
+            </a>
+        </div>
+        
+        <!-- Popular Links -->
+        <div class="mt-5">
+            <h5 class="mb-3">{% trans "روابط مفيدة:" %}</h5>
+            <div class="d-flex flex-wrap justify-content-center gap-2">
+                <a href="{% url 'main:about' %}" class="btn btn-sm btn-outline-primary">{% trans "من نحن" %}</a>
+                <a href="{% url 'main:goals' %}" class="btn btn-sm btn-outline-primary">{% trans "الأهداف" %}</a>
+                <a href="{% url 'main:board' %}" class="btn btn-sm btn-outline-primary">{% trans "مجلس الإدارة" %}</a>
+                <a href="{% url 'contact:contact' %}" class="btn btn-sm btn-outline-primary">{% trans "اتصل بنا" %}</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Auto-focus search input
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.querySelector('.search-input');
+    if (searchInput) {
+        setTimeout(() => {
+            searchInput.focus();
+        }, 1000);
+    }
+});
+
+// Track 404 errors for analytics
+if (typeof gtag !== 'undefined') {
+    gtag('event', '404_error', {
+        'page_title': document.title,
+        'page_location': window.location.href
+    });
+}
+</script>
+{% endblock %}

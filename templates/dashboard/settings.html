@@ -1,0 +1,707 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}إعدادات النظام{% endblock %}
+
+{% block extra_css %}
+<style>
+.settings-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 2px 15px rgba(0,0,0,.08);
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    transition: all .3s ease;
+}
+
+.settings-card:hover {
+    box-shadow: 0 5px 25px rgba(0,0,0,.12);
+    transform: translateY(-3px);
+}
+
+.settings-card .card-header {
+    border: none;
+    padding: 1.25rem 1.5rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.settings-card .card-body {
+    padding: 1.5rem;
+}
+
+.form-switch .form-check-input {
+    width: 3rem;
+    height: 1.5rem;
+    cursor: pointer;
+}
+
+.form-switch .form-check-input:checked {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.info-box {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+}
+
+.nav-pills .nav-link {
+    border-radius: 10px;
+    padding: 0.75rem 1.5rem;
+    margin-bottom: 0.5rem;
+    transition: all .3s;
+    color: #6c757d;
+}
+
+.nav-pills .nav-link:hover {
+    background: #f8f9fa;
+    color: #6B8E23;
+}
+
+.nav-pills .nav-link.active {
+    background: linear-gradient(135deg, #6B8E23, #5a7a1d);
+    color: white;
+}
+
+.action-btn {
+    border-radius: 8px;
+    padding: 0.5rem 1.5rem;
+    font-weight: 500;
+    transition: all .3s;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,.15);
+}
+
+.system-info-item {
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    border-left: 4px solid #6B8E23;
+}
+
+.system-info-item label {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-bottom: 0.25rem;
+}
+
+.system-info-item .value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #212529;
+}
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.loading-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #6B8E23;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- العنوان -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="info-box">
+                <h4 class="mb-2"><i class="fas fa-cogs"></i> إعدادات النظام</h4>
+                <p class="mb-0 opacity-75">إدارة وتخصيص إعدادات الموقع والنظام</p>
+            </div>
+        </div>
+    </div>
+
+    <form method="POST" id="settingsForm" class="needs-validation" novalidate>
+        {% csrf_token %}
+        
+        <div class="row">
+            <!-- القائمة الجانبية -->
+            <div class="col-lg-3 mb-4">
+                <div class="settings-card">
+                    <div class="card-body">
+                        <h6 class="mb-3"><i class="fas fa-list"></i> الأقسام</h6>
+                        <div class="nav flex-column nav-pills" id="settingsTabs" role="tablist">
+                            <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#general" type="button">
+                                <i class="fas fa-globe"></i> عام
+                            </button>
+                            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#security" type="button">
+                                <i class="fas fa-shield-alt"></i> الأمان
+                            </button>
+                            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#performance" type="button">
+                                <i class="fas fa-rocket"></i> الأداء
+                            </button>
+                            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#system" type="button">
+                                <i class="fas fa-info-circle"></i> النظام
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- المحتوى -->
+            <div class="col-lg-9">
+                <div class="tab-content" id="settingsTabContent">
+                    
+                    <!-- الإعدادات العامة -->
+                    <div class="tab-pane fade show active" id="general" role="tabpanel">
+                        <div class="settings-card">
+                            <div class="card-header bg-primary text-white">
+                                <i class="fas fa-globe"></i>
+                                <span>الإعدادات العامة</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">اسم الموقع (عربي)</label>
+                                        <input type="text" class="form-control" name="site_name_ar" 
+                                               value="{{ form.site_name_ar }}" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">اسم الموقع (English)</label>
+                                        <input type="text" class="form-control" name="site_name_en" 
+                                               value="{{ form.site_name_en }}">
+                                    </div>
+                                    <div class="col-12 mb-3">
+                                        <label class="form-label">وصف الموقع</label>
+                                        <textarea class="form-control" name="site_description" rows="3">{{ form.site_description }}</textarea>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">البريد الإلكتروني</label>
+                                        <input type="email" class="form-control" name="site_email" 
+                                               value="{{ form.site_email }}">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">رقم الهاتف</label>
+                                        <input type="tel" class="form-control" name="site_phone" 
+                                               value="{{ form.site_phone }}">
+                                    </div>
+                                </div>
+                                
+                                <hr class="my-4">
+                                
+                                <h6 class="mb-3"><i class="fas fa-tools"></i> وضع الصيانة</h6>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="maintenanceMode" 
+                                                   name="maintenance_mode" {% if form.site_maintenance_mode %}checked{% endif %}>
+                                            <label class="form-check-label" for="maintenanceMode">
+                                                تفعيل وضع الصيانة
+                                            </label>
+                                        </div>
+                                        <small class="text-muted">سيظهر للزوار رسالة الصيانة</small>
+                                    </div>
+                                    <div class="col-12 mb-3">
+                                        <label class="form-label">رسالة الصيانة</label>
+                                        <textarea class="form-control" name="maintenance_message_ar" rows="3">{{ form.maintenance_message_ar }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- الأمان -->
+                    <div class="tab-pane fade" id="security" role="tabpanel">
+                        <div class="settings-card">
+                            <div class="card-header bg-danger text-white">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>إعدادات الأمان</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="twoFactor" 
+                                                   name="enable_two_factor" {% if form.enable_two_factor %}checked{% endif %}>
+                                            <label class="form-check-label" for="twoFactor">
+                                                المصادقة الثنائية
+                                            </label>
+                                        </div>
+                                        <small class="text-muted">طبقة حماية إضافية</small>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">انتهاء الجلسة (دقيقة)</label>
+                                        <input type="number" class="form-control" name="session_timeout" 
+                                               value="{{ form.session_timeout }}" min="5" max="1440">
+                                        <small class="text-muted">الافتراضي: 30 دقيقة</small>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">محاولات الدخول</label>
+                                        <input type="number" class="form-control" name="max_login_attempts" 
+                                               value="{{ form.max_login_attempts }}" min="3" max="10">
+                                        <small class="text-muted">قبل الحظر</small>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="forceHttps" 
+                                                   name="force_https" {% if form.force_https %}checked{% endif %}>
+                                            <label class="form-check-label" for="forceHttps">
+                                                إجبار HTTPS
+                                            </label>
+                                        </div>
+                                        <small class="text-muted">تشفير الاتصال</small>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="ipBlocking" 
+                                                   name="enable_ip_blocking" {% if form.enable_ip_blocking %}checked{% endif %}>
+                                            <label class="form-check-label" for="ipBlocking">
+                                                حظر IP تلقائي
+                                            </label>
+                                        </div>
+                                        <small class="text-muted">للمحاولات المشبوهة</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- الأداء -->
+                    <div class="tab-pane fade" id="performance" role="tabpanel">
+                        <div class="settings-card">
+                            <div class="card-header bg-primary text-white">
+                                <i class="fas fa-rocket"></i>
+                                <span>إعدادات الأداء</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">مهلة الكاش (ثانية)</label>
+                                        <input type="number" class="form-control" name="cache_timeout" 
+                                               value="{{ form.cache_timeout }}" min="60" max="86400">
+                                        <small class="text-muted">الافتراضي: 3600 (ساعة)</small>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-check form-switch mt-4">
+                                            <input class="form-check-input" type="checkbox" id="compression" 
+                                                   name="enable_compression" {% if form.enable_compression %}checked{% endif %}>
+                                            <label class="form-check-label" for="compression">
+                                                ضغط الملفات
+                                            </label>
+                                        </div>
+                                        <small class="text-muted">يحسن سرعة التحميل</small>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="lazyLoad" 
+                                                   name="enable_lazy_loading" {% if form.enable_lazy_loading %}checked{% endif %}>
+                                            <label class="form-check-label" for="lazyLoad">
+                                                التحميل الكسول للصور
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="minify" 
+                                                   name="enable_minification" {% if form.enable_minification %}checked{% endif %}>
+                                            <label class="form-check-label" for="minify">
+                                                تصغير CSS/JS
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <hr class="my-3">
+                                
+                                <div class="d-flex flex-wrap gap-2">
+                                    <button type="button" class="btn btn-warning action-btn" onclick="clearCache()">
+                                        <i class="fas fa-broom"></i> مسح الكاش
+                                    </button>
+                                    <button type="button" class="btn btn-info action-btn" onclick="optimizeDatabase()">
+                                        <i class="fas fa-tools"></i> تحسين قاعدة البيانات
+                                    </button>
+                                    <button type="button" class="btn btn-secondary action-btn" onclick="checkPerformance()">
+                                        <i class="fas fa-tachometer-alt"></i> فحص الأداء
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- معلومات النظام -->
+                    <div class="tab-pane fade" id="system" role="tabpanel">
+                        <div class="settings-card">
+                            <div class="card-header bg-secondary text-white">
+                                <i class="fas fa-info-circle"></i>
+                                <span>معلومات النظام</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <div class="system-info-item">
+                                            <label>إصدار Django</label>
+                                            <div class="value">{{ dashboard_system_info.django_version|default:"3.2" }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="system-info-item">
+                                            <label>إصدار Python</label>
+                                            <div class="value">{{ dashboard_system_info.python_version|default:"3.9" }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="system-info-item">
+                                            <label>وضع التطوير</label>
+                                            <div class="value">
+                                                {% if dashboard_system_info.debug_mode %}
+                                                <span class="badge bg-warning">مفعل</span>
+                                                {% else %}
+                                                <span class="badge bg-success">معطل</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="system-info-item">
+                                            <label>قاعدة البيانات</label>
+                                            <div class="value">SQLite3</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="system-info-item">
+                                            <label>حجم قاعدة البيانات</label>
+                                            <div class="value">{{ dashboard_system_info.database_size|default:"--" }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="system-info-item">
+                                            <label>التوقيت الحالي</label>
+                                            <div class="value">{{ dashboard_system_info.current_time|date:"Y-m-d H:i" }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- أزرار الحفظ -->
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <button type="button" class="btn btn-secondary action-btn" onclick="resetToDefaults()">
+                        <i class="fas fa-undo"></i> إعادة الضبط الافتراضي
+                    </button>
+                    <button type="submit" class="btn btn-primary action-btn">
+                        <i class="fas fa-save"></i> حفظ الإعدادات
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="text-center">
+        <div class="loading-spinner mx-auto mb-3"></div>
+        <h5 class="text-white">جاري المعالجة...</h5>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+'use strict';
+
+const csrf = '{{ csrf_token }}';
+
+// ========================================
+// مسح الكاش
+// ========================================
+function clearCache() {
+    if (!confirm('هل تريد مسح جميع بيانات الكاش؟')) return;
+    
+    showLoading();
+    
+    fetch('/dashboard/api/cache/clear/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrf,
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideLoading();
+        showAlert(
+            data.success ? 'تم مسح الكاش بنجاح' : 'فشل في مسح الكاش', 
+            data.success ? 'success' : 'danger'
+        );
+    })
+    .catch(err => {
+        hideLoading();
+        showAlert('حدث خطأ', 'danger');
+        console.error('Error:', err);
+    });
+}
+
+// ========================================
+// تحسين قاعدة البيانات
+// ========================================
+function optimizeDatabase() {
+    if (!confirm('هل تريد تحسين قاعدة البيانات؟ قد يستغرق بعض الوقت.')) return;
+    
+    showLoading();
+    
+    fetch('/dashboard/api/database/optimize/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrf,
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideLoading();
+        showAlert(
+            data.success ? 'تم تحسين قاعدة البيانات بنجاح' : 'فشل في التحسين', 
+            data.success ? 'success' : 'danger'
+        );
+    })
+    .catch(err => {
+        hideLoading();
+        showAlert('حدث خطأ', 'danger');
+        console.error('Error:', err);
+    });
+}
+
+// ========================================
+// فحص الأداء
+// ========================================
+function checkPerformance() {
+    showLoading();
+    
+    fetch('/dashboard/api/performance/check/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrf,
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideLoading();
+        if (data.success) {
+            const statusColors = {
+                'excellent': 'success',
+                'good': 'info',
+                'warning': 'warning'
+            };
+            
+            const report = `
+                <div class="performance-report">
+                    <h5>تقرير الأداء</h5>
+                    <ul class="list-unstyled">
+                        <li><strong>سرعة الاستجابة:</strong> ${data.response_time}ms</li>
+                        <li><strong>استخدام الذاكرة:</strong> ${data.memory_usage}%</li>
+                        <li><strong>استخدام المعالج:</strong> ${data.cpu_usage}%</li>
+                        <li><strong>حجم الكاش:</strong> ${data.cache_size}</li>
+                        <li><strong>الحالة:</strong> <span class="badge bg-${statusColors[data.status] || 'secondary'}">${data.status_text}</span></li>
+                    </ul>
+                </div>
+            `;
+            showAlert(report, 'info', false);
+        } else {
+            showAlert('فشل في فحص الأداء', 'danger');
+        }
+    })
+    .catch(err => {
+        hideLoading();
+        showAlert('حدث خطأ في الاتصال', 'danger');
+        console.error('Error:', err);
+    });
+}
+
+// ========================================
+// إعادة الضبط الافتراضي
+// ========================================
+function resetToDefaults() {
+    if (!confirm('هل تريد إعادة جميع الإعدادات إلى الحالة الافتراضية؟\n\nتحذير: سيتم فقدان جميع الإعدادات المخصصة!')) return;
+    
+    showLoading();
+    
+    fetch('/dashboard/api/settings/reset/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrf,
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideLoading();
+        if (data.success) {
+            showAlert('تم إعادة الإعدادات إلى الحالة الافتراضية بنجاح', 'success');
+            setTimeout(() => window.location.reload(), 1500);
+        } else {
+            showAlert('فشل في إعادة الضبط: ' + (data.error || 'خطأ غير معروف'), 'danger');
+        }
+    })
+    .catch(err => {
+        hideLoading();
+        showAlert('حدث خطأ في الاتصال', 'danger');
+        console.error('Error:', err);
+    });
+}
+
+// ========================================
+// وظائف مساعدة
+// ========================================
+function showLoading() {
+    document.getElementById('loadingOverlay').style.display = 'flex';
+}
+
+function hideLoading() {
+    document.getElementById('loadingOverlay').style.display = 'none';
+}
+
+function showAlert(message, type = 'info', autoClose = true) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3`;
+    alertDiv.style.zIndex = '10000';
+    alertDiv.style.minWidth = '300px';
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(alertDiv);
+    
+    if (autoClose) {
+        setTimeout(() => {
+            alertDiv.remove();
+        }, 5000);
+    }
+}
+
+// ========================================
+// تحذيرات
+// ========================================
+const maintenanceModeToggle = document.getElementById('maintenanceMode');
+if (maintenanceModeToggle) {
+    maintenanceModeToggle.addEventListener('change', function() {
+        if (this.checked) {
+            showAlert('⚠️ تحذير: تفعيل وضع الصيانة سيمنع الزوار من الوصول للموقع!', 'warning');
+        }
+    });
+}
+
+// ========================================
+// حفظ النموذج
+// ========================================
+document.getElementById('settingsForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    if (!this.checkValidity()) {
+        e.stopPropagation();
+        this.classList.add('was-validated');
+        showAlert('يرجى ملء جميع الحقول المطلوبة', 'danger');
+        return;
+    }
+    
+    showLoading();
+    
+    const formData = new FormData(this);
+    
+    fetch(window.location.href, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideLoading();
+        if (data.success) {
+            showAlert('✅ تم حفظ الإعدادات بنجاح', 'success');
+            // تحديث القيم في الصفحة بدون إعادة تحميل
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        } else {
+            showAlert('❌ فشل في حفظ الإعدادات: ' + (data.error || 'خطأ غير معروف'), 'danger');
+        }
+    })
+    .catch(err => {
+        hideLoading();
+        showAlert('حدث خطأ في الاتصال: ' + err.message, 'danger');
+        console.error('Error:', err);
+    });
+});
+
+// ========================================
+// تهيئة عند التحميل
+// ========================================
+document.addEventListener('DOMContentLoaded', function() {
+    // تفعيل tooltips
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+    
+    // حفظ التبويب النشط
+    const tabs = document.querySelectorAll('[data-bs-toggle="pill"]');
+    tabs.forEach(tab => {
+        tab.addEventListener('shown.bs.tab', function(e) {
+            localStorage.setItem('activeTab', e.target.getAttribute('data-bs-target'));
+        });
+    });
+    
+    // استعادة التبويب النشط
+    const activeTab = localStorage.getItem('activeTab');
+    if (activeTab) {
+        const tab = document.querySelector(`[data-bs-target="${activeTab}"]`);
+        if (tab) {
+            new bootstrap.Tab(tab).show();
+        }
+    }
+    
+    console.log('✅ تم تحميل صفحة الإعدادات بنجاح');
+});
+
+// ========================================
+// اختصارات لوحة المفاتيح
+// ========================================
+document.addEventListener('keydown', function(e) {
+    // Ctrl+S للحفظ
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        document.getElementById('settingsForm').dispatchEvent(new Event('submit', { cancelable: true }));
+    }
+});
+
+console.log('%c⚙️ صفحة الإعدادات جاهزة', 'color: #6B8E23; font-size: 16px; font-weight: bold;');
+</script>
+{% endblock %}

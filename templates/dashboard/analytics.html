@@ -1,0 +1,1376 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary: #667eea;
+        --success: #28a745;
+        --info: #17a2b8;
+        --warning: #ffc107;
+        --danger: #dc3545;
+        --secondary: #6c757d;
+    }
+
+    .page-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .page-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 300px;
+        height: 300px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%;
+        animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+    }
+
+    .stats-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        border-right: 4px solid var(--primary);
+        transition: all 0.3s ease;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stats-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    .stats-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+        transform: rotate(45deg);
+        transition: 0.5s;
+    }
+
+    .stats-card:hover::before {
+        left: 100%;
+    }
+
+    .stats-icon {
+        font-size: 2.5rem;
+        opacity: 0.8;
+        margin-bottom: 1rem;
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+
+    .stats-number {
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin: 0.5rem 0;
+        line-height: 1;
+    }
+
+    .stats-label {
+        color: #6c757d;
+        font-size: 0.95rem;
+        font-weight: 500;
+        margin-bottom: 1rem;
+    }
+
+    .mini-stat {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 8px;
+        padding: 0.75rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s ease;
+        border-left: 3px solid transparent;
+    }
+
+    .mini-stat:hover {
+        background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+        transform: translateX(-5px);
+        border-left-color: var(--primary);
+    }
+
+    .mini-stat-label {
+        font-size: 0.85rem;
+        color: #6c757d;
+        font-weight: 500;
+    }
+
+    .mini-stat-value {
+        font-weight: 700;
+        color: #2c3e50;
+        font-size: 1rem;
+    }
+
+    .chart-container {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        margin-bottom: 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .chart-container:hover {
+        box-shadow: 0 5px 20px rgba(0,0,0,0.12);
+    }
+
+    .chart-container canvas {
+        max-height: 280px !important;
+    }
+
+    .chart-container.large canvas {
+        max-height: 350px !important;
+    }
+
+    .chart-container.small canvas {
+        max-height: 250px !important;
+    }
+
+    .chart-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        color: #2c3e50;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    .chart-title i {
+        color: var(--primary);
+    }
+
+    .filter-section {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        margin-bottom: 2rem;
+    }
+
+    .financial-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+        margin-bottom: 1rem;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .financial-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(102, 126, 234, 0.4);
+    }
+
+    .financial-card::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -20%;
+        width: 200px;
+        height: 200px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%;
+        animation: float 8s ease-in-out infinite;
+    }
+
+    .financial-amount {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin: 0.5rem 0;
+    }
+
+    .financial-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+
+    .currency-toggle {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+
+    .currency-btn {
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,0.3);
+        background: rgba(255,255,255,0.1);
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.85rem;
+    }
+
+    .currency-btn.active {
+        background: white;
+        color: var(--primary);
+        transform: scale(1.05);
+    }
+
+    .currency-btn:hover {
+        background: rgba(255,255,255,0.2);
+    }
+
+    .progress-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .progress-card:hover {
+        box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+    }
+
+    .progress-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .progress-title {
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    .progress-percentage {
+        font-weight: 700;
+        font-size: 1.2rem;
+        color: var(--primary);
+    }
+
+    .progress {
+        height: 12px;
+        border-radius: 10px;
+        background: #e9ecef;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .progress-bar {
+        border-radius: 10px;
+        transition: width 1.5s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .progress-bar::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+
+    .overview-chart {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .overview-chart::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        opacity: 0.5;
+    }
+
+    @media (max-width: 768px) {
+        .stats-number {
+            font-size: 1.8rem;
+        }
+        
+        .financial-amount {
+            font-size: 1.5rem;
+        }
+        
+        .chart-container {
+            padding: 1rem;
+        }
+
+        .chart-container canvas {
+            max-height: 250px !important;
+        }
+        
+        .page-header {
+            padding: 1.5rem;
+        }
+        
+        .page-header h2 {
+            font-size: 1.5rem;
+        }
+
+        .overview-chart {
+            padding: 1.5rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .mini-stat {
+            font-size: 0.85rem;
+        }
+        
+        .stats-icon {
+            font-size: 2rem;
+        }
+        
+        .chart-title {
+            font-size: 1rem;
+        }
+
+        .financial-amount {
+            font-size: 1.3rem;
+        }
+    }
+
+    /* Loading Animation */
+    .chart-loading {
+        display: none;
+        text-align: center;
+        padding: 2rem;
+        color: var(--secondary);
+    }
+
+    .spinner-border {
+        width: 3rem;
+        height: 3rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    
+    <!-- Page Header -->
+    <div class="page-header">
+        <h2><i class="fas fa-chart-line me-2"></i>التحليلات والإحصائيات المتقدمة</h2>
+        <p class="mb-0 mt-2">نظرة شاملة على أداء النظام والمحتوى بشكل تفصيلي ودقيق</p>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="filter-section">
+        <form method="get" id="filterForm" class="row g-3 align-items-end">
+            <div class="col-lg-3 col-md-6">
+                <label class="form-label fw-bold"><i class="fas fa-calendar me-2"></i>الفترة الزمنية</label>
+                <select name="period" class="form-select" id="periodSelect">
+                    <option value="7" {% if selected_period == '7' %}selected{% endif %}>آخر 7 أيام</option>
+                    <option value="30" {% if selected_period == '30' %}selected{% endif %}>آخر 30 يوم</option>
+                    <option value="90" {% if selected_period == '90' %}selected{% endif %}>آخر 90 يوم</option>
+                    <option value="365" {% if selected_period == '365' %}selected{% endif %}>آخر سنة</option>
+                    <option value="custom" {% if selected_period == 'custom' %}selected{% endif %}>فترة مخصصة</option>
+                    <option value="all" {% if selected_period == 'all' %}selected{% endif %}>جميع الفترات</option>
+                </select>
+            </div>
+            <div class="col-lg-3 col-md-6" id="dateFromDiv" style="display: {% if selected_period == 'custom' %}block{% else %}none{% endif %};">
+                <label class="form-label fw-bold">من تاريخ</label>
+                <input type="date" name="date_from" class="form-control" value="{{ date_from }}">
+            </div>
+            <div class="col-lg-3 col-md-6" id="dateToDiv" style="display: {% if selected_period == 'custom' %}block{% else %}none{% endif %};">
+                <label class="form-label fw-bold">إلى تاريخ</label>
+                <input type="date" name="date_to" class="form-control" value="{{ date_to }}">
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-filter me-2"></i>تطبيق الفلتر
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Overview Chart -->
+    <div class="overview-chart">
+        <h4 class="text-center mb-4" style="color: #2c3e50; position: relative; z-index: 1;">
+            <i class="fas fa-globe me-2"></i>نظرة شاملة على الموقع
+        </h4>
+        <div style="max-width: 900px; margin: 0 auto; height: 320px; position: relative; z-index: 1;">
+            <canvas id="overviewChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Main Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+            <div class="stats-card" style="border-right-color: #667eea;">
+                <i class="fas fa-project-diagram stats-icon" style="color: #667eea;"></i>
+                <div class="stats-number" style="color: #667eea;">{{ projects_stats.total|intcomma }}</div>
+                <div class="stats-label">إجمالي المشاريع</div>
+                <div class="mini-stat">
+                    <span class="mini-stat-label"><i class="fas fa-circle text-success me-1"></i>نشط</span>
+                    <span class="mini-stat-value">{{ projects_stats.active }}</span>
+                </div>
+                <div class="mini-stat">
+                    <span class="mini-stat-label"><i class="fas fa-check-circle text-info me-1"></i>مكتمل</span>
+                    <span class="mini-stat-value">{{ projects_stats.completed }}</span>
+                </div>
+                <div class="mini-stat">
+                    <span class="mini-stat-label"><i class="fas fa-star text-warning me-1"></i>مميز</span>
+                    <span class="mini-stat-value">{{ projects_stats.featured }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+            <div class="stats-card" style="border-right-color: #28a745;">
+                <i class="fas fa-envelope stats-icon" style="color: #28a745;"></i>
+                <div class="stats-number" style="color: #28a745;">{{ messages_stats.total|intcomma }}</div>
+                <div class="stats-label">إجمالي الرسائل</div>
+                <div class="mini-stat">
+                    <span class="mini-stat-label"><i class="fas fa-bell text-warning me-1"></i>جديدة</span>
+                    <span class="mini-stat-value">{{ messages_stats.new }}</span>
+                </div>
+                <div class="mini-stat">
+                    <span class="mini-stat-label"><i class="fas fa-reply text-success me-1"></i>تم الرد</span>
+                    <span class="mini-stat-value">{{ messages_stats.replied }}</span>
+                </div>
+                <div class="mini-stat">
+                    <span class="mini-stat-label"><i class="fas fa-exclamation text-danger me-1"></i>عاجلة</span>
+                    <span class="mini-stat-value">{{ messages_stats.urgent }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+            <div class="stats-card" style="border-right-color: #17a2b8;">
+                <i class="fas fa-users stats-icon" style="color: #17a2b8;"></i>
+                <div class="stats-number" style="color: #17a2b8;">{{ users_stats.total|intcomma }}</div>
+                <div class="stats-label">إجمالي المستخدمين</div>
+                <div class="mini-stat">
+                    <span class="mini-stat-label"><i class="fas fa-user-check text-success me-1"></i>نشط</span>
+                    <span class="mini-stat-value">{{ users_stats.active }}</span>
+                </div>
+                <div class="mini-stat">
+                    <span class="mini-stat-label"><i class="fas fa-user-tie text-primary me-1"></i>موظف</span>
+                    <span class="mini-stat-value">{{ users_stats.staff }}</span>
+                </div>
+                <div class="mini-stat">
+                    <span class="mini-stat-label"><i class="fas fa-crown text-warning me-1"></i>مدير</span>
+                    <span class="mini-stat-value">{{ users_stats.superuser }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+            <div class="stats-card" style="border-right-color: #ffc107;">
+                <i class="fas fa-newspaper stats-icon" style="color: #ffc107;"></i>
+                <div class="stats-number" style="color: #ffc107;">{{ newsletter_stats.total|intcomma }}</div>
+                <div class="stats-label">الاشتراكات البريدية</div>
+                <div class="mini-stat">
+                    <span class="mini-stat-label"><i class="fas fa-toggle-on text-success me-1"></i>نشط</span>
+                    <span class="mini-stat-value">{{ newsletter_stats.active }}</span>
+                </div>
+                <div class="mini-stat">
+                    <span class="mini-stat-label"><i class="fas fa-check-double text-info me-1"></i>مؤكد</span>
+                    <span class="mini-stat-value">{{ newsletter_stats.confirmed }}</span>
+                </div>
+                <div class="mini-stat">
+                    <span class="mini-stat-label"><i class="fas fa-calendar-week text-primary me-1"></i>أسبوعي</span>
+                    <span class="mini-stat-value">{{ newsletter_stats.weekly }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Financial Stats -->
+    <div class="row mb-4">
+        <div class="col-lg-4 mb-3">
+            <div class="financial-card">
+                <i class="fas fa-hand-holding-usd fa-2x mb-2"></i>
+                <div class="financial-label">إجمالي التبرعات المجمعة</div>
+                <div class="financial-amount">
+                    <span class="amount-ils">{{ projects_stats.total_raised_amount|floatformat:0|intcomma }} ₪</span>
+                    <span class="amount-usd" style="display:none;">${{ projects_stats.total_raised_usd|floatformat:2|intcomma }}</span>
+                </div>
+                <div class="currency-toggle">
+                    <button class="currency-btn active" onclick="toggleCurrency('ils')">شيكل</button>
+                    <button class="currency-btn" onclick="toggleCurrency('usd')">دولار</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 mb-3">
+            <div class="financial-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                <i class="fas fa-bullseye fa-2x mb-2"></i>
+                <div class="financial-label">الهدف الإجمالي المطلوب</div>
+                <div class="financial-amount">
+                    <span class="amount-ils">{{ projects_stats.total_target_amount|floatformat:0|intcomma }} ₪</span>
+                    <span class="amount-usd" style="display:none;">${{ projects_stats.total_target_usd|floatformat:2|intcomma }}</span>
+                </div>
+                <div class="currency-toggle">
+                    <button class="currency-btn active" onclick="toggleCurrency('ils')">شيكل</button>
+                    <button class="currency-btn" onclick="toggleCurrency('usd')">دولار</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 mb-3">
+            <div class="financial-card" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                <i class="fas fa-coins fa-2x mb-2"></i>
+                <div class="financial-label">المبلغ المتبقي للوصول للهدف</div>
+                <div class="financial-amount">
+                    <span class="amount-ils">{{ projects_stats.total_remaining_amount|floatformat:0|intcomma }} ₪</span>
+                    <span class="amount-usd" style="display:none;">${{ projects_stats.total_remaining_usd|floatformat:2|intcomma }}</span>
+                </div>
+                <div class="currency-toggle">
+                    <button class="currency-btn active" onclick="toggleCurrency('ils')">شيكل</button>
+                    <button class="currency-btn" onclick="toggleCurrency('usd')">دولار</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Cards -->
+    <div class="row mb-4">
+        <div class="col-lg-6 mb-3">
+            <div class="progress-card">
+                <div class="progress-header">
+                    <span class="progress-title"><i class="fas fa-percentage me-2"></i>نسبة التمويل الإجمالية</span>
+                    <span class="progress-percentage">{{ projects_stats.funding_percentage }}%</span>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar bg-success" style="width: {{ projects_stats.funding_percentage }}%"></div>
+                </div>
+                <div class="mt-2 text-muted small">
+                    <i class="fas fa-info-circle me-1"></i>
+                    تم جمع {{ projects_stats.total_raised_amount|floatformat:0|intcomma }} من أصل {{ projects_stats.total_target_amount|floatformat:0|intcomma }} شيكل
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 mb-3">
+            <div class="progress-card">
+                <div class="progress-header">
+                    <span class="progress-title"><i class="fas fa-users me-2"></i>نسبة المستفيدين</span>
+                    <span class="progress-percentage" style="color: #17a2b8;">{{ projects_stats.beneficiaries_percentage }}%</span>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar bg-info" style="width: {{ projects_stats.beneficiaries_percentage }}%"></div>
+                </div>
+                <div class="mt-2 text-muted small">
+                    <i class="fas fa-info-circle me-1"></i>
+                    تم الوصول لـ {{ projects_stats.total_beneficiaries|intcomma }} من أصل {{ projects_stats.target_beneficiaries|intcomma }} مستفيد
+                    (المتبقي: {{ projects_stats.remaining_beneficiaries|intcomma }})
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Timeline Charts -->
+    <div class="row mb-4">
+        <div class="col-lg-6 mb-3">
+            <div class="chart-container">
+                <h5 class="chart-title"><i class="fas fa-chart-line"></i>المشاريع عبر الزمن</h5>
+                <canvas id="projectsTimelineChart"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-3">
+            <div class="chart-container">
+                <h5 class="chart-title"><i class="fas fa-chart-line"></i>الرسائل عبر الزمن</h5>
+                <canvas id="messagesTimelineChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-lg-6 mb-3">
+            <div class="chart-container">
+                <h5 class="chart-title"><i class="fas fa-chart-line"></i>المستخدمين عبر الزمن</h5>
+                <canvas id="usersTimelineChart"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-3">
+            <div class="chart-container">
+                <h5 class="chart-title"><i class="fas fa-chart-line"></i>النشاط عبر الزمن</h5>
+                <canvas id="activityTimelineChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Distribution Charts -->
+    <div class="row mb-4">
+        <div class="col-lg-4 col-md-6 mb-3">
+            <div class="chart-container small">
+                <h5 class="chart-title"><i class="fas fa-chart-pie"></i>المشاريع حسب الحالة</h5>
+                <canvas id="projectsStatusChart"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-3">
+            <div class="chart-container small">
+                <h5 class="chart-title"><i class="fas fa-chart-pie"></i>الرسائل حسب الحالة</h5>
+                <canvas id="messagesStatusChart"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-3">
+            <div class="chart-container small">
+                <h5 class="chart-title"><i class="fas fa-chart-pie"></i>الرسائل حسب الأولوية</h5>
+                <canvas id="messagesPriorityChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activity Charts -->
+    <div class="row mb-4">
+        <div class="col-lg-6 mb-3">
+            <div class="chart-container">
+                <h5 class="chart-title"><i class="fas fa-chart-bar"></i>النشاط حسب النوع</h5>
+                <canvas id="activityActionChart"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-3">
+            <div class="chart-container">
+                <h5 class="chart-title"><i class="fas fa-clock"></i>النشاط حسب الساعة (اليوم)</h5>
+                <canvas id="activityHourChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Categories Chart -->
+    <div class="row mb-4">
+        <div class="col-lg-12 mb-3">
+            <div class="chart-container">
+                <h5 class="chart-title"><i class="fas fa-chart-bar"></i>أفضل 10 تصنيفات للمشاريع</h5>
+                <canvas id="categoriesChart" style="max-height: 320px !important;"></canvas>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+<script>
+    // ========================================
+    // تهيئة الفلتر
+    // ========================================
+    document.getElementById('periodSelect').addEventListener('change', function() {
+        const isCustom = this.value === 'custom';
+        document.getElementById('dateFromDiv').style.display = isCustom ? 'block' : 'none';
+        document.getElementById('dateToDiv').style.display = isCustom ? 'block' : 'none';
+    });
+
+    // ========================================
+    // تبديل العملة
+    // ========================================
+    function toggleCurrency(currency) {
+        const allBtns = document.querySelectorAll('.currency-btn');
+        allBtns.forEach(btn => btn.classList.remove('active'));
+        
+        const clickedBtns = document.querySelectorAll(`.currency-btn`);
+        clickedBtns.forEach(btn => {
+            if ((currency === 'ils' && btn.textContent === 'شيكل') || 
+                (currency === 'usd' && btn.textContent === 'دولار')) {
+                btn.classList.add('active');
+            }
+        });
+
+        if (currency === 'ils') {
+            document.querySelectorAll('.amount-ils').forEach(el => {
+                el.style.display = 'inline';
+                el.style.animation = 'fadeIn 0.3s ease';
+            });
+            document.querySelectorAll('.amount-usd').forEach(el => el.style.display = 'none');
+        } else {
+            document.querySelectorAll('.amount-ils').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.amount-usd').forEach(el => {
+                el.style.display = 'inline';
+                el.style.animation = 'fadeIn 0.3s ease';
+            });
+        }
+    }
+
+    // ========================================
+    // ألوان المخططات
+    // ========================================
+    const colors = {
+        primary: '#667eea',
+        success: '#28a745',
+        info: '#17a2b8',
+        warning: '#ffc107',
+        danger: '#dc3545',
+        secondary: '#6c757d',
+        purple: '#764ba2',
+        pink: '#f093fb'
+    };
+
+    // ========================================
+    // تحليل البيانات من Backend
+    // ========================================
+    let overviewData, projectsTimeline, messagesTimeline, usersTimeline, activityTimeline;
+    let projectsByStatus, messagesByStatus, messagesByPriority;
+    let activityByAction, activityByHour, categoriesData;
+
+    try {
+        overviewData = JSON.parse('{{ overview_data|safe }}');
+        projectsTimeline = JSON.parse('{{ projects_timeline|safe }}');
+        messagesTimeline = JSON.parse('{{ messages_timeline|safe }}');
+        usersTimeline = JSON.parse('{{ users_timeline|safe }}');
+        activityTimeline = JSON.parse('{{ activity_timeline|safe }}');
+        projectsByStatus = JSON.parse('{{ projects_by_status|safe }}');
+        messagesByStatus = JSON.parse('{{ messages_by_status|safe }}');
+        messagesByPriority = JSON.parse('{{ messages_by_priority|safe }}');
+        activityByAction = JSON.parse('{{ activity_by_action|safe }}');
+        activityByHour = JSON.parse('{{ activity_by_hour|safe }}');
+        categoriesData = JSON.parse('{{ categories_stats_data|safe }}');
+
+        // طباعة البيانات في Console للتأكد
+        console.log('📊 Data loaded successfully:');
+        console.log('Projects Timeline:', projectsTimeline);
+        console.log('Messages Timeline:', messagesTimeline);
+        console.log('Users Timeline:', usersTimeline);
+        console.log('Activity Timeline:', activityTimeline);
+    } catch (e) {
+        console.error('❌ Error parsing data:', e);
+        // استخدام بيانات فارغة في حالة الفشل
+        overviewData = {labels: [], data: []};
+        projectsTimeline = [];
+        messagesTimeline = [];
+        usersTimeline = [];
+        activityTimeline = [];
+        projectsByStatus = [];
+        messagesByStatus = [];
+        messagesByPriority = [];
+        activityByAction = [];
+        activityByHour = [];
+        categoriesData = [];
+    }
+
+    // التحقق من البيانات الفارغة وإضافة قيم افتراضية
+    if (projectsTimeline.length === 0) {
+        projectsTimeline = [{date: 'لا توجد بيانات', count: 0}];
+    }
+    if (messagesTimeline.length === 0) {
+        messagesTimeline = [{date: 'لا توجد بيانات', count: 0}];
+    }
+    if (usersTimeline.length === 0) {
+        usersTimeline = [{date: 'لا توجد بيانات', count: 0}];
+    }
+    if (activityTimeline.length === 0) {
+        activityTimeline = [{date: 'لا توجد بيانات', count: 0}];
+    }
+
+    // ========================================
+    // إعدادات Chart.js الافتراضية
+    // ========================================
+    Chart.defaults.font.family = 'Cairo, Segoe UI, Tahoma, sans-serif';
+    Chart.defaults.font.size = 12;
+    Chart.defaults.color = '#666';
+    Chart.defaults.plugins.tooltip.rtl = true;
+    Chart.defaults.plugins.tooltip.textDirection = 'rtl';
+
+    // ========================================
+    // خيارات المخططات المشتركة
+    // ========================================
+    const commonOptions = {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'bottom',
+                rtl: true,
+                labels: {
+                    padding: 15,
+                    usePointStyle: true,
+                    font: { size: 11, family: 'Cairo' },
+                    textAlign: 'right'
+                }
+            },
+            tooltip: {
+                backgroundColor: 'rgba(0,0,0,0.85)',
+                padding: 14,
+                titleFont: { size: 14, weight: 'bold', family: 'Cairo' },
+                bodyFont: { size: 13, family: 'Cairo' },
+                cornerRadius: 8,
+                displayColors: true,
+                rtl: true,
+                textDirection: 'rtl'
+            }
+        }
+    };
+
+    // ========================================
+    // مخطط النظرة الشاملة
+    // ========================================
+    if (overviewData.labels && overviewData.labels.length > 0) {
+        new Chart(document.getElementById('overviewChart'), {
+            type: 'bar',
+            data: {
+                labels: overviewData.labels,
+                datasets: [{
+                    label: 'العدد',
+                    data: overviewData.data,
+                    backgroundColor: [
+                        colors.primary,
+                        colors.success,
+                        colors.info,
+                        colors.warning,
+                        colors.danger,
+                        colors.secondary
+                    ],
+                    borderRadius: 8,
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                ...commonOptions,
+                plugins: {
+                    ...commonOptions.plugins,
+                    legend: { display: false },
+                    tooltip: {
+                        ...commonOptions.plugins.tooltip,
+                        callbacks: {
+                            label: function(context) {
+                                return 'العدد: ' + context.parsed.y.toLocaleString('ar-EG');
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { 
+                            precision: 0,
+                            callback: function(value) {
+                                return value.toLocaleString('ar-EG');
+                            }
+                        },
+                        grid: { color: 'rgba(0,0,0,0.05)' },
+                        title: {
+                            display: true,
+                            text: 'العدد',
+                            font: { size: 12, weight: 'bold', family: 'Cairo' }
+                        }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: {
+                            font: { family: 'Cairo' }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // ========================================
+    // خيارات مخططات الخطوط الزمنية
+    // ========================================
+    const timelineOptions = {
+        ...commonOptions,
+        plugins: {
+            ...commonOptions.plugins,
+            legend: { display: false },
+            tooltip: {
+                ...commonOptions.plugins.tooltip,
+                callbacks: {
+                    title: function(context) {
+                        return 'الشهر: ' + context[0].label;
+                    },
+                    label: function(context) {
+                        return 'العدد: ' + context.parsed.y.toLocaleString('ar-EG');
+                    }
+                }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: { 
+                    precision: 0,
+                    callback: function(value) {
+                        return value.toLocaleString('ar-EG');
+                    }
+                },
+                grid: { color: 'rgba(0,0,0,0.05)' },
+                title: {
+                    display: true,
+                    text: 'العدد',
+                    font: { size: 12, weight: 'bold', family: 'Cairo' }
+                }
+            },
+            x: {
+                grid: { display: false },
+                ticks: {
+                    maxRotation: 45,
+                    minRotation: 45,
+                    autoSkip: false,
+                    font: { size: 11, family: 'Cairo' }
+                },
+                title: {
+                    display: true,
+                    text: 'الشهر',
+                    font: { size: 12, weight: 'bold', family: 'Cairo' }
+                }
+            }
+        }
+    };
+
+    // ========================================
+    // مخططات المشاريع عبر الزمن
+    // ========================================
+    new Chart(document.getElementById('projectsTimelineChart'), {
+        type: 'line',
+        data: {
+            labels: projectsTimeline.map(d => d.date || 'N/A'),
+            datasets: [{
+                label: 'المشاريع',
+                data: projectsTimeline.map(d => d.count || 0),
+                borderColor: colors.primary,
+                backgroundColor: colors.primary + '30',
+                fill: true,
+                tension: 0.4,
+                pointRadius: 4,
+                pointHoverRadius: 7,
+                pointBackgroundColor: colors.primary,
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                borderWidth: 3
+            }]
+        },
+        options: timelineOptions
+    });
+
+    // ========================================
+    // مخططات الرسائل عبر الزمن
+    // ========================================
+    new Chart(document.getElementById('messagesTimelineChart'), {
+        type: 'line',
+        data: {
+            labels: messagesTimeline.map(d => d.date || 'N/A'),
+            datasets: [{
+                label: 'الرسائل',
+                data: messagesTimeline.map(d => d.count || 0),
+                borderColor: colors.success,
+                backgroundColor: colors.success + '30',
+                fill: true,
+                tension: 0.4,
+                pointRadius: 4,
+                pointHoverRadius: 7,
+                pointBackgroundColor: colors.success,
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                borderWidth: 3
+            }]
+        },
+        options: timelineOptions
+    });
+
+    // ========================================
+    // مخططات المستخدمين عبر الزمن
+    // ========================================
+    new Chart(document.getElementById('usersTimelineChart'), {
+        type: 'line',
+        data: {
+            labels: usersTimeline.map(d => d.date || 'N/A'),
+            datasets: [{
+                label: 'المستخدمين',
+                data: usersTimeline.map(d => d.count || 0),
+                borderColor: colors.info,
+                backgroundColor: colors.info + '30',
+                fill: true,
+                tension: 0.4,
+                pointRadius: 4,
+                pointHoverRadius: 7,
+                pointBackgroundColor: colors.info,
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                borderWidth: 3
+            }]
+        },
+        options: timelineOptions
+    });
+
+    // ========================================
+    // مخططات النشاط عبر الزمن
+    // ========================================
+    new Chart(document.getElementById('activityTimelineChart'), {
+        type: 'line',
+        data: {
+            labels: activityTimeline.map(d => d.date || 'N/A'),
+            datasets: [{
+                label: 'النشاطات',
+                data: activityTimeline.map(d => d.count || 0),
+                borderColor: colors.warning,
+                backgroundColor: colors.warning + '30',
+                fill: true,
+                tension: 0.4,
+                pointRadius: 4,
+                pointHoverRadius: 7,
+                pointBackgroundColor: colors.warning,
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                borderWidth: 3
+            }]
+        },
+        options: timelineOptions
+    });
+
+    // ========================================
+    // خيارات المخططات الدائرية
+    // ========================================
+    const pieOptions = {
+        ...commonOptions,
+        plugins: {
+            ...commonOptions.plugins,
+            legend: {
+                ...commonOptions.plugins.legend,
+                position: 'right',
+                rtl: true
+            },
+            tooltip: {
+                ...commonOptions.plugins.tooltip,
+                callbacks: {
+                    label: function(context) {
+                        const label = context.label || '';
+                        const value = context.parsed || 0;
+                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                        const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                        return label + ': ' + value.toLocaleString('ar-EG') + ' (' + percentage + '%)';
+                    }
+                }
+            }
+        }
+    };
+
+    // ========================================
+    // مخطط المشاريع حسب الحالة
+    // ========================================
+    if (projectsByStatus.length > 0) {
+        new Chart(document.getElementById('projectsStatusChart'), {
+            type: 'doughnut',
+            data: {
+                labels: projectsByStatus.map(d => d.status_ar || d.status),
+                datasets: [{
+                    data: projectsByStatus.map(d => d.count || 0),
+                    backgroundColor: [colors.primary, colors.success, colors.info, colors.warning, colors.danger],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: pieOptions
+        });
+    }
+
+    // ========================================
+    // مخطط الرسائل حسب الحالة
+    // ========================================
+    if (messagesByStatus.length > 0) {
+        new Chart(document.getElementById('messagesStatusChart'), {
+            type: 'doughnut',
+            data: {
+                labels: messagesByStatus.map(d => d.status_ar || d.status),
+                datasets: [{
+                    data: messagesByStatus.map(d => d.count || 0),
+                    backgroundColor: [colors.warning, colors.info, colors.success, colors.secondary],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: pieOptions
+        });
+    }
+
+    // ========================================
+    // مخطط الرسائل حسب الأولوية
+    // ========================================
+    if (messagesByPriority.length > 0) {
+        new Chart(document.getElementById('messagesPriorityChart'), {
+            type: 'doughnut',
+            data: {
+                labels: messagesByPriority.map(d => d.priority_ar || d.priority),
+                datasets: [{
+                    data: messagesByPriority.map(d => d.count || 0),
+                    backgroundColor: [colors.secondary, colors.info, colors.warning, colors.danger],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: pieOptions
+        });
+    }
+
+    // ========================================
+    // خيارات المخططات الشريطية
+    // ========================================
+    const barOptions = {
+        ...commonOptions,
+        plugins: {
+            ...commonOptions.plugins,
+            legend: { display: false },
+            tooltip: {
+                ...commonOptions.plugins.tooltip,
+                callbacks: {
+                    label: function(context) {
+                        return 'العدد: ' + context.parsed.y.toLocaleString('ar-EG');
+                    }
+                }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: { 
+                    precision: 0,
+                    callback: function(value) {
+                        return value.toLocaleString('ar-EG');
+                    }
+                },
+                grid: { color: 'rgba(0,0,0,0.05)' },
+                title: {
+                    display: true,
+                    text: 'العدد',
+                    font: { size: 12, weight: 'bold', family: 'Cairo' }
+                }
+            },
+            x: {
+                grid: { display: false },
+                ticks: {
+                    font: { family: 'Cairo' }
+                }
+            }
+        }
+    };
+
+    // ========================================
+    // مخطط النشاط حسب النوع
+    // ========================================
+    if (activityByAction.length > 0) {
+        new Chart(document.getElementById('activityActionChart'), {
+            type: 'bar',
+            data: {
+                labels: activityByAction.map(d => d.action_ar || d.action),
+                datasets: [{
+                    label: 'النشاطات',
+                    data: activityByAction.map(d => d.count || 0),
+                    backgroundColor: colors.primary,
+                    borderRadius: 6,
+                    borderWidth: 0
+                }]
+            },
+            options: barOptions
+        });
+    }
+// ========================================
+// مخطط النشاط حسب الساعة
+// ========================================
+console.log('🔍 Activity by Hour Data:', activityByHour);
+
+if (activityByHour && activityByHour.length > 0) {
+    // التأكد من أن جميع القيم صحيحة
+    const validHours = activityByHour.filter(item => item.hour !== null && item.hour !== undefined);
+    
+    console.log('✅ Valid hours:', validHours.length);
+    
+    // إذا لم تكن هناك ساعات صحيحة، أنشئ 24 ساعة افتراضية
+    let hourData = validHours.length > 0 ? validHours : [];
+    
+    // إذا كانت البيانات أقل من 24 ساعة، أكمل الباقي
+    if (hourData.length < 24) {
+        const existingHours = new Set(hourData.map(item => item.hour));
+        for (let hour = 0; hour < 24; hour++) {
+            if (!existingHours.has(hour)) {
+                hourData.push({ hour: hour, count: 0 });
+            }
+        }
+        // ترتيب حسب الساعة
+        hourData.sort((a, b) => a.hour - b.hour);
+    }
+    
+    console.log('📊 Final hour data:', hourData.slice(0, 5)); // أول 5 ساعات
+    
+    new Chart(document.getElementById('activityHourChart'), {
+        type: 'bar',
+        data: {
+            labels: hourData.map(d => {
+                const hour = d.hour !== null && d.hour !== undefined ? d.hour : 0;
+                return hour.toString().padStart(2, '0') + ':00';
+            }),
+            datasets: [{
+                label: 'النشاطات',
+                data: hourData.map(d => d.count || 0),
+                backgroundColor: colors.warning,
+                borderRadius: 6,
+                borderWidth: 0,
+                hoverBackgroundColor: colors.danger
+            }]
+        },
+        options: {
+            ...barOptions,
+            plugins: {
+                ...barOptions.plugins,
+                tooltip: {
+                    ...barOptions.plugins.tooltip,
+                    callbacks: {
+                        title: function(context) {
+                            return 'الساعة: ' + context[0].label;
+                        },
+                        label: function(context) {
+                            return 'النشاطات: ' + context.parsed.y.toLocaleString('ar-EG');
+                        }
+                    }
+                }
+            },
+            scales: {
+                ...barOptions.scales,
+                x: {
+                    ...barOptions.scales.x,
+                    ticks: {
+                        ...barOptions.scales.x.ticks,
+                        maxRotation: 45,
+                        minRotation: 0,
+                        autoSkip: true,
+                        maxTicksLimit: 12
+                    }
+                }
+            }
+        }
+    });
+    
+    console.log('✅ Activity Hour Chart created successfully!');
+} else {
+    console.warn('⚠️ No activity by hour data available');
+    
+    // إنشاء مخطط فارغ مع 24 ساعة
+    const emptyHours = Array.from({length: 24}, (_, i) => ({hour: i, count: 0}));
+    
+    new Chart(document.getElementById('activityHourChart'), {
+        type: 'bar',
+        data: {
+            labels: emptyHours.map(d => d.hour.toString().padStart(2, '0') + ':00'),
+            datasets: [{
+                label: 'النشاطات',
+                data: emptyHours.map(d => 0),
+                backgroundColor: colors.secondary,
+                borderRadius: 6,
+                borderWidth: 0
+            }]
+        },
+        options: barOptions
+    });
+}
+    // ========================================
+    // مخطط التصنيفات
+    // ========================================
+    if (categoriesData.length > 0) {
+        new Chart(document.getElementById('categoriesChart'), {
+            type: 'bar',
+            data: {
+                labels: categoriesData.map(d => d.name_ar || 'N/A'),
+                datasets: [{
+                    label: 'عدد المشاريع',
+                    data: categoriesData.map(d => d.project_count || 0),
+                    backgroundColor: colors.success,
+                    borderRadius: 6,
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                ...barOptions,
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        ticks: { 
+                            precision: 0,
+                            callback: function(value) {
+                                return value.toLocaleString('ar-EG');
+                            }
+                        },
+                        grid: { color: 'rgba(0,0,0,0.05)' },
+                        title: {
+                            display: true,
+                            text: 'عدد المشاريع',
+                            font: { size: 12, weight: 'bold', family: 'Cairo' }
+                        }
+                    },
+                    y: {
+                        grid: { display: false },
+                        ticks: {
+                            font: { family: 'Cairo' }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // ========================================
+    // تحريك أشرطة التقدم عند التحميل
+    // ========================================
+    window.addEventListener('load', function() {
+        setTimeout(() => {
+            document.querySelectorAll('.progress-bar').forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = '0%';
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 100);
+            });
+        }, 300);
+    });
+
+    // ========================================
+    // رسالة النجاح
+    // ========================================
+    console.log('✅ All charts initialized successfully!');
+    console.log('📊 Total charts created: 11');
+    console.log('🎨 Theme: Professional Analytics Dashboard');
+</script>
+
+
+{% endblock %}

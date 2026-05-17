@@ -1,0 +1,229 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load custom_filters %}
+{% block title %}{% trans "أهداف الجمعية" %} - {{ site_settings|translate_field:"site_name" }}{% endblock %}
+{% block description %}{% trans "تعرف على أهداف جمعية نسائم فلسطين الخيرية ورؤيتها في خدمة المجتمع الفلسطيني" %}{% endblock %}
+
+{% block extra_css %}
+<style>
+
+/* ══ Hero ══ */
+.goals-hero {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: white;
+    padding: 100px 0 50px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* ══ Goal Card ══ */
+.goal-card {
+    background: white;
+    border-radius: 20px;
+    padding: 40px 30px;
+    text-align: center;   /* للأيقونة والعنوان فقط */
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    transition: all 0.4s ease;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    border: 3px solid transparent;
+}
+
+.goal-card:hover {
+    transform: translateY(-15px);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+    border-color: var(--secondary-color);
+}
+
+/* ══ Icon ══ */
+.goal-icon {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+    color: white;
+    font-size: 2.5rem;
+    transition: all 0.3s ease;
+}
+
+.goal-card:hover .goal-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+/* ══ Title ══ */
+.goal-card h4 {
+    color: var(--primary-color);
+    font-weight: 700;
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+    text-align: center;
+}
+
+/* ══ Paragraph — الإصلاح الرئيسي ══
+   نلغي text-align:center الموروث من .goal-card
+   ونجبر النص على البدء من اليمين بشكل متساوٍ
+══ */
+.goal-card p {
+    color: #666;
+    line-height: 1.9;
+    font-size: 1rem;
+    direction: rtl;
+    text-align: right;      /* بداية موحدة من اليمين */
+    display: block;
+    width: 100%;
+    margin: 0 auto;
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+/* ══ Floating Shapes ══ */
+.floating-shape {
+    position: absolute;
+    opacity: 0.1;
+    color: white;
+    animation: float 8s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50%       { transform: translateY(-30px) rotate(180deg); }
+}
+
+</style>
+{% endblock %}
+{% block content %}
+<!-- Hero Section -->
+<section class="goals-hero text-center">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-4" data-aos="fade-up">{% trans "أهداف الجمعية" %}</h1>
+        <p class="lead mb-0" data-aos="fade-up" data-aos-delay="200">
+            {% trans "نسعى لتحقيق هذه الأهداف النبيلة في خدمة مجتمعنا الفلسطيني العزيز" %}
+        </p>
+        <!-- Floating Shapes -->
+        <div class="floating-shape" style="top: 20%; left: 10%; font-size: 4rem;">
+            <i class="fas fa-bullseye"></i>
+        </div>
+        <div class="floating-shape" style="top: 30%; right: 15%; font-size: 3rem;">
+            <i class="fas fa-heart"></i>
+        </div>
+        <div class="floating-shape" style="bottom: 20%; left: 20%; font-size: 3.5rem;">
+            <i class="fas fa-hands-helping"></i>
+        </div>
+    </div>
+</section>
+
+<!-- Goals Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            {% for goal in goals %}
+            <div class="col-lg-4 col-md-6 mb-4" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0|mul:100 }}">
+                <div class="goal-card">
+                    <div class="goal-icon">
+                        <i class="{{ goal.icon }}"></i>
+                    </div>
+                    <h4>{{ goal|translate_field:"title" }}</h4>
+                    <p>{{ goal|translate_field:"description"|default:_("هدف مهم من أهداف الجمعية في خدمة المجتمع وتحقيق التنمية المستدامة.") }}</p>
+                </div>
+            </div>
+            {% empty %}
+            <!-- Default Goals if none in database -->
+            <div class="col-lg-4 col-md-6 mb-4" data-aos="zoom-in">
+                <div class="goal-card">
+                    <div class="goal-icon">
+                        <i class="fas fa-mosque"></i>
+                    </div>
+                    <h4>{% trans "تعزيز الانتماء للدين" %}</h4>
+                    <p>{% trans "ترسيخ القيم والمبادئ الإسلامية في نفوس أبناء المجتمع" %}</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4" data-aos="zoom-in" data-aos-delay="100">
+                <div class="goal-card">
+                    <div class="goal-icon">
+                        <i class="fas fa-hands-helping"></i>
+                    </div>
+                    <h4>{% trans "دعم الفقراء والمحتاجين" %}</h4>
+                    <p>{% trans "مساعدة الأسر الفقيرة وذوي الاحتياجات الخاصة في المجتمع" %}</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4" data-aos="zoom-in" data-aos-delay="200">
+                <div class="goal-card">
+                    <div class="goal-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h4>{% trans "مساعدة الطلبة المحتاجين" %}</h4>
+                    <p>{% trans "دعم الطلبة المحتاجين في تسديد الرسوم الجامعية" %}</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4" data-aos="zoom-in" data-aos-delay="300">
+                <div class="goal-card">
+                    <div class="goal-icon">
+                        <i class="fas fa-hammer"></i>
+                    </div>
+                    <h4>{% trans "رعاية العامل الفلسطيني" %}</h4>
+                    <p>{% trans "توفير المساعدات والإغاثات للعمال وأسرهم" %}</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4" data-aos="zoom-in" data-aos-delay="400">
+                <div class="goal-card">
+                    <div class="goal-icon">
+                        <i class="fas fa-child"></i>
+                    </div>
+                    <h4>{% trans "كفالة الأيتام" %}</h4>
+                    <p>{% trans "توفير كفالات الأيتام حسب الإمكانيات المتاحة" %}</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4" data-aos="zoom-in" data-aos-delay="500">
+                <div class="goal-card">
+                    <div class="goal-icon">
+                        <i class="fas fa-quran"></i>
+                    </div>
+                    <h4>{% trans "رعاية مراكز تحفيظ القرآن" %}</h4>
+                    <p>{% trans "دعم مراكز تحفيظ القرآن الكريم ونشر التعليم الديني" %}</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4" data-aos="zoom-in" data-aos-delay="600">
+                <div class="goal-card">
+                    <div class="goal-icon">
+                        <i class="fas fa-mosque"></i>
+                    </div>
+                    <h4>{% trans "رعاية المشاريع الخيرية" %}</h4>
+                    <p>{% trans "دعم المشاريع الخيرية وبناء المساجد" %}</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4" data-aos="zoom-in" data-aos-delay="700">
+                <div class="goal-card">
+                    <div class="goal-icon">
+                        <i class="fas fa-female"></i>
+                    </div>
+                    <h4>{% trans "تنشيط دور المرأة" %}</h4>
+                    <p>{% trans "تنشيط دور المرأة في المجتمع الفلسطيني وتطوير قدراتها" %}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5" style="background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); color: white;">
+    <div class="container text-center" data-aos="fade-up">
+        <h2 class="display-5 fw-bold mb-3">{% trans "ساعدنا في تحقيق أهدافنا" %}</h2>
+        <p class="lead mb-4">{% trans "كن شريكاً في تحقيق هذه الأهداف النبيلة" %}</p>
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a href="{% url 'contact:contact' %}" class="btn btn-warning btn-lg">
+                <i class="fas fa-phone me-2"></i>{% trans "تواصل معنا" %}
+            </a>
+            <a href="{% url 'projects:all_projects' %}" class="btn btn-outline-light btn-lg">
+                <i class="fas fa-project-diagram me-2"></i>{% trans "مشاريعنا" %}
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

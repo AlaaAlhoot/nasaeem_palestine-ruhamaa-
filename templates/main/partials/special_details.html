@@ -1,0 +1,372 @@
+{% load static %}
+{% load i18n %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    /* الأسماء العربية */
+    [
+        ['special_guardian_first_name',  '{% trans "اسم المعيل" %}'],
+        ['special_guardian_father_name', '{% trans "اسم أب المعيل" %}'],
+        ['special_guardian_grand_name',  '{% trans "اسم جد المعيل" %}'],
+        ['special_guardian_family_name', '{% trans "لقب المعيل" %}'],
+    ].forEach(([id, lbl]) => bindArabicField(id, 'err_' + id, lbl));
+
+    /* تواريخ الميلاد */
+    ['special_birth_date'].forEach(id => bindDateField(id, 'err_' + id));
+
+    /* الأرقام */
+    bindNumberField('special_monthly_rent',            '',                                   '{% trans "مبلغ الإيجار" %}',  0);
+    bindNumberField('special_guardian_monthly_income', 'err_special_guardian_monthly_income','{% trans "الدخل الشهري" %}', 0);
+    bindNumberField('special_guardian_dependents',     'err_special_guardian_dependents',    '{% trans "عدد المُعالين" %}', 1);
+
+    /* رقم هوية المعيل مع تحقق API */
+    bindIdField('special_guardian_id_number', 'err_special_guardian_id_number');
+});
+</script>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     بيانات المريض
+══════════════════════════════════════════════════════════ -->
+<div class="sec-title mb-3"><span>♿</span> {% trans "بيانات المريض" %}</div>
+<div class="row g-3 mb-4">
+
+    <div class="col-md-4">
+        <label class="form-label">{% trans "تاريخ الميلاد" %} <span class="req">*</span></label>
+        <input type="date" id="special_birth_date" class="form-control" max="">
+        <div class="field-err" id="err_special_birth_date"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">{% trans "الحالة الصحية" %} <span class="req">*</span></label>
+        <select id="special_health_status" class="form-select form-control">
+            <option value="">{% trans "-- اختر --" %}</option>
+            <option>{% trans "سليم" %}</option>
+            <option>{% trans "مرض مزمن" %}</option>
+            <option>{% trans "ذوو احتياجات خاصة" %}</option>
+            <option>{% trans "مصاب حرب" %}</option>
+        </select>
+        <div class="field-err" id="err_special_health_status"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">{% trans "المستوى التعليمي" %} <span class="req">*</span></label>
+        <select id="special_education_level" class="form-select form-control"
+                onchange="updateGrade('special_education_level','special_school_grade','special_grade_wrap')">
+            <option value="">{% trans "-- اختر --" %}</option>
+            <option>{% trans "غير متعلم" %}</option>
+            <option>{% trans "رياض الأطفال" %}</option>
+            <option>{% trans "ابتدائي" %}</option>
+            <option>{% trans "إعدادي" %}</option>
+            <option>{% trans "ثانوي" %}</option>
+            <option>{% trans "جامعي" %}</option>
+        </select>
+        <div class="field-err" id="err_special_education_level"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-4 d-none" id="special_grade_wrap">
+        <label class="form-label">{% trans "الصف الدراسي" %} <span class="req">*</span></label>
+        <select id="special_school_grade" class="form-select form-control">
+            <option value="">{% trans "-- اختر --" %}</option>
+        </select>
+        <div class="field-err" id="err_special_school_grade"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">{% trans "اسم المدرسة" %} <span class="opt">({% trans "اختياري" %})</span></label>
+        <input type="text" id="special_school_name" class="form-control" placeholder="{% trans 'اسم المدرسة' %}">
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">{% trans "صورة المريض" %} <span class="req">*</span></label>
+        <div class="photo-box" id="special_photo_box"
+             onclick="document.getElementById('special_photo').click()">
+            <input type="file" id="special_photo" accept=".jpg,.jpeg,.png"
+                   onchange="previewPhoto(this,'specialPhotoPreview','specialPhotoHolder','special_photo_box')"
+                   onclick="event.stopPropagation()">
+            <img loading="lazy" id="specialPhotoPreview" class="photo-preview" src="" alt="">
+            <div id="specialPhotoHolder">
+                <div style="font-size:1.8rem;margin-bottom:4px">📷</div>
+                <div class="file-box-text">{% trans "اضغط لرفع صورة المريض" %}<br><small>{% trans "JPG • PNG — 4MB" %}</small></div>
+            </div>
+        </div>
+        <div class="field-err" id="err_special_photo"><span>⚠️</span><span></span></div>
+    </div>
+
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     العنوان الحالي
+══════════════════════════════════════════════════════════ -->
+<div class="sec-title mb-3"><span>📍</span> {% trans "العنوان الحالي" %}</div>
+<div class="row g-3 mb-3">
+
+    <div class="col-md-4">
+        <label class="form-label">{% trans "المدينة" %} <span class="req">*</span></label>
+        <select id="special_current_city" class="form-select form-control">
+            <option value="">{% trans "-- اختر --" %}</option>
+            <option>{% trans "رفح" %}</option>
+            <option>{% trans "خانيونس" %}</option>
+            <option>{% trans "القرارة" %}</option>
+            <option>{% trans "دير البلح" %}</option>
+            <option>{% trans "الزوايدة" %}</option>
+            <option>{% trans "النصيرات" %}</option>
+            <option>{% trans "المغازي" %}</option>
+            <option>{% trans "البريج" %}</option>
+            <option>{% trans "مدينة غزة" %}</option>
+            <option>{% trans "شمال غزة" %}</option>
+            <option>{% trans "شرق غزة" %}</option>
+            <option>{% trans "غرب غزة" %}</option>
+            <option>{% trans "غير محدد" %}</option>
+        </select>
+        <div class="field-err" id="err_special_current_city"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">{% trans "الشارع" %} <span class="req">*</span></label>
+        <input type="text" id="special_current_street" class="form-control"
+               placeholder="{% trans 'اسم الشارع' %}" data-type="address">
+        <div class="field-err" id="err_special_current_street"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">{% trans "أقرب معلم/مسجد" %} <span class="req">*</span></label>
+        <input type="text" id="special_current_landmark" class="form-control"
+               placeholder="{% trans 'أقرب معلم أو مسجد' %}" data-type="address">
+        <div class="field-err" id="err_special_current_landmark"><span>⚠️</span><span></span></div>
+    </div>
+
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     العنوان السابق (اختياري)
+══════════════════════════════════════════════════════════ -->
+<div class="sec-title mb-3">
+    <span>📍</span> {% trans "العنوان السابق" %}
+    <span style="font-size:0.72rem;color:#9ca3af">({% trans "اختياري" %})</span>
+</div>
+<div class="row g-3 mb-4">
+
+    <div class="col-md-4">
+        <label class="form-label">{% trans "المدينة" %}</label>
+        <select id="special_previous_city" class="form-select form-control">
+            <option value="">{% trans "-- اختر --" %}</option>
+            <option>{% trans "رفح" %}</option>
+            <option>{% trans "خانيونس" %}</option>
+            <option>{% trans "القرارة" %}</option>
+            <option>{% trans "دير البلح" %}</option>
+            <option>{% trans "الزوايدة" %}</option>
+            <option>{% trans "النصيرات" %}</option>
+            <option>{% trans "المغازي" %}</option>
+            <option>{% trans "البريج" %}</option>
+            <option>{% trans "مدينة غزة" %}</option>
+            <option>{% trans "شمال غزة" %}</option>
+            <option>{% trans "شرق غزة" %}</option>
+            <option>{% trans "غرب غزة" %}</option>
+            <option>{% trans "غير محدد" %}</option>
+        </select>
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">{% trans "الشارع" %}</label>
+        <input type="text" id="special_previous_street" class="form-control"
+               placeholder="{% trans 'اسم الشارع' %}" data-type="address">
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">{% trans "أقرب معلم/مسجد" %}</label>
+        <input type="text" id="special_previous_landmark" class="form-control"
+               placeholder="{% trans 'أقرب معلم أو مسجد' %}" data-type="address">
+    </div>
+
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     السكن
+══════════════════════════════════════════════════════════ -->
+<div class="sec-title mb-3"><span>🏠</span> {% trans "السكن" %}</div>
+<div class="row g-3 mb-4">
+
+    <div class="col-md-4">
+        <label class="form-label">{% trans "نوع السكن" %} <span class="req">*</span></label>
+        <select id="special_housing_type" class="form-select form-control">
+            <option value="">{% trans "-- اختر --" %}</option>
+            <option>{% trans "خيمة" %}</option>
+            <option>{% trans "بيت باطون" %}</option>
+            <option>{% trans "بيت زينقو" %}</option>
+        </select>
+        <div class="field-err" id="err_special_housing_type"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">{% trans "ملكية السكن" %} <span class="req">*</span></label>
+        <select id="special_housing_ownership" class="form-select form-control"
+                onchange="document.getElementById('special_rent_wrap').classList.toggle('d-none',this.value!=='إيجار')">
+            <option value="">{% trans "-- اختر --" %}</option>
+            <option>{% trans "ملك" %}</option>
+            <option>{% trans "إيجار" %}</option>
+        </select>
+        <div class="field-err" id="err_special_housing_ownership"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-4 d-none" id="special_rent_wrap">
+        <label class="form-label">{% trans "مبلغ الإيجار (₪)" %} <span class="req">*</span></label>
+        <input type="number" id="special_monthly_rent" class="form-control" placeholder="0" min="0">
+        <div class="field-err" id="err_special_monthly_rent"><span>⚠️</span><span></span></div>
+    </div>
+
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     المعيل الحالي
+══════════════════════════════════════════════════════════ -->
+<div class="sec-title mb-3"><span>🧑</span> {% trans "المعيل الحالي" %}</div>
+<div class="row g-3 mb-4">
+
+    <div class="col-sm-6 col-md-3">
+        <label class="form-label">{% trans "الاسم الأول" %} <span class="req">*</span></label>
+        <input type="text" id="special_guardian_first_name" class="form-control" placeholder="{% trans 'الاسم' %}">
+        <div class="field-err" id="err_special_guardian_first_name"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-sm-6 col-md-3">
+        <label class="form-label">{% trans "اسم الأب" %} <span class="req">*</span></label>
+        <input type="text" id="special_guardian_father_name" class="form-control" placeholder="{% trans 'اسم الأب' %}">
+        <div class="field-err" id="err_special_guardian_father_name"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-sm-6 col-md-3">
+        <label class="form-label">{% trans "اسم الجد" %} <span class="req">*</span></label>
+        <input type="text" id="special_guardian_grand_name" class="form-control" placeholder="{% trans 'اسم الجد' %}">
+        <div class="field-err" id="err_special_guardian_grand_name"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-sm-6 col-md-3">
+        <label class="form-label">{% trans "اسم العائلة" %} <span class="req">*</span></label>
+        <input type="text" id="special_guardian_family_name" class="form-control" placeholder="{% trans 'اسم العائلة' %}">
+        <div class="field-err" id="err_special_guardian_family_name"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">{% trans "رقم الهوية" %} <span class="req">*</span></label>
+        <div style="position:relative">
+            <input type="text" id="special_guardian_id_number" class="form-control" maxlength="9"
+                   placeholder="9XXXXXXXX" inputmode="numeric"
+                   oninput="liveId(this,'hint_sg_id')">
+        </div>
+        <div class="phone-hint" id="hint_sg_id"></div>
+        <div class="field-err" id="err_special_guardian_id_number"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">{% trans "الجنس" %} <span class="req">*</span></label>
+        <select id="special_guardian_gender" class="form-select form-control">
+            <option value="">{% trans "-- اختر --" %}</option>
+            <option>{% trans "ذكر" %}</option>
+            <option>{% trans "أنثى" %}</option>
+        </select>
+        <div class="field-err" id="err_special_guardian_gender"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">{% trans "القرابة للمريض" %} <span class="req">*</span></label>
+        <select id="special_guardian_relation" class="form-select form-control">
+            <option value="">{% trans "-- اختر --" %}</option>
+            <option value="عم">{% trans "عم/ـة" %}</option>
+            <option value="خال">{% trans "خال/ـة" %}</option>
+            <option value="جد">{% trans "جد/ة" %}</option>
+            <option value="أخ">{% trans "أخ" %}</option>
+            <option value="أخت">{% trans "أخت" %}</option>
+            <option value="أب">{% trans "أب" %}</option>
+            <option value="أم">{% trans "أم" %}</option>
+            <option value="أخرى">{% trans "أخرى" %}</option>
+        </select>
+        <div class="field-err" id="err_special_guardian_relation"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">{% trans "المهنة" %} <span class="req">*</span></label>
+        <select id="special_guardian_job" class="form-select form-control">
+            <option value="">{% trans "-- اختر المهنة --" %}</option>
+            <option>{% trans "موظف حكومي" %}</option>
+            <option>{% trans "موظف قطاع خاص" %}</option>
+            <option>{% trans "تاجر" %}</option>
+            <option>{% trans "معلم/ـة" %}</option>
+            <option>{% trans "عامل" %}</option>
+            <option>{% trans "لا يعمل" %}</option>
+            <option>{% trans "أخرى" %}</option>
+        </select>
+        <div class="field-err" id="err_special_guardian_job"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">{% trans "الحالة الصحية" %} <span class="req">*</span></label>
+        <select id="special_guardian_health_status" class="form-select form-control">
+            <option value="">{% trans "-- اختر --" %}</option>
+            <option>{% trans "سليم" %}</option>
+            <option>{% trans "مرض مزمن" %}</option>
+            <option>{% trans "ذوو احتياجات خاصة" %}</option>
+            <option>{% trans "مصاب حرب" %}</option>
+        </select>
+        <div class="field-err" id="err_special_guardian_health_status"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">{% trans "المستوى التعليمي" %} <span class="req">*</span></label>
+        <select id="special_guardian_education_level" class="form-select form-control">
+            <option value="">{% trans "-- اختر --" %}</option>
+            <option>{% trans "غير متعلم" %}</option>
+            <option>{% trans "ابتدائي" %}</option>
+            <option>{% trans "إعدادي" %}</option>
+            <option>{% trans "ثانوي" %}</option>
+            <option>{% trans "جامعي" %}</option>
+            <option>{% trans "ماجستير" %}</option>
+        </select>
+        <div class="field-err" id="err_special_guardian_education_level"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">{% trans "الدخل الشهري (₪)" %} <span class="req">*</span></label>
+        <input type="number" id="special_guardian_monthly_income" class="form-control" placeholder="0" min="0">
+        <div class="field-err" id="err_special_guardian_monthly_income"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">{% trans "عدد من يعيلهم" %} <span class="req">*</span></label>
+        <input type="number" id="special_guardian_dependents" class="form-control" placeholder="1" min="1" value="1">
+        <div class="field-err" id="err_special_guardian_dependents"><span>⚠️</span><span></span></div>
+    </div>
+
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     أفراد الأسرة (اختياري)
+══════════════════════════════════════════════════════════ -->
+<div class="sec-title mb-3">
+    <span>👨‍👩‍👧</span> {% trans "أفراد الأسرة" %}
+    <span style="font-size:0.72rem;color:#9ca3af">{% trans "(اختياري — إذا أضفت فرداً يجب تعبئته كاملاً)" %}</span>
+</div>
+<div id="specialMembersContainer" class="mb-3"></div>
+<button type="button" class="btn-add-member mb-4"
+        onclick="addMember('specialMembersContainer')">
+    <span>➕</span> {% trans "إضافة فرد" %}
+</button>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     تفاصيل الحالة
+══════════════════════════════════════════════════════════ -->
+<div class="sec-title mb-3"><span>🏥</span> {% trans "تفاصيل الحالة" %}</div>
+<div class="mb-2">
+    <textarea id="special_case_details" class="form-control" rows="5" maxlength="1000"
+              placeholder="{% trans 'اكتب تفاصيل الحالة الصحية هنا... (مطلوب)' %}"
+              oninput="document.getElementById('special_case_count').textContent=this.value.length"></textarea>
+    <div class="char-count"><span id="special_case_count">0</span>/1000</div>
+    <div class="field-err" id="err_special_case_details"><span>⚠️</span><span>{% trans "تفاصيل الحالة مطلوبة" %}</span></div>
+</div>

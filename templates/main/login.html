@@ -1,0 +1,978 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "تسجيل الدخول" %}{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ══════════════════════════════════════════════
+   متغيرات
+══════════════════════════════════════════════ */
+:root {
+    --g1: #0f5232; --g2: #2ecc71;
+    --red: #e53e3e;
+    --lc-bg: rgba(255,255,255,0.93);
+    --lc-border: rgba(26,122,74,0.18);
+}
+body.dark-mode {
+    --lc-bg: rgba(17,30,22,0.96);
+    --lc-border: rgba(46,204,113,0.15);
+}
+
+/* ══════════════════════════════════════════════
+   خلفية الصفحة
+══════════════════════════════════════════════ */
+.login-page-bg {
+    min-height: calc(100vh - 80px);
+    background: linear-gradient(150deg,#e8f5e9 0%,#f0faf4 40%,#e8f4fd 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 16px;
+}
+
+/* ══════════════════════════════════════════════
+   البطاقة
+══════════════════════════════════════════════ */
+.login-card {
+    background: var(--lc-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--lc-border);
+    border-radius: 26px;
+    padding: 46px 42px;
+    width: 100%; max-width: 430px;
+    box-shadow: 0 20px 60px rgba(26,122,74,0.10);
+    transition: box-shadow 0.3s, transform 0.3s;
+    position: relative;
+}
+.login-card.success-pulse {
+    box-shadow: 0 0 0 4px rgba(46,204,113,0.4);
+    animation: successPulse 0.6s ease;
+}
+@keyframes successPulse {
+    0%   { transform: scale(1);     }
+    30%  { transform: scale(1.015); }
+    100% { transform: scale(1);     }
+}
+
+/* ══════════════════════════════════════════════
+   Header
+══════════════════════════════════════════════ */
+.login-logo {
+    width: 78px; height: 78px; object-fit: contain;
+    filter: drop-shadow(0 4px 14px rgba(26,122,74,0.30));
+    animation: floatLogo 4s ease-in-out infinite;
+}
+@keyframes floatLogo {
+    0%,100% { transform: translateY(0);  }
+    50%     { transform: translateY(-8px); }
+}
+.login-title {
+    font-family: 'Amiri', serif; font-size: 1.9rem; font-weight: 700;
+    background: linear-gradient(135deg,var(--g1),var(--g2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.login-sub {
+    font-family: 'Tajawal', sans-serif;
+    font-size: 0.84rem; color: #6b7280;
+}
+
+/* ══════════════════════════════════════════════
+   التبويبات
+══════════════════════════════════════════════ */
+.login-tabs {
+    display: flex;
+    background: #f4f9f6;
+    border-radius: 12px; padding: 4px; margin-bottom: 22px;
+    border: 1px solid rgba(26,122,74,0.1);
+}
+.login-tab {
+    flex: 1; padding: 9px; border: none; background: transparent;
+    border-radius: 10px; font-family: 'Tajawal', sans-serif;
+    font-size: 0.84rem; font-weight: 600; color: #6b7280;
+    cursor: pointer; transition: all 0.25s;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.login-tab.active {
+    background: linear-gradient(135deg,var(--g1),var(--g2));
+    color: #fff; box-shadow: 0 4px 14px rgba(26,122,74,0.28);
+}
+
+/* ══════════════════════════════════════════════
+   الحقول
+══════════════════════════════════════════════ */
+.form-group { margin-bottom: 16px; }
+.lc-label {
+    font-family: 'Tajawal', sans-serif; font-size: 0.84rem;
+    font-weight: 600; color: #1a1a2e; margin-bottom: 6px; display: block;
+}
+.lc-input {
+    background: #f4f9f6;
+    border: 1.5px solid var(--lc-border);
+    color: #1a1a2e; border-radius: 12px;
+    padding: 12px 16px; font-family: 'Tajawal', sans-serif;
+    font-size: 0.94rem; transition: all 0.25s; width: 100%;
+}
+.lc-input:focus {
+    border-color: #1a7a4a;
+    box-shadow: 0 0 0 3px rgba(26,122,74,0.15);
+    background: #fff; outline: none;
+}
+.lc-input::placeholder { color: #9ca3af; }
+.lc-input.is-invalid {
+    border-color: var(--red) !important;
+    box-shadow: 0 0 0 3px rgba(229,62,62,0.12) !important;
+}
+.lc-input.is-valid {
+    border-color: #1a7a4a !important;
+    box-shadow: 0 0 0 3px rgba(26,122,74,0.12) !important;
+}
+
+/* ══════════════════════════════════════════════
+   كلمة المرور
+══════════════════════════════════════════════ */
+.pass-wrap { position: relative; }
+.pass-wrap .lc-input { padding-left: 42px; }
+.btn-eye {
+    position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
+    background: none; border: none; cursor: pointer;
+    font-size: 0.95rem; color: #6b7280; padding: 0; transition: color 0.2s;
+}
+.btn-eye:hover { color: #1a7a4a; }
+
+/* ══════════════════════════════════════════════
+   رسائل الخطأ
+══════════════════════════════════════════════ */
+.field-err {
+    font-family: 'Tajawal', sans-serif; font-size: 0.78rem;
+    color: var(--red); margin-top: 5px; display: none;
+    align-items: center; gap: 4px;
+}
+.field-err.show { display: flex; }
+
+/* ══════════════════════════════════════════════
+   التنبيهات
+══════════════════════════════════════════════ */
+.login-alert {
+    border-radius: 12px; padding: 12px 16px;
+    font-family: 'Tajawal', sans-serif; font-size: 0.87rem;
+    margin-bottom: 16px; display: none;
+    align-items: center; gap: 9px; border: none;
+}
+.login-alert.show    { display: flex; }
+.login-alert.error   { background: rgba(229,62,62,0.1);  color: #c53030; }
+.login-alert.locked  { background: rgba(245,158,11,0.1); color: #b45309; }
+.login-alert.success { background: rgba(26,122,74,0.1);  color: #1a7a4a; }
+
+/* ══════════════════════════════════════════════
+   شريط المحاولات
+══════════════════════════════════════════════ */
+.att-bar {
+    height: 3px; background: #f4f9f6;
+    border-radius: 3px; margin-top: 8px;
+    overflow: hidden; display: none; direction: rtl;
+}
+.att-bar.show { display: block; }
+.att-fill { height: 100%; border-radius: 3px; transition: all 0.4s; }
+
+/* ══════════════════════════════════════════════
+   صندوق الحظر
+══════════════════════════════════════════════ */
+.lockout-box {
+    display: none; text-align: center; padding: 14px;
+    background: rgba(245,158,11,0.08);
+    border: 1px solid rgba(245,158,11,0.25);
+    border-radius: 12px; margin-bottom: 14px;
+}
+.lockout-timer {
+    font-size: 2rem; font-weight: 900;
+    color: #b45309; font-family: 'Cairo', monospace; letter-spacing: 2px;
+}
+.lockout-progress {
+    height: 4px; background: rgba(245,158,11,0.2);
+    border-radius: 4px; margin-top: 8px; overflow: hidden;
+}
+.lockout-progress-fill {
+    height: 100%; background: #ed8936;
+    border-radius: 4px; transition: width 1s linear;
+}
+.lockout-text {
+    font-size: 0.76rem; color: #b45309;
+    margin-top: 6px; font-family: 'Tajawal', sans-serif;
+}
+
+/* ══════════════════════════════════════════════
+   زر الدخول
+══════════════════════════════════════════════ */
+.btn-login {
+    background: linear-gradient(135deg,var(--g1),var(--g2));
+    color: #fff; border: none; padding: 14px; border-radius: 50px;
+    font-family: 'Tajawal', sans-serif; font-weight: 700;
+    font-size: 0.98rem; width: 100%; cursor: pointer;
+    box-shadow: 0 6px 20px rgba(26,122,74,0.28);
+    transition: all 0.3s;
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px; margin-top: 4px;
+}
+.btn-login:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px rgba(26,122,74,0.38);
+}
+.btn-login:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
+
+.lc-spinner {
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff; border-radius: 50%;
+    animation: lcSpin 0.7s linear infinite; display: none;
+}
+@keyframes lcSpin { to { transform: rotate(360deg); } }
+.btn-login.loading .lc-spinner { display: block; }
+.btn-login.loading .btn-icon   { display: none; }
+
+/* ══════════════════════════════════════════════
+   تذكرني ونسيت كلمة المرور
+══════════════════════════════════════════════ */
+.lc-check { display: flex; align-items: center; gap: 8px; margin-bottom: 0; }
+.lc-check input { width: 16px; height: 16px; accent-color: #1a7a4a; cursor: pointer; }
+.lc-check label {
+    font-family: 'Tajawal', sans-serif;
+    font-size: 0.83rem; color: #6b7280; cursor: pointer;
+}
+.forgot-link {
+    font-family: 'Tajawal', sans-serif; font-size: 0.82rem;
+    color: #1a7a4a; text-decoration: none; font-weight: 600;
+    transition: opacity 0.2s;
+}
+.forgot-link:hover { opacity: 0.75; }
+
+/* ══════════════════════════════════════════════
+   روابط أسفل البطاقة
+══════════════════════════════════════════════ */
+.auth-divider {
+    text-align: center; margin: 18px 0; position: relative;
+}
+.auth-divider::before {
+    content: ''; position: absolute; top: 50%; left: 0; right: 0;
+    height: 1px; background: rgba(26,122,74,0.12);
+}
+.auth-divider span {
+    background: #fff; padding: 0 12px; position: relative;
+    font-family: 'Tajawal', sans-serif; font-size: 0.82rem; color: #9ca3af;
+}
+.auth-link {
+    text-align: center; font-family: 'Tajawal', sans-serif;
+    font-size: 0.86rem; color: #6b7280; margin: 0;
+}
+.auth-link a { color: #1a7a4a; font-weight: 700; text-decoration: none; }
+
+/* ══════════════════════════════════════════════
+   تلميح نسيت كلمة المرور
+══════════════════════════════════════════════ */
+.hint-forgot {
+    display: none; text-align: center;
+    font-family: 'Tajawal', sans-serif; font-size: 0.8rem;
+    color: #b45309; margin-top: 8px;
+}
+.hint-forgot.show { display: block; }
+
+/* ══════════════════════════════════════════════
+   Shake
+══════════════════════════════════════════════ */
+@keyframes lcShake {
+    0%,100% { transform: translateX(0);   }
+    20%     { transform: translateX(-7px); }
+    40%     { transform: translateX(7px);  }
+    60%     { transform: translateX(-4px); }
+    80%     { transform: translateX(4px);  }
+}
+.lc-shake { animation: lcShake 0.4s ease; }
+
+@media (max-width: 480px) {
+    .login-card { padding: 32px 20px; border-radius: 20px; }
+    .login-page-bg { padding: 24px 12px; }
+}
+</style>
+{% endblock %}
+
+
+{% block content %}
+    <div id="jsTranslations"
+    data-locked="{% trans 'تم تجميد الدخول مؤقتاً' %}"
+    data-retry="{% trans 'يمكنك المحاولة مجدداً' %}"
+    data-connection-error="{% trans 'حدث خطأ في الاتصال، يرجى المحاولة مجدداً' %}"
+    data-invalid-input="{% trans 'مدخل غير مسموح به' %}"
+    data-invalid-inputs="{% trans 'مدخلات غير صالحة' %}"
+    data-username-required="{% trans 'اسم المستخدم مطلوب' %}"
+    data-id-required="{% trans 'رقم الهوية مطلوب' %}"
+    data-id-invalid="{% trans 'رقم الهوية يجب أن يكون 9 أرقام ويبدأ بـ 9 أو 8 أو 4 أو 7' %}"
+    data-input-too-long="{% trans 'المدخل طويل جداً' %}"
+    data-password-required="{% trans 'كلمة المرور مطلوبة' %}"
+    data-password-invalid="{% trans 'كلمة المرور غير صالحة' %}"
+    data-banned="{% trans 'محظور مؤقتاً' %}"
+    data-verified="{% trans 'تم التحقق' %}"
+    data-login="{% trans 'تسجيل الدخول' %}"
+    data-redirecting="{% trans 'جار التوجيه...' %}"
+    data-frozen="{% trans 'تم تجميد الدخول' %}"
+    data-username-label="{% trans 'اسم المستخدم' %}"
+    data-id-label="{% trans 'رقم الهوية' %}"
+    data-morning="{% trans 'صباح الخير ☀️' %}"
+    data-hello="{% trans 'مرحباً بك' %}"
+    data-evening="{% trans 'مساء الخير 🌙' %}"
+    data-night="{% trans 'طاب مساؤك 🌟' %}"
+    data-continue="{% trans 'سجّل دخولك للمتابعة' %}"
+         data-id-placeholder="{% trans '9XXXXXXXX — 9 أرقام' %}"
+    style="display:none;">
+</div>
+<div class="login-page-bg">
+    <div class="login-card" id="loginCard">
+
+        {% csrf_token %}
+
+        <!-- Honeypot -->
+        <input type="text" name="honeypot" style="display:none!important"
+               tabindex="-1" autocomplete="off" aria-hidden="true">
+
+        <!-- Header -->
+        <div class="text-center mb-4">
+            {% if site_settings.logo %}
+                <img loading="lazy" src="{{ site_settings.logo.url }}" class="login-logo" alt="{% trans 'رُحَمَاء' %}">
+            {% else %}
+                <img loading="lazy" src="{% static 'images/logo.png' %}" class="login-logo" alt="{% trans 'رُحَمَاء' %}">
+            {% endif %}
+            <h2 class="login-title mt-3 mb-1">{% trans "رُحَمَاء" %}</h2>
+            <p class="login-sub mb-0" id="greetMsg" style="justify-content:center;text-align:center;"></p>
+        </div>
+
+        <!-- التبويبات -->
+        <div class="login-tabs" role="tablist">
+            <button class="login-tab active" id="tabSponsor"
+                    onclick="switchTab('sponsor')" role="tab"
+                    aria-selected="true"
+                    aria-label="{% trans 'تسجيل دخول الكفلاء والإدارة' %}">
+                <span>🤝</span> {% trans "كافل / إدارة" %}
+            </button>
+            <button class="login-tab" id="tabBeneficiary"
+                    onclick="switchTab('beneficiary')" role="tab"
+                    aria-selected="false"
+                    aria-label="{% trans 'تسجيل دخول المستفيدين' %}">
+                <span>👦</span> {% trans "مستفيد" %}
+            </button>
+        </div>
+
+        <!-- تنبيه -->
+        <div class="login-alert" id="loginAlert" role="alert" aria-live="polite"></div>
+
+        <!-- صندوق الحظر -->
+        <div class="lockout-box" id="lockoutBox" role="alert" aria-live="assertive">
+            <div class="lockout-timer" id="lockoutTimer">02:00</div>
+            <div class="lockout-progress">
+                <div class="lockout-progress-fill" id="lockoutFill" style="width:100%"></div>
+            </div>
+            <div class="lockout-text">{% trans "تم تجميد الدخول مؤقتاً بسبب المحاولات المتكررة" %}</div>
+        </div>
+
+        <!-- المعرّف -->
+        <div class="form-group">
+            <label class="lc-label" id="identifierLabel" for="identifier">
+                {% trans "اسم المستخدم" %}
+            </label>
+            <input type="text"
+                   id="identifier"
+                   class="lc-input"
+                   placeholder="{% trans 'أدخل اسم المستخدم' %}"
+                   autocomplete="username"
+                   maxlength="150"
+                   aria-label="{% trans 'المعرّف' %}"
+                   oninput="onIdentifierInput(this)">
+            <div class="field-err" id="errIdentifier" role="alert">
+                <span>⚠️</span><span id="errIdentifierMsg"></span>
+            </div>
+        </div>
+
+        <!-- كلمة المرور -->
+        <div class="form-group">
+            <label class="lc-label" for="password">{% trans "كلمة المرور" %}</label>
+            <div class="pass-wrap">
+                <input type="password"
+                       id="password"
+                       class="lc-input"
+                       placeholder="{% trans 'أدخل كلمة المرور' %}"
+                       autocomplete="current-password"
+                       maxlength="128"
+                       aria-label="{% trans 'كلمة المرور' %}"
+                       oninput="onPasswordInput(this)"
+                       onkeydown="if(event.key==='Enter')submitLogin()">
+                <button class="btn-eye" type="button"
+                        id="eyeBtn" onclick="togglePass()"
+                        aria-label="{% trans 'إظهار/إخفاء كلمة المرور' %}">👁</button>
+            </div>
+            <div class="field-err" id="errPassword" role="alert">
+                <span>⚠️</span><span id="errPasswordMsg"></span>
+            </div>
+            <div class="hint-forgot" id="hintForgot">
+                {% trans "هل نسيت كلمة المرور؟" %}
+                <a href="{% url 'main:forgot_password' %}" style="color:#b45309;font-weight:700">
+                    {% trans "استعدها الآن" %}
+                </a>
+            </div>
+        </div>
+
+        <!-- شريط المحاولات -->
+        <div class="att-bar" id="attBar" aria-hidden="true">
+            <div class="att-fill" id="attFill"></div>
+        </div>
+
+        <!-- تذكرني + نسيت كلمة المرور -->
+        <div class="d-flex justify-content-between align-items-center mb-4 mt-2">
+            <div class="lc-check">
+                <input type="checkbox" id="rememberMe" name="remember_me"
+                       aria-label="{% trans 'تذكرني' %}">
+                <label for="rememberMe">{% trans "تذكّرني" %}</label>
+            </div>
+            <a href="{% url 'main:forgot_password' %}" class="forgot-link"
+               id="forgotLink" rel="noopener noreferrer">
+                {% trans "نسيت كلمة المرور؟" %}
+            </a>
+        </div>
+
+        <!-- زر الدخول -->
+        <button class="btn-login" id="loginBtn" onclick="submitLogin()"
+                aria-label="{% trans 'تسجيل الدخول' %}">
+            <div class="lc-spinner"></div>
+            <span class="btn-icon">🔑</span>
+            <span class="btn-text">{% trans "تسجيل الدخول" %}</span>
+        </button>
+
+        <div class="auth-divider mt-4"><span>{% trans "أو" %}</span></div>
+
+        <p class="auth-link">
+            {% trans "ليس لديك حساب؟" %}
+            <a href="{% url 'main:register' %}" rel="noopener noreferrer">
+                ✨ {% trans "أنشئ حساباً جديداً" %}
+            </a>
+        </p>
+
+    </div>
+</div>
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+'use strict';
+
+/* ══════════════════════════════════════════════
+   الحماية من Clickjacking
+══════════════════════════════════════════════ */
+if (window.top !== window.self) {
+    window.top.location = window.location;
+}
+
+/* ══════════════════════════════════════════════
+   نصوص الترجمة (يجب وجود عنصر jsTranslations)
+══════════════════════════════════════════════ */
+const T = (() => {
+    const el = document.getElementById('jsTranslations');
+    if (!el) {
+        // عنصر افتراضي إذا لم يوجد
+        return {
+            locked: 'تم تجميد الدخول مؤقتاً',
+            retry: 'يمكنك المحاولة مجدداً',
+            connectionError: 'حدث خطأ في الاتصال، يرجى المحاولة مجدداً',
+            invalidInput: 'مدخل غير مسموح به',
+            invalidInputs: 'مدخلات غير صالحة',
+            usernameRequired: 'اسم المستخدم مطلوب',
+            idRequired: 'رقم الهوية مطلوب',
+            idInvalid: 'رقم الهوية يجب أن يكون 9 أرقام ويبدأ بـ 9 أو 8 أو 4 أو 7',
+            inputTooLong: 'المدخل طويل جداً',
+            passwordRequired: 'كلمة المرور مطلوبة',
+            passwordInvalid: 'كلمة المرور غير صالحة',
+            banned: 'محظور مؤقتاً',
+            verified: 'تم التحقق',
+            login: 'تسجيل الدخول',
+            redirecting: 'جار التوجيه...',
+            frozen: 'تم تجميد الدخول',
+            usernameLabel: 'اسم المستخدم',
+            idLabel: 'رقم الهوية',
+            morning: 'صباح الخير',
+            hello: 'مرحباً بك',
+            evening: 'مساء الخير',
+            night: 'طاب مساؤك',
+            continueTxt: 'سجّل دخولك للمتابعة',
+            idPlaceholder:    '9XXXXXXXX — 9 أرقام',
+        };
+    }
+    return {
+        locked:          el.dataset.locked || 'تم تجميد الدخول مؤقتاً',
+        retry:           el.dataset.retry || 'يمكنك المحاولة مجدداً',
+        connectionError: el.dataset.connectionError || 'حدث خطأ في الاتصال، يرجى المحاولة مجدداً',
+        invalidInput:    el.dataset.invalidInput || 'مدخل غير مسموح به',
+        invalidInputs:   el.dataset.invalidInputs || 'مدخلات غير صالحة',
+        usernameRequired: el.dataset.usernameRequired || 'اسم المستخدم مطلوب',
+        idRequired:      el.dataset.idRequired || 'رقم الهوية مطلوب',
+        idInvalid:       el.dataset.idInvalid || 'رقم الهوية يجب أن يكون 9 أرقام ويبدأ بـ 9 أو 8 أو 4 أو 7',
+        inputTooLong:    el.dataset.inputTooLong || 'المدخل طويل جداً',
+        passwordRequired: el.dataset.passwordRequired || 'كلمة المرور مطلوبة',
+        passwordInvalid: el.dataset.passwordInvalid || 'كلمة المرور غير صالحة',
+        banned:          el.dataset.banned || 'محظور مؤقتاً',
+        verified:        el.dataset.verified || 'تم التحقق',
+        login:           el.dataset.login || 'تسجيل الدخول',
+        redirecting:     el.dataset.redirecting || 'جار التوجيه...',
+        frozen:          el.dataset.frozen || 'تم تجميد الدخول',
+        usernameLabel:   el.dataset.usernameLabel || 'اسم المستخدم',
+        idLabel:         el.dataset.idLabel || 'رقم الهوية',
+        morning:         el.dataset.morning || 'صباح الخير',
+        hello:           el.dataset.hello || 'مرحباً بك',
+        evening:         el.dataset.evening || 'مساء الخير',
+        night:           el.dataset.night || 'طاب مساؤك',
+        continueTxt:     el.dataset.continue || 'سجّل دخولك للمتابعة',
+        idPlaceholder:    el.dataset.idPlaceholder    || '9XXXXXXXX — 9 أرقام',
+    };
+})();
+
+/* ══════════════════════════════════════════════
+   ثوابت وحالة
+══════════════════════════════════════════════ */
+const CSRF = document.querySelector('[name=csrfmiddlewaretoken]')?.value
+    || document.cookie.split(';').find(c => c.trim().startsWith('csrftoken='))?.split('=')[1] || '';
+
+const XSS_PATTERN    = /[<>"';&\/\\]/g;
+const INJECT_PATTERN = /(<script|javascript:|onerror=|onload=|data:text\/html)/i;
+
+let currentTab   = 'sponsor';
+let lockInterval = null;
+let lockTotal    = 120;
+let failCount    = 0;
+let lastSubmit   = 0;
+
+/* ══════════════════════════════════════════════
+   رسالة الترحيب حسب الوقت
+══════════════════════════════════════════════ */
+function setGreeting() {
+    const h = new Date().getHours();
+    const msg = h < 12 ? `${T.morning} ☀️`
+              : h < 17 ? `${T.hello} 👋`
+              : h < 20 ? `${T.evening} 🌙`
+              :           `${T.night} 🌟`;
+    const el = document.getElementById('greetMsg');
+    if (el) el.textContent = msg + ' — ' + T.continueTxt;
+}
+
+/* ══════════════════════════════════════════════
+   مساعدات UI (تعريف أولاً)
+══════════════════════════════════════════════ */
+function clearErr() {
+    ['identifier', 'password'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('is-invalid', 'is-valid');
+    });
+    ['errIdentifier', 'errPassword'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('show');
+    });
+    const alertEl = document.getElementById('loginAlert');
+    if (alertEl) alertEl.classList.remove('show');
+}
+
+function showAlert(type, msg) {
+    const el = document.getElementById('loginAlert');
+    if (!el) return;
+    const icons = { error: '⚠️', locked: '🔒', success: '✅' };
+    el.className = 'login-alert show ' + type;
+    el.innerHTML = `<span>${icons[type] || '⚠️'}</span><span>${msg}</span>`;
+    if (type !== 'success') {
+        setTimeout(() => el.classList.remove('show'), 6000);
+    }
+}
+
+function _shake(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.remove('shake');
+    void el.offsetWidth;
+    el.classList.add('shake');
+    el.addEventListener('animationend', () => el.classList.remove('shake'), { once: true });
+}
+
+function _setLoading(on) {
+    const btn = document.getElementById('loginBtn');
+    if (!btn) return;
+    btn.classList.toggle('loading', on);
+    btn.disabled = on;
+}
+
+function _setBtn(text, disabled) {
+    const btn = document.getElementById('loginBtn');
+    if (!btn) return;
+    const span = btn.querySelector('.btn-text');
+    const icon = btn.querySelector('.btn-icon');
+    if (span) span.textContent = text.replace(/^[^\s]+\s/, '');
+    if (icon) icon.textContent = text.split(' ')[0];
+    btn.disabled = disabled;
+    btn.classList.remove('loading');
+}
+
+function _fieldErr(fieldId, msgId, msg) {
+    const inp = document.getElementById(fieldId);
+    const el = document.getElementById(msgId);
+    const err = document.getElementById('err' + fieldId.charAt(0).toUpperCase() + fieldId.slice(1));
+    if (inp) {
+        inp.classList.add('is-invalid');
+        _shake(fieldId);
+    }
+    if (el) el.textContent = msg;
+    if (err) err.classList.add('show');
+}
+
+/* ══════════════════════════════════════════════
+   تبديل التبويب
+══════════════════════════════════════════════ */
+function switchTab(tab) {
+    currentTab = tab;
+    const isSponsor = tab === 'sponsor';
+
+    const tabSponsor = document.getElementById('tabSponsor');
+    const tabBeneficiary = document.getElementById('tabBeneficiary');
+    const forgotLink = document.getElementById('forgotLink');
+    const identifier = document.getElementById('identifier');
+    const identifierLabel = document.getElementById('identifierLabel');
+
+    if (tabSponsor) {
+        tabSponsor.classList.toggle('active', isSponsor);
+        tabSponsor.setAttribute('aria-selected', isSponsor);
+    }
+    if (tabBeneficiary) {
+        tabBeneficiary.classList.toggle('active', !isSponsor);
+        tabBeneficiary.setAttribute('aria-selected', !isSponsor);
+    }
+
+    if (identifierLabel && identifier) {
+        if (isSponsor) {
+            identifierLabel.textContent = T.usernameLabel;
+            identifier.placeholder = T.usernameLabel;
+            identifier.maxLength = 150;
+            identifier.inputMode = 'text';
+            identifier.setAttribute('type', 'text');
+            if (forgotLink) forgotLink.style.display = '';
+        } else {
+            identifierLabel.textContent = T.idLabel;
+            identifier.placeholder = T.idPlaceholder;
+            identifier.maxLength = 9;
+            identifier.inputMode = 'numeric';
+            if (forgotLink) forgotLink.style.display = 'none';
+        }
+        identifier.value = '';
+    }
+
+    clearErr();
+    if (identifier) identifier.focus();
+}
+
+/* ══════════════════════════════════════════════
+   معالجة إدخال المعرّف
+══════════════════════════════════════════════ */
+function onIdentifierInput(inp) {
+    if (!inp) return;
+    if (INJECT_PATTERN.test(inp.value)) {
+        inp.value = '';
+        showAlert('error', T.invalidInput);
+        return;
+    }
+    if (currentTab === 'sponsor') {
+        inp.value = inp.value.replace(/[\u0600-\u06FF\s]/g, '');
+    } else {
+        inp.value = inp.value.replace(/\D/g, '').slice(0, 9);
+    }
+    inp.value = inp.value.replace(XSS_PATTERN, '');
+    clearErr();
+}
+
+/* ══════════════════════════════════════════════
+   معالجة إدخال كلمة المرور
+══════════════════════════════════════════════ */
+function onPasswordInput(inp) {
+    if (!inp) return;
+    if (INJECT_PATTERN.test(inp.value)) {
+        inp.value = '';
+        showAlert('error', T.invalidInput);
+        return;
+    }
+    clearErr();
+}
+
+/* ══════════════════════════════════════════════
+   إظهار/إخفاء كلمة المرور
+══════════════════════════════════════════════ */
+function togglePass() {
+    const inp = document.getElementById('password');
+    const btn = document.getElementById('eyeBtn');
+    if (!inp) return;
+    const isHidden = inp.type === 'password';
+    inp.type = isHidden ? 'text' : 'password';
+    if (btn) {
+        btn.textContent = isHidden ? '🙈' : '👁';
+        btn.setAttribute('aria-label', isHidden ? 'إخفاء كلمة المرور' : 'إظهار كلمة المرور');
+    }
+}
+
+/* ══════════════════════════════════════════════
+   بناء FormData
+══════════════════════════════════════════════ */
+function _buildForm(identifier, password) {
+    const fd = new FormData();
+    fd.append('csrfmiddlewaretoken', CSRF);
+    fd.append('identifier', identifier);
+    fd.append('password', password);
+    fd.append('honeypot', '');
+    fd.append('remember_me', document.getElementById('rememberMe')?.checked ? 'on' : '');
+    return fd;
+}
+
+/* ══════════════════════════════════════════════
+   التحقق المحلي
+══════════════════════════════════════════════ */
+function _validateLocally(identifier, password) {
+    let ok = true;
+    if (!identifier) {
+        _fieldErr('identifier', 'errIdentifierMsg',
+            currentTab === 'sponsor' ? T.usernameRequired : T.idRequired);
+        ok = false;
+    } else if (currentTab === 'beneficiary' && !/^[9847]\d{8}$/.test(identifier)) {
+        _fieldErr('identifier', 'errIdentifierMsg', T.idInvalid);
+        ok = false;
+    } else if (identifier.length > 150) {
+        _fieldErr('identifier', 'errIdentifierMsg', T.inputTooLong);
+        ok = false;
+    }
+    if (!password) {
+        _fieldErr('password', 'errPasswordMsg', T.passwordRequired);
+        ok = false;
+    } else if (password.length < 4 || password.length > 128) {
+        _fieldErr('password', 'errPasswordMsg', T.passwordInvalid);
+        ok = false;
+    }
+    return ok;
+}
+
+/* ══════════════════════════════════════════════
+   شريط المحاولات
+══════════════════════════════════════════════ */
+function _updateAttBar(left) {
+    const bar = document.getElementById('attBar');
+    const fill = document.getElementById('attFill');
+    if (!bar || !fill) return;
+    const colors = ['#e53e3e', '#e53e3e', '#ed8936', '#ecc94b', '#4ade80', '#4ade80'];
+    bar.classList.add('show');
+    fill.style.width = ((left / 5) * 100) + '%';
+    fill.style.background = colors[left] || '#e53e3e';
+}
+
+/* ══════════════════════════════════════════════
+   عداد الحظر
+══════════════════════════════════════════════ */
+function startLockout(seconds) {
+    lockTotal = seconds;
+    const box = document.getElementById('lockoutBox');
+    const timer = document.getElementById('lockoutTimer');
+    const prog = document.getElementById('lockoutFill');
+    if (!box || !timer || !prog) return;
+    box.style.display = 'block';
+    if (lockInterval) clearInterval(lockInterval);
+    let rem = seconds;
+    function tick() {
+        const m = Math.floor(rem / 60).toString().padStart(2, '0');
+        const s = (rem % 60).toString().padStart(2, '0');
+        timer.textContent = `${m}:${s}`;
+        prog.style.width = ((rem / lockTotal) * 100) + '%';
+        if (rem <= 0) {
+            if (lockInterval) clearInterval(lockInterval);
+            box.style.display = 'none';
+            _setBtn(`🔑 ${T.login}`, false);
+            _setLoading(false);
+            showAlert('success', T.retry);
+            _updateAttBar(5);
+            localStorage.removeItem('lockout_until');
+        }
+        rem--;
+    }
+    tick();
+    lockInterval = setInterval(tick, 1000);
+}
+
+/* ══════════════════════════════════════════════
+   localStorage helpers
+══════════════════════════════════════════════ */
+function _loadRemembered() {
+    const saved = localStorage.getItem('login_identifier');
+    if (saved) {
+        const inp = document.getElementById('identifier');
+        const chk = document.getElementById('rememberMe');
+        if (inp) inp.value = saved;
+        if (chk) chk.checked = true;
+    }
+}
+
+function _storeLockout(seconds) {
+    localStorage.setItem('lockout_until', Date.now() + seconds * 1000);
+}
+
+function _checkStoredLockout() {
+    const until = parseInt(localStorage.getItem('lockout_until') || '0');
+    const rem = Math.ceil((until - Date.now()) / 1000);
+    if (rem > 0) {
+        startLockout(rem);
+        _setBtn(`🔒 ${T.banned}`, true);
+    }
+}
+
+function _storeAttempt() {
+    const attempts = parseInt(localStorage.getItem('login_attempts') || '0') + 1;
+    localStorage.setItem('login_attempts', attempts);
+    localStorage.setItem('login_attempts_time', Date.now());
+}
+
+function _clearStoredAttempts() {
+    localStorage.removeItem('login_attempts');
+    localStorage.removeItem('login_attempts_time');
+}
+
+/* ══════════════════════════════════════════════
+   معالجة رد السيرفر
+══════════════════════════════════════════════ */
+function _handleResponse(data, status) {
+    if (data.status === 'locked' || status === 429) {
+        const rem = data.remaining || 120;
+        startLockout(rem);
+        showAlert('locked', data.message || T.locked);
+        _setBtn(`🔒 ${T.banned}`, true);
+        _storeLockout(rem);
+        return;
+    }
+
+    if (data.status === 'success') {
+        failCount = 0;
+        _clearStoredAttempts();
+        if (document.getElementById('rememberMe')?.checked) {
+            localStorage.setItem('login_identifier', document.getElementById('identifier').value.trim());
+        } else {
+            localStorage.removeItem('login_identifier');
+        }
+        const card = document.getElementById('loginCard');
+        if (card) card.classList.add('success-pulse');
+        const h = new Date().getHours();
+        const greet = h < 12 ? T.morning : h < 17 ? T.hello : h < 20 ? T.evening : T.night;
+        const name = data.message?.replace('أهلاً ', '').replace(' 👋', '') || '';
+        showAlert('success', `${greet} ${name} 👋 — ${T.redirecting}`);
+        _setBtn(`✅ ${T.verified}`, true);
+        sessionStorage.clear();
+        setTimeout(() => {
+            window.location.href = data.redirect;
+        }, 800);
+        return;
+    }
+
+    failCount++;
+    _storeAttempt();
+    if (data.errors?.identifier) _fieldErr('identifier', 'errIdentifierMsg', data.errors.identifier);
+    if (data.errors?.password) _fieldErr('password', 'errPasswordMsg', data.errors.password);
+    if (data.message && !data.errors) showAlert('error', data.message);
+    if (data.attempts_left !== undefined) _updateAttBar(data.attempts_left);
+    if (failCount >= 2 && currentTab === 'sponsor') {
+        const hint = document.getElementById('hintForgot');
+        if (hint) hint.classList.add('show');
+    }
+    _setLoading(false);
+    _setBtn(`🔑 ${T.login}`, false);
+}
+
+/* ══════════════════════════════════════════════
+   إرسال النموذج
+══════════════════════════════════════════════ */
+async function submitLogin() {
+    const honeypot = document.querySelector('[name=honeypot]');
+    if (honeypot && honeypot.value) return;
+
+    const now = Date.now();
+    if (now - lastSubmit < 800) return;
+    lastSubmit = now;
+
+    const identifier = document.getElementById('identifier')?.value.trim() || '';
+    const password = document.getElementById('password')?.value || '';
+
+    if (!_validateLocally(identifier, password)) return;
+    if (INJECT_PATTERN.test(identifier) || INJECT_PATTERN.test(password)) {
+        showAlert('error', T.invalidInputs);
+        return;
+    }
+
+    _setLoading(true);
+
+    try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+        const [res] = await Promise.all([
+            fetch(window.location.pathname, {
+                method: 'POST',
+                body: _buildForm(identifier, password),
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                signal: controller.signal,
+            }),
+            new Promise(r => setTimeout(r, 400)),
+        ]);
+
+        clearTimeout(timeoutId);
+        const data = await res.json();
+        _handleResponse(data, res.status);
+    } catch (error) {
+        if (error.name === 'AbortError') {
+            showAlert('error', 'استغرق الطلب وقتاً طويلاً، يرجى المحاولة مجدداً');
+        } else {
+            showAlert('error', T.connectionError);
+        }
+        _setLoading(false);
+    }
+}
+
+/* ══════════════════════════════════════════════
+   ربط الدوال بالنافذة (لتعمل مع onclick في HTML)
+══════════════════════════════════════════════ */
+window.switchTab = switchTab;
+window.onIdentifierInput = onIdentifierInput;
+window.onPasswordInput = onPasswordInput;
+window.submitLogin = submitLogin;
+window.togglePass = togglePass;
+window.clearErr = clearErr;
+
+/* ══════════════════════════════════════════════
+   أحداث عند تحميل الصفحة
+══════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+    setGreeting();
+    const identifier = document.getElementById('identifier');
+    if (identifier) identifier.focus();
+    _loadRemembered();
+    _checkStoredLockout();
+});
+
+/* ══════════════════════════════════════════════
+   Enter = دخول
+══════════════════════════════════════════════ */
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') submitLogin();
+});
+
+/* ══════════════════════════════════════════════
+   DevTools protection (جزئي)
+══════════════════════════════════════════════ */
+const passwordInput = document.getElementById('password');
+if (passwordInput) {
+    passwordInput.addEventListener('focus', function() {
+        this.setAttribute('autocomplete', 'new-password');
+    });
+}
+</script>
+{% endblock %}

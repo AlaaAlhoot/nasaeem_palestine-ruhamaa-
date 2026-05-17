@@ -1,0 +1,1056 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% load dashboard_filters %}
+{% block title %}لوحة التحكم{% endblock %}
+
+{% block extra_css %}
+<style>
+:root {
+    --primary: #6B8E23;
+    --success: #28a745;
+    --info: #17a2b8;
+    --warning: #ffc107;
+    --danger: #dc3545;
+}
+
+/* بطاقات الإحصائيات */
+.stat-card {
+    background: linear-gradient(135deg, var(--primary), #5a7a1d);
+    color: white;
+    border: none;
+    border-radius: 15px;
+    padding: 20px;
+    transition: all .3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,.1) 0%, transparent 70%);
+    transform: scale(0);
+    transition: transform .5s;
+}
+
+.stat-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 25px rgba(0,0,0,.2);
+}
+
+.stat-card:hover::before {
+    transform: scale(1);
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.stat-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 4rem;
+    opacity: .15;
+}
+
+/* البطاقات العامة */
+.chart-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 2px 15px rgba(0,0,0,.08);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.chart-card:hover {
+    box-shadow: 0 5px 25px rgba(0,0,0,.12);
+    transform: translateY(-3px);
+}
+
+/* الإجراءات السريعة */
+.quick-action-card {
+    border: 2px solid #f0f0f0;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    transition: all .3s;
+    cursor: pointer;
+    background: white;
+}
+
+.quick-action-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,.1);
+}
+
+.quick-action-card i {
+    transition: transform .3s;
+}
+
+.quick-action-card:hover i {
+    transform: scale(1.2);
+}
+
+/* عناصر النشاط */
+.activity-item {
+    padding: 15px;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background .2s;
+}
+
+.activity-item:hover {
+    background: #f8f9fa;
+}
+
+/* بطاقات الرسائل */
+.message-card {
+    border-left: 4px solid var(--primary);
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    background: white;
+    transition: all .2s;
+}
+
+.message-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,.1);
+    transform: translateX(-5px);
+}
+
+/* بطاقات المشاريع */
+.project-card {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all .3s;
+    box-shadow: 0 2px 10px rgba(0,0,0,.08);
+}
+
+.project-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0,0,0,.15);
+}
+
+/* صناديق المقاييس */
+.metric-box {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+/* Avatar المستخدم */
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+/* Badge النبض */
+.badge-pulse {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* صحة النظام */
+.health-item {
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.health-item:hover {
+    background-color: #e9ecef;
+    transform: scale(1.02);
+}
+
+.health-bar-container {
+    width: 100%;
+    height: 8px;
+    background-color: #e9ecef;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.health-bar {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.health-bar-success {
+    background: linear-gradient(90deg, #28a745 0%, #20c997 50%, #28a745 100%);
+    background-size: 200% 100%;
+    animation: gradient-shift 3s ease infinite;
+    box-shadow: 0 0 10px rgba(40, 167, 69, 0.5);
+}
+
+.health-bar-warning {
+    background: linear-gradient(90deg, #ffc107 0%, #fd7e14 50%, #ffc107 100%);
+    background-size: 200% 100%;
+    animation: gradient-shift 3s ease infinite;
+    box-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+}
+
+.health-bar-danger {
+    background: linear-gradient(90deg, #dc3545 0%, #c82333 50%, #dc3545 100%);
+    background-size: 200% 100%;
+    animation: gradient-shift 3s ease infinite, pulse-danger 2s ease-in-out infinite;
+    box-shadow: 0 0 15px rgba(220, 53, 69, 0.7);
+}
+
+.health-bar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: linear-gradient(45deg, rgba(255,255,255,0.2) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.2) 75%, transparent 75%, transparent);
+    background-size: 20px 20px;
+    animation: move-stripes 1s linear infinite;
+}
+
+.health-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes move-stripes {
+    from { background-position: 0 0; }
+    to { background-position: 20px 0; }
+}
+
+@keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+@keyframes pulse-danger {
+    0%, 100% { opacity: 1; box-shadow: 0 0 15px rgba(220, 53, 69, 0.7); }
+    50% { opacity: 0.8; box-shadow: 0 0 25px rgba(220, 53, 69, 1); }
+}
+
+@keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+@media (max-width: 768px) {
+    .health-item { margin-bottom: 1rem; }
+    .health-bar-container { height: 6px; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- ترحيب -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card chart-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="mb-1">مرحباً، {{ request.user.get_full_name|default:request.user.username }} 👋</h4>
+                            <p class="text-muted mb-0">إليك ملخص سريع لنشاط اليوم</p>
+                        </div>
+                        <div class="text-end">
+                            <div class="text-muted small mb-1">
+                                <i class="fas fa-calendar-alt"></i> الميلادي: {{ gregorian_date }}
+                            </div>
+                            <div class="text-muted small mb-1">
+                                <i class="fas fa-calendar"></i> الهجري: {{ hijri_date }}
+                            </div>
+                            <div class="text-primary fw-bold" id="currentTime">
+                                <i class="fas fa-clock"></i> {{ now|date:"h:i:s A" }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- الإحصائيات الرئيسية -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="stat-card" style="background:linear-gradient(135deg,#667eea,#764ba2)">
+                <i class="fas fa-users stat-icon"></i>
+                <div class="stat-number">{{ statistics.users.total }}</div>
+                <div class="mb-2">إجمالي المستخدمين</div>
+                <div class="d-flex justify-content-between small">
+                    <span><i class="fas fa-arrow-up"></i> {{ statistics.users.new_week }} أسبوع</span>
+                    <span>{{ statistics.users.active }} نشط</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="stat-card" style="background:linear-gradient(135deg,#f093fb,#f5576c)">
+                <i class="fas fa-project-diagram stat-icon"></i>
+                <div class="stat-number">{{ statistics.projects.total }}</div>
+                <div class="mb-2">إجمالي المشاريع</div>
+                <div class="d-flex justify-content-between small">
+                    <span><i class="fas fa-check-circle"></i> {{ statistics.projects.active }} نشط</span>
+                    <span><i class="fas fa-star"></i> {{ statistics.projects.featured }} مميز</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="stat-card" style="background:linear-gradient(135deg,#4facfe,#00f2fe)">
+                <i class="fas fa-envelope stat-icon"></i>
+                <div class="stat-number">{{ statistics.messages.total }}</div>
+                <div class="mb-2">رسائل التواصل</div>
+                <div class="d-flex justify-content-between small">
+                    <span class="badge-pulse"><i class="fas fa-exclamation-circle"></i> {{ statistics.messages.new }} جديدة</span>
+                    <span><i class="fas fa-fire"></i> {{ statistics.messages.urgent }} عاجل</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="stat-card" style="background:linear-gradient(135deg,#fa709a,#fee140)">
+                <i class="fas fa-bell stat-icon"></i>
+                <div class="stat-number">{{ statistics.newsletter.active }}</div>
+                <div class="mb-2">مشتركي النشرة</div>
+                <div class="d-flex justify-content-between small">
+                    <span><i class="fas fa-check"></i> {{ statistics.newsletter.confirmed }} مؤكد</span>
+                    <span><i class="fas fa-arrow-up"></i> {{ statistics.newsletter.new_week }} جديد</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- النشاط والمخططات -->
+    <div class="row mb-4">
+        <!-- مخطط النشاط الأسبوعي -->
+        <div class="col-lg-8 mb-3">
+            <div class="card chart-card h-100">
+                <div class="card-header bg-white border-0">
+                    <h6 class="mb-0"><i class="fas fa-chart-area text-primary"></i> نظرة عامة - آخر 7 أيام</h6>
+                </div>
+                <div class="card-body">
+                    <canvas id="weeklyActivityChart" height="280"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- صحة النظام -->
+        <div class="col-lg-4 mb-3">
+            <div class="card chart-card h-100">
+                <div class="card-body">
+                    <h6 class="mb-3 text-center">
+                        <i class="fas fa-heartbeat" style="color: {{ system_health.get_status_color }}"></i> 
+                        صحة النظام
+                        <span class="badge" style="background-color: {{ system_health.get_status_color }}; font-size: 0.7rem; padding: 4px 10px; border-radius: 12px; margin-right: 8px;">
+                            {{ system_health.get_status_display }}
+                        </span>
+                    </h6>
+                    
+                    <!-- المعالج -->
+                    <div class="health-item mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                                <i class="fas fa-microchip" style="color: {% if system_health.cpu_usage_percent >= 80 %}#dc3545{% elif system_health.cpu_usage_percent >= 60 %}#ffc107{% else %}#28a745{% endif %}"></i>
+                                <span class="text-muted">المعالج</span>
+                            </div>
+                            <span class="fw-bold" style="color: {% if system_health.cpu_usage_percent >= 80 %}#dc3545{% elif system_health.cpu_usage_percent >= 60 %}#ffc107{% else %}#28a745{% endif %}; font-size: 1.1rem;">
+                                {{ system_health.cpu_usage_percent|floatformat:1 }}%
+                            </span>
+                        </div>
+                        <div class="health-bar-container">
+                            <div class="health-bar {% if system_health.cpu_usage_percent >= 80 %}health-bar-danger{% elif system_health.cpu_usage_percent >= 60 %}health-bar-warning{% else %}health-bar-success{% endif %}" 
+                                 style="width: {{ system_health.cpu_usage_percent }}%;"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- الذاكرة -->
+                    <div class="health-item mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                                <i class="fas fa-memory" style="color: {% if system_health.memory_usage_percent >= 80 %}#dc3545{% elif system_health.memory_usage_percent >= 60 %}#ffc107{% else %}#28a745{% endif %}"></i>
+                                <span class="text-muted">الذاكرة</span>
+                            </div>
+                            <span class="fw-bold" style="color: {% if system_health.memory_usage_percent >= 80 %}#dc3545{% elif system_health.memory_usage_percent >= 60 %}#ffc107{% else %}#28a745{% endif %}; font-size: 1.1rem;">
+                                {{ system_health.memory_usage_percent|floatformat:1 }}%
+                            </span>
+                        </div>
+                        <div class="health-bar-container">
+                            <div class="health-bar {% if system_health.memory_usage_percent >= 80 %}health-bar-danger{% elif system_health.memory_usage_percent >= 60 %}health-bar-warning{% else %}health-bar-success{% endif %}" 
+                                 style="width: {{ system_health.memory_usage_percent }}%;"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- القرص -->
+                    <div class="health-item mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                                <i class="fas fa-hdd" style="color: {% if system_health.disk_usage_percent >= 80 %}#dc3545{% elif system_health.disk_usage_percent >= 60 %}#ffc107{% else %}#28a745{% endif %}"></i>
+                                <span class="text-muted">القرص</span>
+                            </div>
+                            <span class="fw-bold" style="color: {% if system_health.disk_usage_percent >= 80 %}#dc3545{% elif system_health.disk_usage_percent >= 60 %}#ffc107{% else %}#28a745{% endif %}; font-size: 1.1rem;">
+                                {{ system_health.disk_usage_percent|floatformat:1 }}%
+                            </span>
+                        </div>
+                        <div class="health-bar-container">
+                            <div class="health-bar {% if system_health.disk_usage_percent >= 80 %}health-bar-danger{% elif system_health.disk_usage_percent >= 60 %}health-bar-warning{% else %}health-bar-success{% endif %}" 
+                                 style="width: {{ system_health.disk_usage_percent }}%;"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- معلومات إضافية -->
+                    <div class="row text-center mt-4 pt-3" style="border-top: 1px solid #e9ecef;">
+                        <div class="col-6">
+                            <div class="d-flex flex-column align-items-center">
+                                <i class="fas fa-users mb-2" style="color: #17a2b8; font-size: 1.5rem;"></i>
+                                <span class="text-muted small">نشط</span>
+                                <span class="fw-bold text-primary" style="font-size: 1.2rem;">{{ system_health.active_users }}</span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="d-flex flex-column align-items-center">
+                                <i class="fas fa-database mb-2" style="color: #6f42c1; font-size: 1.5rem;"></i>
+                                <span class="text-muted small">اتصالات</span>
+                                <span class="fw-bold text-info" style="font-size: 1.2rem;">{{ system_health.db_connections }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- الإجراءات السريعة -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card chart-card">
+            <div class="card-header bg-white border-0">
+                <h6 class="mb-0"><i class="fas fa-bolt text-warning"></i> الإجراءات السريعة</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for action in quick_actions %}
+                        {% if action.title_ar != 'إدارة الرسائل' %}
+                        <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                            <a href="{{ action.action_url }}" class="text-decoration-none">
+                                <div class="quick-action-card">
+                                    <i class="{{ action.icon }} fa-3x mb-3" style="color:{{ action.color }}"></i>
+                                    <div class="fw-bold">{{ action.title_ar }}</div>
+                                </div>
+                            </a>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- إحصائيات التفاعل -->
+    <div class="row mb-4">
+        <div class="col-lg-4 mb-3">
+            <div class="metric-box" style="background:linear-gradient(135deg,#667eea,#764ba2)">
+                <i class="fas fa-eye fa-2x mb-2"></i>
+                <h3>{{ engagement_stats.total_views|default:0 }}</h3>
+                <p class="mb-0">إجمالي المشاهدات</p>
+            </div>
+        </div>
+        <div class="col-lg-4 mb-3">
+            <div class="metric-box" style="background:linear-gradient(135deg,#f093fb,#f5576c)">
+                <i class="fas fa-heart fa-2x mb-2"></i>
+                <h3>{{ engagement_stats.total_likes|default:0 }}</h3>
+                <p class="mb-0">إجمالي الإعجابات</p>
+            </div>
+        </div>
+        <div class="col-lg-4 mb-3">
+            <div class="metric-box" style="background:linear-gradient(135deg,#4facfe,#00f2fe)">
+                <i class="fas fa-share fa-2x mb-2"></i>
+                <h3>{{ engagement_stats.total_shares|default:0 }}</h3>
+                <p class="mb-0">إجمالي المشاركات</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- الأنشطة والرسائل -->
+    <div class="row mb-4">
+        <!-- الأنشطة الحديثة -->
+        <div class="col-lg-6 mb-3">
+            <div class="card chart-card">
+                <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0"><i class="fas fa-history text-info"></i> الأنشطة الحديثة</h6>
+                    <a href="{% url 'dashboard:activity_logs' %}" class="btn btn-sm btn-outline-primary">عرض الكل</a>
+                </div>
+                <div class="card-body p-0" style="max-height:400px;overflow-y:auto">
+                    {% for activity in recent_activities %}
+                    <div class="activity-item d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center" 
+                                 style="width:40px;height:40px;background:{% if activity.action == 'create' %}#28a74520{% elif activity.action == 'update' %}#17a2b820{% elif activity.action == 'delete' %}#dc354520{% else %}#6B8E2320{% endif %}">
+                                <i class="fas fa-{% if activity.action == 'create' %}plus{% elif activity.action == 'update' %}edit{% elif activity.action == 'delete' %}trash{% else %}eye{% endif %}" 
+                                   style="color:{% if activity.action == 'create' %}#28a745{% elif activity.action == 'update' %}#17a2b8{% elif activity.action == 'delete' %}#dc3545{% else %}#6B8E23{% endif %}"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <div class="fw-bold small">{{ activity.title }}</div>
+                            <div class="text-muted small">
+                                <i class="fas fa-user"></i> {{ activity.username }} • 
+                                <i class="fas fa-clock"></i> {{ activity.timestamp|timesince }}
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="text-center p-4 text-muted">
+                        <i class="fas fa-inbox fa-2x mb-2"></i>
+                        <p>لا توجد أنشطة حديثة</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- الرسائل الجديدة -->
+{#        <div class="col-lg-6 mb-3">#}
+{#            <div class="card chart-card">#}
+{#                <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">#}
+{#                    <h6 class="mb-0"><i class="fas fa-envelope text-success"></i> الرسائل الجديدة</h6>#}
+{#                    <a href="{% url 'dashboard:messages_management' %}" class="btn btn-sm btn-outline-primary">عرض الكل</a>#}
+{#                </div>#}
+{#                <div class="card-body" style="max-height:400px;overflow-y:auto">#}
+{#                    {% for message in new_messages %}#}
+{#                    <div class="message-card">#}
+{#                        <div class="d-flex align-items-start">#}
+{#                            <div class="user-avatar flex-shrink-0">{{ message.name|slice:":1"|upper }}</div>#}
+{#                            <div class="flex-grow-1 ms-3">#}
+{#                                <div class="d-flex justify-content-between align-items-start">#}
+{#                                    <div>#}
+{#                                        <div class="fw-bold">{{ message.name }}</div>#}
+{#                                        <div class="small text-muted">{{ message.subject|truncatechars:40 }}</div>#}
+{#                                    </div>#}
+{#                                    <span class="badge bg-{% if message.priority == 'urgent' %}danger{% elif message.priority == 'high' %}warning{% else %}info{% endif %}">#}
+{#                                        {{ message.get_priority_display }}#}
+{#                                    </span>#}
+{#                                </div>#}
+{#                                <div class="small text-muted mt-1">#}
+{#                                    <i class="fas fa-clock"></i> {{ message.created_at|timesince }}#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    {% empty %}#}
+{#                    <div class="text-center text-muted py-4">#}
+{#                        <i class="fas fa-check-circle fa-2x mb-2 text-success"></i>#}
+{#                        <p>لا توجد رسائل جديدة</p>#}
+{#                    </div>#}
+{#                    {% endfor %}#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+    </div>
+
+    <!-- المشاريع -->
+    <div class="row mb-4">
+        <!-- أهم المشاريع -->
+        <div class="col-lg-6 mb-3">
+            <div class="card chart-card">
+                <div class="card-header bg-white border-0">
+                    <h6 class="mb-0"><i class="fas fa-star text-warning"></i> أهم المشاريع</h6>
+                </div>
+                <div class="card-body">
+                    {% for project in top_projects %}
+                    <div class="d-flex align-items-center mb-3 p-2 rounded" style="background:#f8f9fa">
+                        <div class="flex-shrink-0">
+                            <div class="badge bg-primary rounded-circle" style="width:35px;height:35px;display:flex;align-items:center;justify-content:center">{{ forloop.counter }}</div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <div class="fw-bold">{{ project.title_ar|truncatechars:35 }}</div>
+                            <div class="small text-muted">
+                                <span class="badge bg-success me-1"><i class="fas fa-eye"></i> {{ project.views_count }}</span>
+                                <span class="badge bg-danger"><i class="fas fa-heart"></i> {{ project.likes_count }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="text-center text-muted py-4">لا توجد مشاريع</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    
+        <!-- المشاريع الحديثة -->
+        <div class="col-lg-6 mb-3">
+            <div class="card chart-card">
+                <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0"><i class="fas fa-project-diagram text-primary"></i> المشاريع الحديثة</h6>
+                    <a href="{% url 'dashboard:projects_management' %}" class="btn btn-sm btn-outline-primary">إدارة المشاريع</a>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for project in recent_projects|slice:":4" %}
+                        <div class="col-md-6 mb-3">
+                            <div class="project-card card h-100">
+                                <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <span class="badge bg-{% if project.status == 'active' %}success{% elif project.status == 'completed' %}primary{% elif project.status == 'planning' %}warning{% else %}secondary{% endif %}">
+                                            {{ project.get_status_display }}
+                                        </span>
+                                        <small class="text-muted">{{ project.created_at|date:"M d" }}</small>
+                                    </div>
+                                    <h6 class="mb-2" style="height:45px;overflow:hidden">{{ project.title_ar|truncatechars:40 }}</h6>
+                                    <div class="d-flex justify-content-between small text-muted">
+                                        <span><i class="fas fa-eye"></i> {{ project.views_count|default:0 }}</span>
+                                        <span><i class="fas fa-heart text-danger"></i> {{ project.likes_count|default:0 }}</span>
+                                        <span><i class="fas fa-share text-success"></i> {{ project.shares_count|default:0 }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="col-12 text-center text-muted py-4">
+                            <i class="fas fa-folder-open fa-2x mb-2"></i>
+                            <p>لا توجد مشاريع حديثة</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- المستخدمين النشطين -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card chart-card">
+                <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0"><i class="fas fa-users-cog text-info"></i> المستخدمين النشطين</h6>
+                    <a href="{% url 'dashboard:users_management' %}" class="btn btn-sm btn-outline-primary">إدارة المستخدمين</a>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for user in active_users %}
+                        <div class="col-lg-2 col-md-4 col-6 mb-3">
+                            <div class="text-center p-3 border rounded" style="transition:all .3s;cursor:pointer">
+                                <div class="user-avatar mx-auto mb-2" style="width:50px;height:50px;font-size:1.2rem">
+                                    {{ user.get_full_name|slice:":1"|upper|default:user.username|slice:":1"|upper }}
+                                </div>
+                                <div class="fw-bold small">{{ user.get_full_name|default:user.username|truncatechars:15 }}</div>
+                                <div class="small text-muted">
+                                    {% if user.is_superuser %}
+                                        <span class="badge bg-danger">مدير</span>
+                                    {% elif user.is_staff %}
+                                        <span class="badge bg-warning">موظف</span>
+                                    {% else %}
+                                        <span class="badge bg-info">عضو</span>
+                                    {% endif %}
+                                </div>
+                                <div class="small text-muted mt-1">
+                                    <i class="fas fa-clock"></i> {{ user.last_login|timesince }}
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="col-12 text-center text-muted py-4">
+                            <i class="fas fa-user-slash fa-2x mb-2"></i>
+                            <p>لا يوجد مستخدمين نشطين</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ملخص سريع -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card chart-card text-center">
+                <div class="card-body">
+                    <i class="fas fa-calendar-day fa-3x text-primary mb-3"></i>
+                    <h4 class="text-primary">{{ statistics.activities.today }}</h4>
+                    <p class="text-muted mb-0">نشاط اليوم</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card chart-card text-center">
+                <div class="card-body">
+                    <i class="fas fa-calendar-week fa-3x text-success mb-3"></i>
+                    <h4 class="text-success">{{ statistics.activities.week }}</h4>
+                    <p class="text-muted mb-0">نشاط الأسبوع</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card chart-card text-center">
+                <div class="card-body">
+                    <i class="fas fa-chart-line fa-3x text-info mb-3"></i>
+                    <h4 class="text-info">{{ statistics.projects.new_week }}</h4>
+                    <p class="text-muted mb-0">مشاريع جديدة</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card chart-card text-center">
+                <div class="card-body">
+                    <i class="fas fa-envelope-open-text fa-3x text-warning mb-3"></i>
+                    <h4 class="text-warning">{{ statistics.messages.week }}</h4>
+                    <p class="text-muted mb-0">رسائل الأسبوع</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- روابط سريعة -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card chart-card">
+                <div class="card-body text-center">
+                    <h6 class="mb-3"><i class="fas fa-link text-primary"></i> روابط سريعة</h6>
+                    <div class="d-flex flex-wrap justify-content-center gap-2">
+                        <a href="{% url 'dashboard:analytics' %}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-chart-pie"></i> التحليلات
+                        </a>
+                        <a href="{% url 'dashboard:reports' %}" class="btn btn-outline-success btn-sm">
+                            <i class="fas fa-file-export"></i> التقارير
+                        </a>
+                        <a href="{% url 'dashboard:activity_logs' %}" class="btn btn-outline-info btn-sm">
+                            <i class="fas fa-history"></i> سجل النشاط
+                        </a>
+                        <a href="{% url 'dashboard:settings' %}" class="btn btn-outline-warning btn-sm">
+                            <i class="fas fa-cog"></i> الإعدادات
+                        </a>
+                        <a href="{% url 'dashboard:backup' %}" class="btn btn-outline-danger btn-sm">
+                            <i class="fas fa-database"></i> النسخ الاحتياطي
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'vendor/chartjs/chart.umd.min.js' %}"></script>
+<script>
+'use strict';
+
+// ========================================
+// الإعدادات العامة
+// ========================================
+
+const colors = {
+    primary: '#6B8E23',
+    success: '#28a745',
+    info: '#17a2b8',
+    warning: '#ffc107',
+    danger: '#dc3545',
+    purple: '#6f42c1'
+};
+
+Chart.defaults.font.family = 'Cairo, sans-serif';
+Chart.defaults.responsive = true;
+Chart.defaults.maintainAspectRatio = false;
+
+// ========================================
+// تحديث الوقت (نظام 12 ساعة)
+// ========================================
+
+function updateTime() {
+    const now = new Date();
+    let hours = now.getHours();
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    const ampm = hours >= 12 ? 'م' : 'ص';
+    
+    hours = hours % 12 || 12;
+    hours = String(hours).padStart(2, '0');
+    
+    const timeElement = document.getElementById('currentTime');
+    if (timeElement) {
+        timeElement.innerHTML = `<i class="fas fa-clock"></i> ${hours}:${minutes}:${seconds} ${ampm}`;
+    }
+}
+
+setInterval(updateTime, 1000);
+updateTime();
+
+// ========================================
+// مخطط النشاط الأسبوعي
+// ========================================
+
+const ctx = document.getElementById('weeklyActivityChart');
+if (ctx) {
+    const chartLabels = {{ chart_labels|safe }};
+    const projectsData = {{ projects_chart_data|safe }};
+    const messagesData = {{ messages_chart_data|safe }};
+    const usersData = {{ users_chart_data|safe }};
+    
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: chartLabels,
+            datasets: [
+                {
+                    label: 'المشاريع',
+                    data: projectsData,
+                    borderColor: colors.primary,
+                    backgroundColor: colors.primary + '20',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 5,
+                    pointHoverRadius: 8,
+                    pointBackgroundColor: colors.primary,
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                },
+                {
+                    label: 'الرسائل',
+                    data: messagesData,
+                    borderColor: colors.info,
+                    backgroundColor: colors.info + '20',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 5,
+                    pointHoverRadius: 8,
+                    pointBackgroundColor: colors.info,
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                },
+                {
+                    label: 'المستخدمين',
+                    data: usersData,
+                    borderColor: colors.purple,
+                    backgroundColor: colors.purple + '20',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 5,
+                    pointHoverRadius: 8,
+                    pointBackgroundColor: colors.purple,
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        usePointStyle: true,
+                        padding: 15,
+                        font: { size: 12, weight: 'bold' }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.85)',
+                    padding: 12,
+                    cornerRadius: 8,
+                    titleFont: { size: 14, weight: 'bold' },
+                    bodyFont: { size: 13 },
+                    callbacks: {
+                        label: (context) => `${context.dataset.label}: ${context.parsed.y}`
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0,
+                        font: { size: 11 }
+                    },
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)',
+                        drawBorder: false
+                    }
+                },
+                x: {
+                    ticks: {
+                        font: { size: 11 }
+                    },
+                    grid: {
+                        display: false,
+                        drawBorder: false
+                    }
+                }
+            }
+        }
+    });
+}
+
+// ========================================
+// عداد متحرك للأرقام
+// ========================================
+
+function animateValue(element, start, end, duration) {
+    let startTimestamp = null;
+    const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        element.textContent = Math.floor(progress * (end - start) + start);
+        if (progress < 1) {
+            window.requestAnimationFrame(step);
+        }
+    };
+    window.requestAnimationFrame(step);
+}
+
+// ========================================
+// تأثيرات Hover
+// ========================================
+
+function addHoverEffect(selector, translateY = -8, scale = 1.02) {
+    document.querySelectorAll(selector).forEach(element => {
+        element.addEventListener('mouseenter', function() {
+            this.style.transform = `translateY(${translateY}px) scale(${scale})`;
+        });
+        element.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+}
+
+// ========================================
+// التهيئة عند التحميل
+// ========================================
+
+document.addEventListener('DOMContentLoaded', function() {
+    // تحريك الأرقام
+    document.querySelectorAll('.stat-number').forEach(element => {
+        const finalValue = parseInt(element.textContent);
+        if (!isNaN(finalValue) && finalValue > 0) {
+            element.textContent = '0';
+            setTimeout(() => animateValue(element, 0, finalValue, 1500), 200);
+        }
+    });
+    
+    // إضافة تأثيرات hover
+    addHoverEffect('.quick-action-card', -8, 1.02);
+    addHoverEffect('.stat-card', -10, 1.02);
+    addHoverEffect('.project-card', -5, 1.01);
+    addHoverEffect('.message-card', 0, 1.01);
+    
+    // تلميح للبطاقات الفارغة
+    document.querySelectorAll('.chart-card').forEach(card => {
+        card.style.transition = 'all 0.3s ease';
+    });
+});
+
+// ========================================
+// تحديث تلقائي لصحة النظام
+// ========================================
+
+let updateCounter = 0;
+const updateInterval = setInterval(function() {
+    updateCounter++;
+    console.log(`🔄 محاولة تحديث رقم ${updateCounter}`);
+    
+    fetch('{% url "dashboard:home" %}', {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log('✅ تم تحديث البيانات بنجاح');
+        }
+    })
+    .catch(error => {
+        console.warn('⚠️ خطأ في التحديث:', error.message);
+    });
+}, 30000); // كل 30 ثانية
+
+// ========================================
+// تنظيف عند مغادرة الصفحة
+// ========================================
+
+window.addEventListener('beforeunload', function() {
+    clearInterval(updateInterval);
+});
+
+// ========================================
+// اختصارات لوحة المفاتيح
+// ========================================
+
+document.addEventListener('keydown', function(e) {
+    // Ctrl/Cmd + R: تحديث يدوي
+    if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
+        console.log('🔄 تحديث يدوي...');
+    }
+    
+    // Escape: إغلاق أي مودال مفتوح
+    if (e.key === 'Escape') {
+        const modals = document.querySelectorAll('.modal.show');
+        modals.forEach(modal => {
+            const bsModal = bootstrap.Modal.getInstance(modal);
+            if (bsModal) bsModal.hide();
+        });
+    }
+});
+
+// ========================================
+// مراقبة أداء الصفحة
+// ========================================
+
+if (window.performance && window.performance.timing) {
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            const perfData = window.performance.timing;
+            const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
+            console.log(`⚡ وقت تحميل الصفحة: ${pageLoadTime}ms`);
+        }, 0);
+    });
+}
+
+// ========================================
+// رسالة النجاح
+// ========================================
+
+console.log('%c✅ تم تحميل لوحة التحكم بنجاح', 'color: #28a745; font-size: 16px; font-weight: bold;');
+console.log('%c🎨 جميع التأثيرات البصرية نشطة', 'color: #17a2b8; font-size: 12px;');
+console.log('%c🔄 التحديث التلقائي: مفعّل (كل 30 ثانية)', 'color: #6B8E23; font-size: 12px;');
+
+</script>
+{% endblock %}

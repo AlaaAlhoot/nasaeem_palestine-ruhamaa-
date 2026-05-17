@@ -1,0 +1,2564 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-10-21 10:56+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# ==================== admin.py ====================
+
+#: .\admin.py:21
+msgid "معلومات أساسية"
+msgstr "Basic Information"
+
+#: .\admin.py:24 .\admin.py:238
+
+
+#: .\admin.py:27
+msgid "الموقع الجغرافي"
+msgstr "Geographic Location"
+
+#: .\admin.py:31 .\admin.py:242
+msgid "وسائل التواصل الاجتماعي"
+msgstr "Social Media"
+
+#: .\admin.py:35
+msgid "معلومات الجمعية"
+msgstr "Association Information"
+
+#: .\admin.py:38 .\models.py:337
+msgid "الإحصائيات"
+msgstr "Statistics"
+
+#: .\admin.py:42
+msgid "التواريخ"
+msgstr "Dates"
+
+#: .\admin.py:69
+msgid "المحتوى الأساسي"
+msgstr "Main Content"
+
+#: .\admin.py:73
+msgid "زر الإجراء"
+msgstr "Action Button"
+
+#: .\admin.py:77 .\admin.py:246
+msgid "إعدادات العرض"
+msgstr "Display Settings"
+
+#: .\admin.py:91
+msgid "معاينة الصورة"
+msgstr "Image Preview"
+
+#: .\admin.py:106 .\admin.py:135 .\admin.py:197
+msgid "المحتوى"
+msgstr "Content"
+
+#: .\admin.py:109 .\admin.py:200
+msgid "التصميم"
+msgstr "Design"
+
+#: .\admin.py:112 .\admin.py:142 .\admin.py:176 .\admin.py:203
+msgid "الإعدادات"
+msgstr "Settings"
+
+#: .\admin.py:124 .\admin.py:215
+msgid "الأيقونة"
+msgstr "Icon"
+
+#: .\admin.py:138 .\admin.py:172
+msgid "SEO"
+msgstr "SEO"
+
+#: .\admin.py:160
+msgid "الرؤية"
+msgstr "Vision"
+
+#: .\admin.py:164
+msgid "الرسالة"
+msgstr "Mission"
+
+#: .\admin.py:168
+msgid "القيم"
+msgstr "Values"
+
+#: .\admin.py:230
+msgid "المعلومات الأساسية"
+msgstr "Basic Information"
+
+#: .\admin.py:234
+msgid "النبذة الشخصية"
+msgstr "Biography"
+
+#: .\admin.py:263 .\models.py:99 .\models.py:250
+
+
+
+# ==================== apps.py ====================
+
+#: .\apps.py:9
+msgid "التطبيق الرئيسي"
+msgstr "Main Application"
+
+# ==================== models.py ====================
+
+#: .\models.py:12
+msgid "اسم الموقع بالعربية"
+msgstr "Site Name in Arabic"
+
+#: .\models.py:13
+msgid "اسم الموقع بالإنجليزية"
+msgstr "Site Name in English"
+
+#: .\models.py:16
+msgid "الشعار"
+msgstr "Logo"
+
+#: .\models.py:17
+msgid "أيقونة الموقع"
+msgstr "Site Icon"
+
+#: .\models.py:18
+msgid "الصورة الافتراضية"
+msgstr "Default Image"
+
+#: .\models.py:23
+msgid "رقم الهاتف يجب أن يكون بصيغة صحيحة"
+msgstr "Phone number must be in a valid format"
+
+#: .\models.py:25 .\models.py:210
+msgid "رقم الهاتف"
+msgstr "Phone Number"
+
+#: .\models.py:26
+msgid "رقم الواتساب"
+msgstr "WhatsApp Number"
+
+#: .\models.py:27 .\models.py:209 .\models.py:383
+msgid "البريد الإلكتروني"
+msgstr "Email"
+
+#: .\models.py:30 .\models.py:93 .\models.py:241 .\models.py:282
+msgid "العنوان بالعربية"
+msgstr "Title in Arabic"
+
+#: .\models.py:31 .\models.py:94 .\models.py:242 .\models.py:283
+msgid "العنوان بالإنجليزية"
+msgstr "Title in English"
+
+#: .\models.py:34
+msgid "خط العرض"
+msgstr "Latitude"
+
+#: .\models.py:35
+msgid "خط الطول"
+msgstr "Longitude"
+
+#: .\models.py:38 .\models.py:213
+msgid "رابط الفيسبوك"
+msgstr "Facebook Link"
+
+#: .\models.py:39 .\models.py:214
+msgid "رابط تويتر"
+msgstr "Twitter Link"
+
+#: .\models.py:40
+msgid "رابط انستغرام"
+msgstr "Instagram Link"
+
+#: .\models.py:41
+msgid "رابط تيك توك"
+msgstr "TikTok Link"
+
+#: .\models.py:42
+msgid "رابط يوتيوب"
+msgstr "YouTube Link"
+
+#: .\models.py:45
+msgid "نبذة مختصرة عن الجمعية بالعربية"
+msgstr "Brief about the Association in Arabic"
+
+#: .\models.py:46
+msgid "نبذة مختصرة عن الجمعية بالإنجليزية"
+msgstr "Brief about the Association in English"
+
+#: .\models.py:49
+msgid "سنة التأسيس"
+msgstr "Year of Establishment"
+
+#: .\models.py:52
+msgid "عدد المشاريع الإجمالي"
+msgstr "Total Number of Projects"
+
+#: .\models.py:53 .\models.py:327
+msgid "عدد المستفيدين"
+msgstr "Number of Beneficiaries"
+
+#: .\models.py:54
+msgid "إجمالي التبرعات"
+msgstr "Total Donations"
+
+#: .\models.py:57 .\models.py:105 .\models.py:147 .\models.py:173
+#: .\models.py:221 .\models.py:260 .\models.py:332
+msgid "تاريخ الإنشاء"
+msgstr "Creation Date"
+
+#: .\models.py:58 .\models.py:106 .\models.py:148 .\models.py:174
+#: .\models.py:222 .\models.py:261 .\models.py:333
+msgid "تاريخ التحديث"
+msgstr "Update Date"
+
+#: .\models.py:61 .\models.py:62
+msgid "إعدادات الموقع"
+msgstr "Site Settings"
+
+#: .\models.py:70
+msgid "يمكن إنشاء إعدادات موقع واحدة فقط"
+msgstr "Only one site settings can be created"
+
+#: .\models.py:96
+msgid "المحتوى بالعربية"
+msgstr "Content in Arabic"
+
+#: .\models.py:97
+msgid "المحتوى بالإنجليزية"
+msgstr "Content in English"
+
+#: .\models.py:101 .\models.py:143
+msgid "وصف SEO بالعربية"
+msgstr "SEO Description in Arabic"
+
+#: .\models.py:102 .\models.py:144
+msgid "وصف SEO بالإنجليزية"
+msgstr "SEO Description in English"
+
+#: .\models.py:104 .\models.py:146 .\models.py:171 .\models.py:219
+#: .\models.py:258 .\models.py:316 .\models.py:387
+msgid "مُفعل"
+msgstr "Active"
+
+#: .\models.py:109 .\models.py:110
+msgid "صفحة من نحن"
+msgstr "About Us Page"
+
+#: .\models.py:120
+msgid "عنوان الرؤية بالعربية"
+msgstr "Vision Title in Arabic"
+
+#: .\models.py:121
+msgid "عنوان الرؤية بالإنجليزية"
+msgstr "Vision Title in English"
+
+#: .\models.py:122
+msgid "محتوى الرؤية بالعربية"
+msgstr "Vision Content in Arabic"
+
+#: .\models.py:123
+msgid "محتوى الرؤية بالإنجليزية"
+msgstr "Vision Content in English"
+
+#: .\models.py:126
+msgid "عنوان الرسالة بالعربية"
+msgstr "Mission Title in Arabic"
+
+#: .\models.py:127
+msgid "عنوان الرسالة بالإنجليزية"
+msgstr "Mission Title in English"
+
+#: .\models.py:128
+msgid "محتوى الرسالة بالعربية"
+msgstr "Mission Content in Arabic"
+
+#: .\models.py:129
+msgid "محتوى الرسالة بالإنجليزية"
+msgstr "Mission Content in English"
+
+#: .\models.py:132
+msgid "عنوان القيم بالعربية"
+msgstr "Values Title in Arabic"
+
+#: .\models.py:133
+msgid "عنوان القيم بالإنجليزية"
+msgstr "Values Title in English"
+
+#: .\models.py:134
+msgid "محتوى القيم بالعربية"
+msgstr "Values Content in Arabic"
+
+#: .\models.py:135
+msgid "محتوى القيم بالإنجليزية"
+msgstr "Values Content in English"
+
+#: .\models.py:138
+msgid "صورة الرؤية"
+msgstr "Vision Image"
+
+#: .\models.py:139
+msgid "صورة الرسالة"
+msgstr "Mission Image"
+
+#: .\models.py:140
+msgid "صورة القيم"
+msgstr "Values Image"
+
+#: .\models.py:151 .\models.py:152
+msgid "صفحة الرؤية والرسالة"
+msgstr "Vision and Mission Page"
+
+#: .\models.py:161
+msgid "الهدف بالعربية"
+msgstr "Goal in Arabic"
+
+#: .\models.py:162
+msgid "الهدف بالإنجليزية"
+msgstr "Goal in English"
+
+#: .\models.py:164 .\models.py:247
+msgid "الوصف بالعربية"
+msgstr "Description in Arabic"
+
+#: .\models.py:165 .\models.py:248
+msgid "الوصف بالإنجليزية"
+msgstr "Description in English"
+
+#: .\models.py:167 .\models.py:303
+msgid "أيقونة FontAwesome"
+msgstr "FontAwesome Icon"
+
+#: .\models.py:168
+msgid "مثال: fas fa-bullseye"
+msgstr "Example: fas fa-bullseye"
+
+#: .\models.py:170 .\models.py:217 .\models.py:257 .\models.py:315
+#: .\models.py:386
+msgid "الترتيب"
+msgstr "Order"
+
+#: .\models.py:177
+msgid "هدف"
+msgstr "Goal"
+
+#: .\models.py:178
+msgid "الأهداف"
+msgstr "Goals"
+
+#: .\models.py:189
+msgid "رئيس مجلس الإدارة"
+msgstr "Chairman of the Board"
+
+#: .\models.py:190
+msgid "نائب الرئيس"
+msgstr "Vice President"
+
+#: .\models.py:191
+
+
+#: .\models.py:192
+msgid "أمين الصندوق"
+msgstr "Treasurer"
+
+#: .\models.py:193
+msgid "عضو"
+msgstr "Member"
+
+#: .\models.py:196
+msgid "الاسم بالعربية"
+msgstr "Name in Arabic"
+
+#: .\models.py:197
+msgid "الاسم بالإنجليزية"
+msgstr "Name in English"
+
+#: .\models.py:199
+msgid "المنصب بالعربية"
+msgstr "Position in Arabic"
+
+#: .\models.py:200
+msgid "المنصب بالإنجليزية"
+msgstr "Position in English"
+
+#: .\models.py:201
+msgid "نوع المنصب"
+msgstr "Position Type"
+
+#: .\models.py:203
+msgid "نبذة شخصية بالعربية"
+msgstr "Biography in Arabic"
+
+#: .\models.py:204
+msgid "نبذة شخصية بالإنجليزية"
+msgstr "Biography in English"
+
+#: .\models.py:206
+msgid "الصورة الشخصية"
+msgstr "Profile Picture"
+
+#: .\models.py:215
+msgid "رابط لينكدإن"
+msgstr "LinkedIn Link"
+
+#: .\models.py:218
+msgid "ترتيب العرض في الصفحة"
+msgstr "Display Order on Page"
+
+#: .\models.py:225 .\views.py:262
+msgid "عضو مجلس الإدارة"
+msgstr "Board Member"
+
+#: .\models.py:226
+msgid "أعضاء مجلس الإدارة"
+msgstr "Board Members"
+
+#: .\models.py:244
+msgid "العنوان الفرعي بالعربية"
+msgstr "Subtitle in Arabic"
+
+#: .\models.py:245
+msgid "العنوان الفرعي بالإنجليزية"
+msgstr "Subtitle in English"
+
+#: .\models.py:253
+msgid "نص الزر بالعربية"
+msgstr "Button Text in Arabic"
+
+#: .\models.py:254
+msgid "نص الزر بالإنجليزية"
+msgstr "Button Text in English"
+
+#: .\models.py:255
+msgid "رابط الزر"
+msgstr "Button Link"
+
+#: .\models.py:264
+msgid "شريحة في السلايدر"
+msgstr "Slider Slide"
+
+#: .\models.py:265
+msgid "شرائح السلايدر"
+msgstr "Slider Slides"
+
+#: .\models.py:286
+msgid "الرقم"
+msgstr "Number"
+
+#: .\models.py:288
+msgid "اللاحقة بالعربية"
+msgstr "Suffix in Arabic"
+
+#: .\models.py:292
+msgid "مثل: مشروع، مستفيد، دولار"
+msgstr "Like: project, beneficiary, dollar"
+
+#: .\models.py:295
+msgid "اللاحقة بالإنجليزية"
+msgstr "Suffix in English"
+
+#: .\models.py:308
+msgid "اللون"
+msgstr "Color"
+
+#: .\models.py:311
+msgid "كود اللون الهكساديسمال"
+msgstr "Hexadecimal Color Code"
+
+#: .\models.py:320
+msgid "تحديث تلقائي من"
+msgstr "Auto Update From"
+
+#: .\models.py:325
+msgid "عدد المشاريع"
+msgstr "Number of Projects"
+
+#: .\models.py:326
+msgid "عدد المستخدمين"
+msgstr "Number of Users"
+
+#: .\models.py:336
+msgid "إحصائية"
+msgstr "Statistic"
+
+
+
+
+
+#: .\models.py:374
+msgid "Name"
+msgstr "Name"
+
+#: .\models.py:375
+msgid "اللوجو"
+msgstr "Logo"
+
+#: .\models.py:376
+msgid "وصف مختصر"
+msgstr "Short Description"
+
+#: .\models.py:377
+msgid "Short Description"
+msgstr "Short Description"
+
+#: .\models.py:379
+msgid "تاريخ الشراكة"
+msgstr "Partnership Date"
+
+#: .\models.py:380
+msgid "عدد المشاريع المنفذة"
+msgstr "Number of Implemented Projects"
+
+#: .\models.py:382
+msgid "الموقع الإلكتروني"
+msgstr "Website"
+
+#: .\models.py:384
+msgid "الهاتف"
+msgstr "Phone"
+
+#: .\models.py:388
+msgid "تاريخ الإضافة"
+msgstr "Date Added"
+
+#: .\models.py:391
+msgid "شريك"
+msgstr "Partner"
+
+#: .\models.py:392
+msgid "الشركاء"
+msgstr "Partners"
+
+# ==================== views.py ====================
+
+#: .\views.py:69
+msgid "الصفحة الرئيسية"
+msgstr "Home Page"
+
+#: .\views.py:90
+msgid "من نحن"
+msgstr "About Us"
+
+#: .\views.py:106 .\views.py:108
+msgid "لا توجد صفحة رؤية ورسالة"
+msgstr "Vision and mission page not found"
+
+
+
+#: .\views.py:127
+msgid "أهداف الجمعية"
+msgstr "Association Goals"
+
+#: .\views.py:128
+msgid "تعرف على أهداف جمعية نسائم فلسطين الخيرية ورؤيتها في خدمة المجتمع الفلسطيني"
+msgstr "Learn about the goals and vision of Nasaeem Palestine Charity in serving the Palestinian community"
+
+#: .\views.py:169
+msgid "مجلس الإدارة"
+msgstr "Board of Directors"
+
+#: .\views.py:170
+msgid "تعرف على أعضاء مجلس إدارة جمعية نسائم فلسطين الخيرية"
+msgstr "Meet the members of the Nasaeem Palestine Charity Board of Directors"
+
+#: .\views.py:194
+msgid "شركاؤنا"
+msgstr "Partners"
+
+#: .\views.py:196
+msgid "تعرف على شركاء جمعية نسائم فلسطين الخيرية والجهات التي نتعاون معها في خدمة المجتمع الفلسطيني"
+msgstr "Learn about the partners of Nasaeem Palestine Charity and the entities we work with in serving the Palestinian community"
+
+#: .\views.py:210
+msgid "موقعنا على الخريطة"
+msgstr "Our Location on the Map"
+
+#: .\views.py:211
+msgid "موقع جمعية نسائم فلسطين الخيرية على الخريطة ومعلومات الاتصال"
+msgstr "Nasaeem Palestine Charity location on the map and contact information"
+
+#: .\views.py:242
+msgid "مشروع"
+msgstr "Project"
+
+#: .\views.py:279
+msgid "البحث عن"
+msgstr "Search for"
+
+#: .\views.py:279
+msgid "البحث"
+msgstr "Search"
+
+#: .\views.py:280
+msgid "نتائج البحث عن"
+msgstr "Search results for"
+
+#: .\views.py:281
+msgid "البحث في موقع جمعية نسائم فلسطين الخيرية"
+msgstr "Search Nasaeem Palestine Charity website"
+
+#: .\views.py:381
+msgid "تم تحديث الإحصائيات بنجاح"
+msgstr "Statistics updated successfully"
+
+#: .\views.py:396
+msgid "الصفحة غير موجودة - 404"
+msgstr "Page Not Found - 404"
+
+#: .\views.py:406
+msgid "خطأ في الخادم - 500"
+msgstr "Server Error - 500"
+
+#: .\views.py:416
+msgid "غير مصرح لك - 403"
+msgstr "Unauthorized Access - 403"
+
+#: .\views.py:426
+msgid "طلب غير صالح - 400"
+msgstr "Bad Request - 400"
+
+# ==================== Additional Translations ====================
+
+msgid "الموقع"
+msgstr "Location"
+
+msgid "عن جمعية نسائم فلسطين الخيرية"
+msgstr "About Nasaeem Palestine Charitable Society"
+
+msgid "مؤسسة خيرية تنموية إنسانية تعمل على خدمة المجتمع الفلسطيني منذ %(year)s"
+msgstr "A humanitarian charity working to serve the Palestinian community since %(year)s"
+
+msgid "تعرف على الأشخاص الذين يقودون رؤيتنا ويوجهون مسيرة الجمعية"
+msgstr "Meet the people who lead our vision and guide the association's journey"
+
+msgid "نفتخر بشراكاتنا الاستراتيجية مع مؤسسات وجهات محلية ودولية في خدمة مجتمعنا"
+msgstr "We are proud of our strategic partnership with local and international institutions and entities in serving our community"
+
+msgid "لا يوجد شركاء حالياً"
+msgstr "There are no partners currently"
+
+msgid "هل تريد أن تكون شريكاً لنا؟"
+msgstr "Do you want to be our partner?"
+
+msgid "نرحب بالتعاون مع المؤسسات والجهات المهتمة بخدمة المجتمع الفلسطيني"
+msgstr "We welcome cooperation with institutions and entities interested in serving the Palestinian community"
+
+msgid "رؤيتنا"
+msgstr "Vision"
+
+msgid "نسعى لتحقيق هذه الأهداف النبيلة في خدمة مجتمعنا الفلسطيني العزيز"
+msgstr "We seek to achieve these noble goals in the service of our dear Palestinian community"
+
+msgid "ساعدنا في تحقيق أهدافنا"
+msgstr "Help us achieve our goals"
+
+msgid "كن شريكاً في تحقيق هذه الأهداف النبيلة"
+msgstr "Be a partner in achieving these noble goals"
+
+msgid "نعمل على بناء شراكات استراتيجية جديدة لخدمة مجتمعنا بشكل أفضل"
+msgstr "We are working to build new strategic partnerships to better serve our community"
+
+msgid "طلب غير صالح"
+msgstr "Invalid Request"
+
+msgid "الطلب الذي أرسلته غير صالح أو يحتوي على أخطاء"
+msgstr "The request you submitted is invalid or contains errors"
+
+msgid "طلب غير صالح!"
+msgstr "Invalid Request!"
+
+msgid "عذراً، الطلب الذي أرسلته يحتوي على أخطاء أو بيانات غير صحيحة."
+msgstr "Sorry, the request you submitted contains errors or incorrect data"
+
+msgid "يرجى التحقق من البيانات المدخلة والمحاولة مرة أخرى."
+msgstr "Please check the entered data and try again"
+
+msgid "أسباب محتملة:"
+msgstr "Possible Reasons:"
+
+msgid "بيانات مفقودة أو غير مكتملة"
+msgstr "Missing or incomplete data"
+
+msgid "تنسيق خاطئ للبيانات المدخلة"
+msgstr "Incorrect format of the entered data"
+
+msgid "رابط غير صحيح أو منتهي الصلاحية"
+msgstr "Invalid or expired link"
+
+msgid "العودة للخلف"
+msgstr "Go Back"
+
+msgid "توواصل معنا"
+msgstr "Contact Us"
+
+msgid "غير مصرح"
+msgstr "Unauthorized"
+
+msgid "ليس لديك صلاحية للوصول إلى هذه الصفحة"
+msgstr "You do not have permission to access this page"
+
+msgid "الوصول مرفوض"
+msgstr "Access Denied"
+
+msgid "غير مصرح لك!"
+msgstr "You are not authorized!"
+
+msgid "عذراً، ليس لديك الصلاحية الكافية للوصول إلى هذه الصفحة أو هذا المورد."
+msgstr "Sorry, you do not have sufficient permission to access this page or resource"
+
+msgid "يرجى التأكد من صحة تسجيل دخولك أو التواصل مع الإدارة."
+msgstr "Please make sure you are logged in correctly or contact the administration"
+
+msgid "لم تقم بتسجيل الدخول"
+msgstr "You are not logged in"
+
+msgid "حسابك لا يملك الصلاحية المطلوبة"
+msgstr "Your account does not have the required permission"
+
+msgid "انتهت صلاحية جلسة تسجيل الدخول"
+msgstr "Your login session has expired"
+
+msgid "الصفحة محمية ومخصصة للإدارة فقط"
+msgstr "This page is protected and restricted to administrators only"
+
+
+
+msgid "إذا تعتقد أن هذا خطأ:"
+msgstr "If you believe this is a mistake:"
+
+msgid "طلب صلاحية"
+msgstr "Request Access"
+
+msgid "مسجل الدخول كـ:"
+msgstr "Logged in as:"
+
+msgid "مستوى الصلاحية:"
+msgstr "Permission Level:"
+
+msgid "مدير عام"
+msgstr "Administrator"
+
+msgid "موظف"
+msgstr "Staff"
+
+msgid "مستخدم عادي"
+msgstr "Regular User"
+
+msgid "الصفحة غير موجودة"
+msgstr "Page Not Found"
+
+msgid "الصفحة التي تبحث عنها غير موجودة أو تم نقلها"
+msgstr "The page you are looking for does not exist or has been moved"
+
+msgid "الصفحة غير موجودة!"
+msgstr "Page Not Found!"
+
+msgid "عذراً، الصفحة التي تبحث عنها غير موجودة أو تم نقلها إلى مكان آخر."
+msgstr "Sorry, the page you are looking for does not exist or has been moved elsewhere"
+
+msgid "يمكنك العودة إلى الصفحة الرئيسية أو البحث عما تريد."
+msgstr "You can return to the homepage or search for what you need"
+
+msgid "ابحث عما تريد..."
+msgstr "Search for what you need..."
+
+msgid "بحث"
+msgstr "Search"
+
+msgid "المشاريع"
+msgstr "The Projects"
+
+msgid "روابط مفيدة:"
+msgstr "Useful Links:"
+
+
+
+msgid "اتصل بنا"
+msgstr "Contact Us"
+
+msgid "خطأ في الخادم"
+msgstr "Server Error"
+
+msgid "حدث خطأ داخلي في الخادم، نعمل على حل المشكلة"
+msgstr "An internal server error occurred, we are working to resolve it"
+
+msgid "عذراً! حدث خطأ"
+msgstr "Sorry! An error occurred"
+
+msgid "حدث خطأ داخلي في الخادم ونحن نعمل على حل هذه المشكلة بأسرع وقت ممكن."
+msgstr "An internal server error occurred and we are working to resolve it as quickly as possible"
+
+msgid "يرجى المحاولة مرة أخرى بعد قليل، أو العودة إلى الصفحة الرئيسية."
+msgstr "Please try again shortly, or return to the homepage"
+
+msgid "إعادة المحاولة"
+msgstr "Retry"
+
+msgid "معلومات إضافية:"
+msgstr "Additional Information:"
+
+msgid "إذا استمر هذا الخطأ، يرجى التواصل معنا وإرفاق الوقت الحالي:"
+msgstr "If this error persists, please contact us and include the current time:"
+
+msgid "رقم المرجع:"
+msgstr "Reference Number:"
+
+msgid "للدعم الفني:"
+msgstr "For Technical Support:"
+
+
+
+msgid "رؤيتنا وأهدافنا"
+msgstr "Our Vision and Goals"
+
+msgid "إنجازاتنا بالأرقام"
+msgstr "Our Achievements in Numbers"
+
+msgid "نفخر بما حققناه منذ تأسيس الجمعية"
+msgstr "We are proud of what we have achieved since the establishment"
+
+msgid "سنة من العطاء"
+msgstr "Years of Giving"
+
+msgid "قيادة الجمعية"
+msgstr "Association Leadership"
+
+msgid "تعرف على الأشخاص الذين يقودون رؤيتنا"
+msgstr "Meet the people who lead our vision"
+
+msgid "مجلس الإدارة كاملاً"
+msgstr "Full Board of Directors"
+
+
+
+msgid "نواب الرئيس"
+msgstr "Vice Presidents"
+
+msgid "السكرتير"
+msgstr "Secretary"
+
+
+
+msgid "أعضاء المجلس"
+msgstr "Board Members"
+
+msgid "أحدث مشاريعنا"
+msgstr "Our Latest Projects"
+
+msgid "تعرف على آخر المشاريع التي نفذتها الجمعية لخدمة المجتمع"
+msgstr "Learn about the latest projects implemented by the association to serve the community"
+
+msgid "المزيد"
+msgstr "More"
+
+msgid "عرض جميع المشاريع"
+msgstr "View All Projects"
+
+msgid "لا توجد مشاريع متاحة حالياً"
+msgstr "No projects available at the moment"
+
+msgid "تعرف على الجمعية"
+msgstr "Learn About the Association"
+
+msgid "فئات المشاريع"
+msgstr "Project Categories"
+
+msgid "تصفح مشاريعنا حسب الفئة"
+msgstr "Browse our projects by category"
+
+msgid "عرض جميع الفئات"
+msgstr "View All Categories"
+
+msgid "نسعى لتحقيق هذه الأهداف النبيلة في خدمة مجتمعنا"
+msgstr "We strive to achieve these noble goals in serving our community"
+
+msgid "مساعدة المحتاجين"
+msgstr "Helping the Needy"
+
+msgid "تقديم الدعم للفئات الأكثر احتياجاً"
+msgstr "Providing support to the most needy groups"
+
+msgid "دعم التعليم"
+msgstr "Supporting Education"
+
+msgid "تعزيز التعليم وتطوير القدرات"
+msgstr "Enhancing education and developing capabilities"
+
+msgid "رعاية الأيتام وتوفير حياة كريمة"
+msgstr "Caring for orphans and providing a dignified life"
+
+msgid "العمل الخيري"
+msgstr "Charitable Work"
+
+msgid "نشر ثقافة العمل الخيري"
+msgstr "Spreading the culture of charitable work"
+
+msgid "عرض جميع الأهداف"
+msgstr "View All Goals"
+
+msgid "عرض جميع الأعضاء"
+msgstr "View All Members"
+
+msgid "نفتخر بشراكاتنا مع المؤسسات المحلية والدولية"
+msgstr "We are proud of our partnerships with local and international organizations"
+
+msgid "منذ"
+msgstr "Since"
+
+msgid "مشروع مشترك"
+msgstr "Joint Project"
+
+msgid "عرض جميع الشركاء"
+msgstr "View All Partners"
+
+msgid "كن جزءاً من رحلة العطاء"
+msgstr "Be Part of the Giving Journey"
+
+msgid "انضم إلينا في رحلة العطاء والتنمية، وساهم في بناء مستقبل أفضل لمجتمعنا الفلسطيني"
+msgstr "Join us in the journey of giving and development, and contribute to building a better future for our Palestinian community"
+
+msgid "تصفح مشاريعنا"
+msgstr "Browse Our Projects"
+
+msgid "موقعنا"
+msgstr "Our Location"
+
+msgid "تفضل بزيارتنا في مقرنا الرئيسي أو تواصل معنا عبر الوسائل المتاحة"
+msgstr "Please visit us at our headquarters or contact us through available means"
+
+
+msgid "العنوان"
+msgstr "Address"
+
+msgid "واتساب"
+msgstr "WhatsApp"
+
+msgid "بالسيارة"
+msgstr "By Car"
+
+msgid "يمكنك الوصول إلينا بسهولة عبر الطرق الرئيسية في غزة"
+msgstr "You can easily reach us via the main roads in Gaza"
+
+msgid "بالمواصلات العامة"
+msgstr "By Public Transportation"
+
+msgid "متاح خطوط مواصلات عامة تصل إلى منطقة السامر"
+msgstr "Public transportation lines are available to Al-Samer area"
+
+msgid "سيراً على الأقدام"
+msgstr "On Foot"
+
+msgid "الموقع مناسب للوصول إليه مشياً من المناطق المجاورة"
+msgstr "The location is suitable for walking access from nearby areas"
+
+msgid "أوقات العمل"
+msgstr "Working Hours"
+
+msgid "أيام الأسبوع"
+msgstr "Weekdays"
+
+msgid "الأحد - الخميس"
+msgstr "Sunday - Thursday"
+
+msgid "نهاية الأسبوع"
+msgstr "Weekend"
+
+msgid "الجمعة - السبت"
+msgstr "Friday - Saturday"
+
+msgid "مغلق"
+msgstr "Closed"
+
+msgid "نتائج البحث"
+msgstr "Search Results"
+
+msgid "تم العثور على"
+msgstr "Found"
+
+msgid "نتيجة"
+msgstr "result"
+
+msgid "ابحث في الموقع..."
+msgstr "Search the website..."
+
+msgid "قراءة المزيد"
+msgstr "Read More"
+
+msgid "ترقيم نتائج البحث"
+msgstr "Search results pagination"
+
+msgid "اقتراحات البحث"
+msgstr "Search Suggestions"
+
+msgid "مشاريع"
+msgstr "projects"
+
+msgid "تبرعات"
+msgstr "donations"
+
+msgid "أيتام"
+msgstr "orphans"
+
+msgid "تعليم"
+msgstr "education"
+
+msgid "مساعدات"
+msgstr "aid"
+
+msgid "قرآن"
+msgstr "quran"
+
+msgid "مساجد"
+msgstr "mosques"
+
+msgid "نساء"
+msgstr "women"
+
+msgid "فقراء"
+msgstr "poor"
+
+msgid "روابط سريعة"
+msgstr "Quick Links"
+
+msgid "جميع المشاريع"
+msgstr "All Projects"
+
+msgid "لم يتم العثور على نتائج"
+msgstr "No results found"
+
+msgid "لم نتمكن من العثور على أي نتائج تطابق بحثك عن"
+msgstr "We couldn't find any results matching your search for"
+
+msgid "نصائح للبحث"
+msgstr "Search Tips"
+
+msgid "تأكد من صحة كتابة الكلمات"
+msgstr "Make sure words are spelled correctly"
+
+msgid "جرب كلمات مختلفة أو أكثر عمومية"
+msgstr "Try different or more general keywords"
+
+msgid "استخدم كلمات أقل في البحث"
+msgstr "Use fewer keywords"
+
+msgid "جرب البحث بالمرادفات"
+msgstr "Try searching with synonyms"
+
+msgid "أهداف"
+msgstr "goals"
+
+msgid "مجلس إدارة"
+msgstr "board of directors"
+
+msgid "تواصل"
+msgstr "contact"
+
+msgid "ابحث في موقعنا"
+msgstr "Search Our Website"
+
+msgid "استخدم مربع البحث أعلاه للعثور على المحتوى الذي تبحث عنه"
+msgstr "Use the search box above to find the content you're looking for"
+
+msgid "مواضيع شائعة"
+msgstr "Popular Topics"
+
+msgid "مشاريع خيرية"
+msgstr "charity projects"
+
+msgid "كفالة أيتام"
+msgstr "orphan sponsorship"
+
+msgid "تحفيظ قرآن"
+msgstr "quran memorization"
+
+msgid "بناء مساجد"
+msgstr "mosque construction"
+
+msgid "دور المرأة"
+msgstr "women's role"
+
+msgid "تطوير"
+msgstr "development"
+
+msgid "أقسام الموقع"
+msgstr "Website Sections"
+
+msgid "يرجى إدخال كلمة البحث"
+msgstr "Please enter a search term"
+
+msgid "رؤيتنا ورسالتنا"
+msgstr "Our Vision and Mission"
+
+msgid "نحن نؤمن برؤية واضحة ورسالة سامية تقودنا نحو خدمة مجتمعنا"
+msgstr "We believe in a clear vision and noble mission that guides us towards serving our community"
+
+msgid "شاركنا تحقيق الرؤية"
+msgstr "Share Our Vision"
+
+msgid "كن جزءاً من رحلتنا نحو تحقيق رؤيتنا ورسالتنا السامية"
+msgstr "Be part of our journey towards achieving our noble vision and mission"
+
+msgid "تعرف على أهدافنا"
+msgstr "Learn About Our Goals"
+
+msgid "شريحة"
+msgstr "Slide"
+
+msgid "تعرف علينا"
+msgstr "Know Us"
+
+
+
+
+
+
+
+
+
+msgid "جمعية تنموية رائدة في خدمة المجتمع"
+msgstr "A leading development association serving the community"
+
+msgid "جمعية نسائم فلسطين الخيرية هي مؤسسة خيرية تنموية إنسانية تأسست عام %(year)s في قطاع غزة - فلسطين، وتُعنى بتنفيذ البرامج والمشاريع التي تساهم في تحقيق التنمية المتكاملة في المجتمع الفلسطيني."
+msgstr "Nasaeem Palestine Charity is a humanitarian development organization founded in %(year)s in Gaza Strip - Palestine, concerned with implementing programs and projects that contribute to achieving integrated development in Palestinian society"
+
+msgid "نسعى لبناء مجتمع فلسطيني قوي ومتماسك من خلال العمل الخيري المؤسسي والشراكات الفاعلة مع المؤسسات المحلية والدولية، بما يحقق التنمية المستدامة ويعزز الصمود والثبات."
+msgstr "We strive to build a strong and cohesive Palestinian society through institutional charitable work and effective partnerships with local and international organizations, achieving sustainable development and enhancing steadfastness"
+
+msgid "عمل مؤسسي احترافي"
+msgstr "Professional Institutional Work"
+
+msgid "فريق متخصص وملتزم"
+msgstr "Specialized and Committed Team"
+
+msgid "شراكات محلية ودولية"
+msgstr "Local and International Partnerships"
+
+msgid "تنمية مستدامة"
+msgstr "Sustainable Development"
+
+msgid "اقرأ المزيد عنا"
+msgstr "Read More About Us"
+
+msgid "نفخر بما حققناه من إنجازات في خدمة المجتمع الفلسطيني"
+msgstr "We are proud of our achievements in serving the Palestinian community"
+
+msgid "مستفيد"
+msgstr "Beneficiary"
+
+msgid "متطوع"
+msgstr "Volunteer"
+
+msgid "مشاريعنا"
+msgstr "Projects"
+
+# ==================== forms.py ====================
+
+msgid "أدخل العنوان بالعربية"
+msgstr "Enter the title in Arabic"
+
+msgid "أدخل العنوان بالإنجليزية"
+msgstr "Enter the title in English"
+
+msgid "أدخل المحتوى بالعربية"
+msgstr "Enter the content in Arabic"
+
+msgid "أدخل المحتوى بالإنجليزية"
+msgstr "Enter the content in English"
+
+msgid "اختر الأيقونة"
+msgstr "Choose Icon"
+
+msgid "أدخل عنوان الهدف بالعربية"
+msgstr "Enter goal title in Arabic"
+
+msgid "أدخل عنوان الهدف بالإنجليزية"
+msgstr "Enter goal title in English"
+
+msgid "أدخل وصف الهدف بالعربية"
+msgstr "Enter goal description in Arabic"
+
+msgid "أدخل وصف الهدف بالإنجليزية"
+msgstr "Enter goal description in English"
+
+msgid "اتركه فارغاً للإضافة في النهاية"
+msgstr "Leave empty to add at the end"
+
+msgid "مستخدمة"
+msgstr "Used"
+
+msgid "هذه الأيقونة مستخدمة بالفعل. الرجاء اختيار أيقونة أخرى."
+msgstr "This icon is already in use. Please choose another icon"
+
+msgid "اكتب الرد هنا..."
+msgstr "Write your reply here..."
+
+msgid "الرد"
+msgstr "Reply"
+
+msgid "حالة الرسالة"
+msgstr "Message Status"
+
+msgid "اسم المستخدم"
+msgstr "Username"
+
+msgid "-- اختر المنصة --"
+msgstr "-- Select Platform --"
+
+msgid "جميع المنصات مضافة"
+msgstr "All platforms added"
+
+msgid "الرقم مطلوب عند عدم اختيار التحديث التلقائي"
+msgstr "Number is required when auto-update is not selected"
+
+msgid "اسم الشريك بالعربية"
+msgstr "Partner name in Arabic"
+
+msgid "اسم الشريك بالإنجليزية"
+msgstr "Partner name in English"
+
+msgid "وصف مختصر بالعربية"
+msgstr "Short description in Arabic"
+
+msgid "وصف مختصر بالإنجليزية"
+msgstr "Short description in English"
+
+# Icon choices for GoalForm
+msgid "مسجد - Mosque"
+msgstr "Mosque"
+
+msgid "قرآن كريم - Quran"
+msgstr "Quran"
+
+msgid "كعبة - Kaaba"
+msgstr "Kaaba"
+
+msgid "دعاء - Praying Hands"
+msgstr "Praying Hands"
+
+msgid "هلال - Moon"
+msgstr "Moon"
+
+msgid "هلال ونجمة - Star and Crescent"
+msgstr "Star and Crescent"
+
+msgid "هدف - Bullseye"
+msgstr "Bullseye"
+
+msgid "هدف محدد - Target"
+msgstr "Target"
+
+msgid "كأس - Trophy"
+msgstr "Trophy"
+
+msgid "ميدالية - Medal"
+msgstr "Medal"
+
+msgid "جائزة - Award"
+msgstr "Award"
+
+msgid "علم إنجاز - Checkered Flag"
+msgstr "Checkered Flag"
+
+msgid "المساعدة - Helping Hands"
+msgstr "Helping Hands"
+
+msgid "عطاء - Hand Holding Heart"
+msgstr "Hand Holding Heart"
+
+msgid "تعاون - Handshake"
+msgstr "Handshake"
+
+msgid "تبرع - Donate"
+msgstr "Donate"
+
+msgid "هدية - Gift"
+msgstr "Gift"
+
+msgid "دعم مالي - Hand Holding Money"
+msgstr "Hand Holding Money"
+
+msgid "تخرج - Graduation Cap"
+msgstr "Graduation Cap"
+
+msgid "كتاب - Book"
+msgstr "Book"
+
+msgid "كتاب مفتوح - Open Book"
+msgstr "Open Book"
+
+msgid "قارئ - Book Reader"
+msgstr "Book Reader"
+
+msgid "خريج - Graduate"
+msgstr "Graduate"
+
+msgid "معلم - Teacher"
+msgstr "Teacher"
+
+msgid "قلم - Pencil"
+msgstr "Pencil"
+
+msgid "قلب - Heart"
+msgstr "Heart"
+
+msgid "نبض - Heartbeat"
+msgstr "Heartbeat"
+
+msgid "طبي - Medical Kit"
+msgstr "Medical Kit"
+
+msgid "مستشفى - Hospital"
+msgstr "Hospital"
+
+msgid "إسعافات أولية - First Aid"
+msgstr "First Aid"
+
+msgid "سماعة طبية - Stethoscope"
+msgstr "Stethoscope"
+
+msgid "مجموعة - Users"
+msgstr "Users"
+
+msgid "أصدقاء - Friends"
+msgstr "Friends"
+
+msgid "طفل - Child"
+msgstr "Child"
+
+msgid "رضيع - Baby"
+msgstr "Baby"
+
+msgid "امرأة - Female"
+msgstr "Female"
+
+msgid "رجل - Male"
+msgstr "Male"
+
+msgid "منزل - Home"
+msgstr "Home"
+
+msgid "منزل مع قلب - Home Heart"
+msgstr "Home Heart"
+
+msgid "عامل - Hammer"
+msgstr "Hammer"
+
+msgid "أدوات - Tools"
+msgstr "Tools"
+
+msgid "خوذة عامل - Hard Hat"
+msgstr "Hard Hat"
+
+msgid "بناء - Building"
+msgstr "Building"
+
+msgid "مدينة - City"
+msgstr "City"
+
+msgid "نمو - Seedling"
+msgstr "Seedling"
+
+msgid "شجرة - Tree"
+msgstr "Tree"
+
+msgid "ورقة شجر - Leaf"
+msgstr "Leaf"
+
+msgid "نمو متصاعد - Chart Line"
+msgstr "Chart Line"
+
+msgid "تصاعد - Arrow Up"
+msgstr "Arrow Up"
+
+msgid "فكرة - Lightbulb"
+msgstr "Lightbulb"
+
+msgid "عقل - Brain"
+msgstr "Brain"
+
+msgid "نجمة - Star"
+msgstr "Star"
+msgid "تعرف على أعضاء مجلس الإدارة"
+msgstr "Meet the Board of Directors"
+
+
+
+msgid "أهدافنا"
+msgstr "Goals"
+
+msgid "نفخر بشراكاتنا مع المؤسسات المحلية والدولية"
+msgstr "We are proud of our partnership with local and international institutions."
+
+
+
+msgid "اشترك في نشرتنا"
+msgstr "Subscribe to our newsletter"
+msgid"احصل على آخر الأخبار والتحديثات"
+msgstr"Get the latest news and updates"
+msgid"بريدك الإلكتروني"
+msgstr"Your email"
+
+msgid"عن الجمعية"
+msgstr"About the Association"
+
+msgid"جمعية نسائم فلسطين الخيرية هي مؤسسة خيرية تنموية إنسانية تأسست عام 2013 في قطاع غزة – فلسطين، وتُعنى بتنفيذ البرامج والمشاريع التي تساهم في تحقيق التنمية المتكاملة في المجتمع الفلسطيني."
+msgstr"Nasaem Palestine Charity Association is a charitable, developmental, and humanitarian organization founded in 2013 in the Gaza Strip, Palestine. It is dedicated to implementing programs and projects that contribute to achieving comprehensive development in Palestinian society."
+
+
+msgid"جمعية نسائم فلسطين الخيرية. جميع الحقوق محفوظة."
+msgstr"Nasaem Palestine Charity Association. All rights reserved."
+
+
+msgid"سنوات من الشراكة"
+msgstr"Years of partnership"
+msgid"شريك استراتيجي"
+msgstr"Strategic partner"
+
+
+msgid"لا توجد قيم متاحة حاليا"
+msgstr"No values are currently available."
+
+
+
+
+msgid"أعضاء آخرون"
+msgstr"Other members"
+
+
+msgid"انضم إلى مسيرتنا"
+msgstr"Join our journey"
+
+
+msgid"كن جزءاً من التغيير الإيجابي في المجتمع الفلسطيني"
+msgstr"Be part of the positive change in Palestinian society."
+msgid "موقعك الحالي"
+msgstr "Your Current Location"
+
+
+
+
+
+
+
+
+
+
+msgid "تم تحديد موقعك"
+msgstr "Your location has been determined"
+
+msgid "احصل على الاتجاهات"
+msgstr "Get Directions"
+
+
+msgid "كيفية الوصول إلينا"
+msgstr "Get Directions"
+
+msgid"القائد والموجه لمسيرة الجمعية نحو تحقيق أهدافها النبيلة"
+msgstr"The leader and guide of the association's journey towards achieving its noble goals"
+
+
+
+
+msgid "اختر الطريقة الأنسب لك للوصول إلى مقرنا"
+msgstr "Choose the most convenient way to get to our location"
+
+
+
+msgid "الموقع مناسب للوصول إليه مشياً من المناطق المجاورة مع ممرات آمنة"
+msgstr "The location is easily accessible on foot from surrounding areas with safe pathways."
+msgid "متاح خطوط مواصلات عامة متعددة تصل إلى منطقتنا بشكل منتظم"
+msgstr "Multiple public transport routes reach our area regularly."
+msgid "يمكنك الوصول إلينا بسهولة عبر الطرق الرئيسية في المنطقة مع توفر مواقف للسيارات"
+msgstr "You can easily reach us via the main roads in the area, and parking is available."
+
+
+msgid "نحن في خدمتكم خلال الأوقات التالية"
+msgstr  "We are at your service during the following times:"
+
+
+msgid "صباحاً"
+msgstr  "AM"
+
+msgid "مساءً"
+msgstr  "PM"
+
+
+
+
+
+msgid "أنت هنا"
+msgstr "You Are Here"
+
+msgid "المسافة"
+msgstr "Distance"
+
+msgid "كم"
+msgstr "km"
+
+msgid "فشل تحديد الموقع. يرجى السماح بالوصول للموقع"
+msgstr "Failed to determine location. Please allow location access"
+
+msgid "المتصفح لا يدعم تحديد الموقع"
+msgstr "Browser does not support geolocation"
+
+
+msgid "يمكنك زيارتنا أو التواصل معنا في أي وقت"
+msgstr "You can visit us or contact us at any time."
+
+
+
+msgid "جاري تحميل الخريطة"
+msgstr "Loading Map"
+
+msgid "تكبير"
+msgstr "Zoom In"
+
+msgid "تصغير"
+msgstr "Zoom Out"
+
+msgid "موقعي"
+msgstr "My Location"
+
+msgid "عرض القمر الصناعي"
+msgstr "Satellite View"
+
+
+
+msgid "نخبة من القادة المتميزين الملتزمين بخدمة المجتمع الفلسطيني"
+msgstr "A select group of distinguished leaders committed to serving the Palestinian community."
+
+
+
+
+msgid "القيادة التنفيذية"
+msgstr "Executive Leadership"
+
+
+
+msgid "فريق العمل الأساسي المسؤول عن إدارة وتنفيذ أعمال الجمعية"
+msgstr "The core team responsible for managing and implementing the association's work"
+
+
+msgid "فريق متميز من المساهمين في دعم رؤية الجمعية وتحقيق رسالتها"
+msgstr "A distinguished team of contributors supporting the association's vision and achieving its mission."
+
+
+
+
+
+msgid "منصة الكفالة الإنسانية"
+msgstr "Humanitarian Sponsorship Platform"
+
+msgid "منصة رُحَمَاء الإنسانية التابعة لجمعية نسائم فلسطين الخيرية — لرعاية الأيتام والأسر المحتاجة وذوي الاحتياجات الخاصة في غزة"
+msgstr "Ruhamaa Humanitarian Platform, affiliated with Nasaeem Palestine Charity — dedicated to caring for orphans, families in need, and people with special needs in Gaza"
+
+msgid "الرئيسية"
+msgstr "Home"
+
+
+
+
+
+msgid "القصص"
+msgstr "Stories"
+
+msgid "تواصل معنا"
+msgstr "Contact Us"
+
+msgid "معاً نبني مستقبلاً أفضل للأيتام والأسر المحتاجة"
+msgstr "Together we build a better future for orphans and families in need"
+
+msgid "وذوي الاحتياجات الخاصة في غزة"
+msgstr "and people with special needs in Gaza"
+
+msgid "انضم إلينا"
+msgstr "Join Us"
+
+msgid "تعرّف علينا"
+msgstr "Get to Know Us"
+
+msgid "منصة"
+msgstr "Platform"
+
+msgid "هي منصة إنسانية رقمية تابعة لجمعية نسائم فلسطين الخيرية، تُعنى بتوثيق أحوال الأيتام والأسر المحتاجة وذوي الاحتياجات الخاصة في قطاع غزة، وربطهم بالكفلاء الكرام لبناء مستقبل آمن ومستدام. نؤمن بأن كل طفل يستحق الرعاية، وكل أسرة تستحق الكرامة."
+msgstr "is a digital humanitarian platform affiliated with Nasaeem Palestine Charity. It documents the conditions of orphans, families in need, and people with special needs in the Gaza Strip, connecting them with generous sponsors to build a safe and sustainable future. We believe every child deserves care, and every family deserves dignity."
+
+msgid "رعاية الأيتام"
+msgstr "Orphan Care"
+
+msgid "دعم الأسر"
+msgstr "Family Support"
+
+msgid "ذوو الاحتياجات"
+msgstr "Special Needs"
+
+msgid "الكفالة الإنسانية"
+msgstr "Humanitarian Sponsorship"
+
+msgid "غزة"
+msgstr "Gaza"
+
+msgid "اقرأ عنّا"
+msgstr "Read About Us"
+
+msgid "يتيم مسجّل في المنصة"
+msgstr "Registered Orphan on the Platform"
+
+msgid "كفيل إنساني"
+msgstr "Humanitarian Sponsor"
+
+msgid "أسرة مستفيدة"
+msgstr "Beneficiary Family"
+
+msgid "من ذوي الاحتياجات الخاصة"
+msgstr "Person with Special Needs"
+
+msgid "بالأرقام"
+msgstr "By the Numbers"
+
+msgid "إحصائياتنا"
+msgstr "Our Statistics"
+
+msgid "الحقيقية"
+msgstr "Real"
+
+msgid "أرقام تعكس حجم عملنا الإنساني في خدمة المجتمع الفلسطيني"
+msgstr "Figures that reflect the scale of our humanitarian work serving the Palestinian community"
+
+msgid "إجمالي الأيتام"
+msgstr "Total Orphans"
+
+
+
+msgid "الأسر المسجلة"
+msgstr "Registered Families"
+
+msgid "الكفلاء"
+msgstr "Sponsors"
+
+msgid "قصص إنسانية"
+msgstr "Humanitarian Stories"
+
+msgid "أبرز"
+msgstr "Featured"
+
+
+
+msgid "قصص حقيقية لأناس يحتاجون يدًا حانية — كن سببًا في تغيير حياتهم"
+msgstr "Real stories of people who need a helping hand — be the reason their lives change"
+
+msgid "قصة يتيم"
+msgstr "Orphan's Story"
+
+
+
+msgid "اكفل معنا"
+msgstr "Sponsor with Us"
+
+msgid "قصة أسرة"
+msgstr "Family's Story"
+
+
+
+msgid "أفراد"
+msgstr "Members"
+
+msgid "قصة ذوي احتياجات"
+msgstr "Special Needs Story"
+
+
+
+msgid "تتجدد القصص كل 24 ساعة لمنح الفرصة للجميع"
+msgstr "Stories are refreshed every 24 hours to give everyone a chance"
+
+msgid "هل لديك استفسار أو رغبة في المساهمة؟"
+msgstr "Do you have a question or wish to contribute?"
+
+msgid "فريقنا مستعد للإجابة على جميع تساؤلاتك حول الكفالة، التسجيل، أو أي استفسار آخر. تواصل معنا ونحن هنا لمساعدتك."
+msgstr "Our team is ready to answer all your questions about sponsorship, registration, or any other inquiry. Reach out and we are here to help you."
+
+msgid "سجّل الآن"
+msgstr "Register Now"
+
+
+#: login.html
+msgid "كافل / إدارة"
+msgstr "Sponsor / Admin"
+
+#: login.html
+msgid "مرحباً بك"
+msgstr "Welcome"
+msgid "سجّل دخولك للمتابعة"
+msgstr "Log in to continue"
+
+#: login.html
+msgid "مرحباً بك — سجّل دخولك للمتابعة"
+msgstr "Welcome — Sign in to continue"
+
+#: login.html
+msgid "صباح الخير ☀️"
+msgstr "Good morning ☀️"
+
+#: login.html
+msgid "مساء الخير 🌙"
+msgstr "Good evening 🌙"
+
+#: login.html
+msgid "طاب مساؤك 🌟"
+msgstr "Good night 🌟"
+
+
+
+
+
+#: login.html
+
+
+#: login.html
+msgid "أدخل اسم المستخدم"
+msgstr "Enter username"
+
+#: login.html
+msgid "أدخل كلمة المرور"
+msgstr "Enter password"
+
+#: login.html
+msgid "كلمة المرور"
+msgstr "Password"
+
+#: login.html
+msgid "تسجيل الدخول"
+msgstr "Login"
+
+#: login.html
+msgid "تذكّرني"
+msgstr "Remember me"
+
+#: login.html
+msgid "نسيت كلمة المرور؟"
+msgstr "Forgot password?"
+
+#: login.html
+
+
+#: login.html
+msgid "ليس لديك حساب؟"
+msgstr "Don't have an account?"
+
+#: login.html
+msgid "أنشئ حساباً جديداً"
+msgstr "Create a new account"
+
+#: login.html
+msgid "رُحَمَاء"
+msgstr "Ruhamá"
+
+# forgot_password.html
+msgid "استرجاع كلمة المرور"
+msgstr "Reset Password"
+
+msgid "أدخل بريدك الإلكتروني وسنرسل لك رمز التحقق"
+msgstr "Enter your email and we will send you a verification code"
+
+msgid "أدخل رمز التحقق الذي أرسلناه إلى بريدك"
+msgstr "Enter the verification code we sent to your email"
+
+msgid "أدخل كلمة المرور الجديدة"
+msgstr "Enter your new password"
+
+
+
+
+
+
+msgid "إرسال الرمز"
+msgstr "Send Code"
+
+msgid "رمز التحقق"
+msgstr "Verification Code"
+
+msgid "تحقق من الرمز"
+msgstr "Verify Code"
+
+msgid "إعادة الإرسال"
+msgstr "Resend"
+
+msgid "كلمة المرور الجديدة"
+msgstr "New Password"
+
+
+
+
+msgid "أعد كلمة المرور"
+msgstr "Re-enter password"
+
+msgid "تغيير كلمة المرور"
+msgstr "Change Password"
+
+msgid "أو"
+msgstr "Or"
+
+msgid "العودة لتسجيل الدخول"
+msgstr "Back to Login"
+
+msgid "البريد الإلكتروني مطلوب"
+msgstr "Email is required"
+
+msgid "البريد الإلكتروني غير صالح"
+msgstr "Invalid email address"
+
+msgid "رمز التحقق مطلوب"
+msgstr "Verification code is required"
+
+msgid "الرمز يجب أن يكون 6 أرقام"
+msgstr "Code must be 6 digits"
+
+msgid "كلمة المرور مطلوبة"
+msgstr "Password is required"
+
+msgid "كلمة المرور يجب أن تكون 8 أحرف على الأقل"
+msgstr "Password must be at least 8 characters"
+
+msgid "كلمة المرور غير متطابقة"
+msgstr "Passwords do not match"
+
+msgid "جار الإرسال..."
+msgstr "Sending..."
+
+msgid "جار التحقق..."
+msgstr "Verifying..."
+
+msgid "جار التغيير..."
+msgstr "Changing..."
+
+msgid "إعادة الإرسال بعد"
+msgstr "Resend after"
+
+msgid "ثانية"
+msgstr "second"
+
+msgid "حدث خطأ في الاتصال، يرجى المحاولة مجدداً"
+msgstr "Connection error, please try again"
+
+msgid "ضعيفة"
+msgstr "Weak"
+
+msgid "متوسطة"
+msgstr "Medium"
+
+msgid "قوية"
+msgstr "Strong"
+
+
+msgid "إنشاء حساب جديد"
+msgstr "Create New Account"
+
+msgid "أكمل الخطوات لإنشاء حسابك في منصة رُحَمَاء"
+msgstr "Complete the steps to create your account on the Ruhamaa platform"
+
+msgid "نوع الحساب"
+msgstr "Account Type"
+
+msgid "البيانات"
+msgstr "Data"
+
+msgid "التفاصيل"
+msgstr "Details"
+
+msgid "الوثائق"
+msgstr "Documents"
+
+msgid "مراجعة"
+msgstr "Review"
+
+msgid "اختر نوع حسابك"
+msgstr "Choose Your Account Type"
+
+msgid "كافل"
+msgstr "Sponsor"
+
+msgid "يتيم"
+msgstr "Orphan"
+
+msgid "أسرة"
+msgstr "Family"
+
+msgid "ذوو احتياجات"
+msgstr "People with Special Needs"
+
+msgid "يرجى اختيار نوع الحساب"
+msgstr "Please select an account type"
+
+msgid "التالي"
+msgstr "Next"
+
+msgid "السابق"
+msgstr "Previous"
+
+msgid "الاسم الرباعي"
+msgstr "Full Name (Four Parts)"
+
+
+
+msgid "اسم الأب"
+msgstr "Father's Name"
+
+msgid "اسم الجد"
+msgstr "Grandfather's Name"
+
+msgid "اسم العائلة"
+msgstr "Family Name"
+
+msgid "بيانات الحساب"
+msgstr "Account Information"
+
+
+
+
+msgid "لا يقل عن 4 أحرف — بدون مسافات أو نص لغة عربية"
+msgstr "Minimum 4 characters — no spaces or Arabic text"
+
+msgid "رقم الهوية"
+msgstr "ID Number"
+
+msgid "9 أرقام تبدأ بـ 9 أو 8 أو 4 أو 7"
+msgstr "9 digits starting with 9, 8, 4, or 7"
+
+
+
+
+msgid "الجنسية"
+msgstr "Nationality"
+
+msgid "ابحث عن دولتك..."
+msgstr "Search for your country..."
+
+msgid "فلسطين"
+msgstr "Palestine"
+
+
+
+
+
+
+
+msgid "أنثى"
+msgstr "Female"
+
+msgid "رقم الجوال الأول"
+msgstr "Primary Phone Number"
+
+msgid "رقم الجوال الثاني"
+msgstr "Secondary Phone Number"
+
+
+
+msgid "بحث..."
+msgstr "Search..."
+
+
+
+msgid "8 أحرف على الأقل"
+msgstr "At least 8 characters"
+
+msgid "تأكيد كلمة المرور"
+msgstr "Confirm Password"
+
+msgid "أعد كتابة كلمة المرور"
+msgstr "Re-enter your password"
+
+msgid "بيانات إضافية للكافل"
+msgstr "Additional Sponsor Information"
+
+msgid "الدولة"
+msgstr "Country"
+
+msgid "اختر الدولة"
+msgstr "Select Country"
+
+msgid "المهنة"
+msgstr "Occupation"
+
+
+
+
+
+msgid "اضغط لرفع صورتك"
+msgstr "Click to upload your photo"
+
+msgid "JPG • PNG — الحد 4MB"
+msgstr "JPG • PNG — Max 4MB"
+
+msgid "لا توجد بيانات تكميلية للكافل"
+msgstr "No additional data required for the sponsor"
+
+msgid "لا توجد وثائق مطلوبة للكافل"
+msgstr "No documents required for the sponsor"
+
+msgid "صورة هوية الوصي"
+msgstr "Guardian's ID Photo"
+
+msgid "شهادة ميلاد الطفل"
+msgstr "Child's Birth Certificate"
+
+msgid "شهادة وفاة الأب"
+msgstr "Father's Death Certificate"
+
+msgid "حجة وصاية"
+msgstr "Guardianship Deed"
+
+msgid "حجة ترمل"
+msgstr "Widowhood Deed"
+
+msgid "حجة ولاية"
+msgstr "Custody Deed"
+
+msgid "حجة إعالة"
+msgstr "Dependancy Deed"
+
+msgid "حجة إقرار حضانة"
+msgstr "Custody Acknowledgment Deed"
+
+msgid "شهادة ميلاد الأخوة"
+msgstr "Siblings' Birth Certificates"
+
+msgid "هوية المعيل"
+msgstr "Provider's ID"
+
+msgid "هوية الأب"
+msgstr "Father's ID"
+
+msgid "هوية الأم"
+msgstr "Mother's ID"
+
+msgid "شهادة ميلاد الشخص"
+msgstr "Person's Birth Certificate"
+
+msgid "التقرير الطبي"
+msgstr "Medical Report"
+
+msgid "هوية المريض"
+msgstr "Patient's ID"
+
+msgid "تقارير طبية"
+msgstr "Medical Reports"
+
+msgid "مراجعة البيانات"
+msgstr "Review Information"
+
+msgid "أوافق على"
+msgstr "I agree to the"
+
+msgid "شروط الاستخدام"
+msgstr "Terms of Use"
+
+msgid "سياسة الخصوصية"
+msgstr "Privacy Policy"
+
+msgid "يجب الموافقة على الشروط"
+msgstr "You must agree to the terms"
+
+msgid "إنشاء الحساب"
+msgstr "Create Account"
+
+msgid "لديك حساب؟"
+msgstr "Already have an account?"
+
+msgid "سجّل دخولك"
+msgstr "Log in"
+
+msgid "(اختياري)"
+msgstr "(Optional)"
+
+msgid "إلزامي"
+msgstr "Required"
+
+msgid "اختياري"
+msgstr "Optional"
+
+msgid "اضغط أو اسحب الملف هنا"
+msgstr "Click or drag file here"
+
+msgid "JPG • PNG • PDF — الحد 4MB"
+msgstr "JPG • PNG • PDF — Max 4MB"
+# ══ أقسام العناوين ══
+msgid "بيانات رب الأسرة"
+msgstr "Head of Household Data"
+
+msgid "العنوان الحالي"
+msgstr "Current Address"
+
+msgid "العنوان السابق"
+msgstr "Previous Address"
+
+msgid "السكن"
+msgstr "Housing"
+
+msgid "بيانات الزوجة"
+msgstr "Wife's Data"
+
+msgid "المعيل الحالي"
+msgstr "Current Guardian"
+
+msgid "أفراد الأسرة"
+msgstr "Family Members"
+
+msgid "الوضع العام للأسرة وقصتها"
+msgstr "Family General Status and Story"
+
+# ══ حقول رب الأسرة ══
+msgid "الاسم الأول"
+msgstr "First Name"
+
+
+
+
+
+
+
+msgid "تاريخ الميلاد"
+msgstr "Date of Birth"
+
+
+
+msgid "الجنس"
+msgstr "Gender"
+
+msgid "الحالة الاجتماعية"
+msgstr "Marital Status"
+
+msgid "الحالة الصحية"
+msgstr "Health Status"
+
+msgid "المستوى التعليمي"
+msgstr "Education Level"
+
+
+
+
+
+
+msgid "عدد أفراد الأسرة"
+msgstr "Number of Family Members"
+
+msgid "عدد المرضى بالأسرة"
+msgstr "Number of Sick Family Members"
+
+# ══ خيارات القوائم ══
+msgid "-- اختر --"
+msgstr "-- Select --"
+
+msgid "-- اختر المهنة --"
+msgstr "-- Select Occupation --"
+
+msgid "ذكر"
+msgstr "Male"
+
+
+
+msgid "متزوج/ـة"
+msgstr "Married"
+
+msgid "أرمل/ـة"
+msgstr "Widowed"
+
+msgid "مطلق/ـة"
+msgstr "Divorced"
+
+msgid "سليم"
+msgstr "Healthy"
+
+msgid "سليمة"
+msgstr "Healthy"
+
+msgid "مرض مزمن"
+msgstr "Chronic Illness"
+
+msgid "ذوو احتياجات خاصة"
+msgstr "Special Needs"
+
+msgid "مصاب حرب"
+msgstr "War Injury"
+
+msgid "غير متعلم"
+msgstr "Uneducated"
+
+msgid "ابتدائي"
+msgstr "Primary"
+
+msgid "إعدادي"
+msgstr "Intermediate"
+
+msgid "ثانوي"
+msgstr "Secondary"
+
+msgid "جامعي"
+msgstr "University"
+
+msgid "ماجستير"
+msgstr "Master's"
+
+msgid "موظف حكومي"
+msgstr "Government Employee"
+
+msgid "موظف قطاع خاص"
+msgstr "Private Sector Employee"
+
+msgid "تاجر"
+msgstr "Merchant"
+
+msgid "طبيب"
+msgstr "Doctor"
+
+msgid "مهندس"
+msgstr "Engineer"
+
+msgid "معلم/ـة"
+msgstr "Teacher"
+
+msgid "ممرض/ـة"
+msgstr "Nurse"
+
+msgid "مقاول"
+msgstr "Contractor"
+
+msgid "سائق"
+msgstr "Driver"
+
+msgid "عامل"
+msgstr "Worker"
+
+msgid "ربة بيت"
+msgstr "Housewife"
+
+msgid "متقاعد"
+msgstr "Retired"
+
+msgid "لا يعمل"
+msgstr "Unemployed"
+
+msgid "أخرى"
+msgstr "Other"
+
+# ══ المدن ══
+msgid "رفح"
+msgstr "Rafah"
+
+msgid "خانيونس"
+msgstr "Khan Yunis"
+
+msgid "القرارة"
+msgstr "Al-Qarara"
+
+msgid "دير البلح"
+msgstr "Deir al-Balah"
+
+msgid "الزوايدة"
+msgstr "Al-Zawayda"
+
+msgid "النصيرات"
+msgstr "Nuseirat"
+
+msgid "المغازي"
+msgstr "Al-Maghazi"
+
+msgid "البريج"
+msgstr "Al-Bureij"
+
+msgid "مدينة غزة"
+msgstr "Gaza City"
+
+msgid "شمال غزة"
+msgstr "North Gaza"
+
+msgid "شرق غزة"
+msgstr "East Gaza"
+
+msgid "غرب غزة"
+msgstr "West Gaza"
+
+msgid "غير محدد"
+msgstr "Unspecified"
+
+# ══ العنوان ══
+msgid "المدينة"
+msgstr "City"
+
+msgid "الشارع"
+msgstr "Street"
+
+msgid "أقرب معلم/مسجد"
+msgstr "Nearest Landmark/Mosque"
+
+# ══ السكن ══
+msgid "نوع السكن"
+msgstr "Housing Type"
+
+msgid "ملكية السكن"
+msgstr "Housing Ownership"
+
+msgid "مبلغ الإيجار (₪)"
+msgstr "Rent Amount (₪)"
+
+msgid "خيمة"
+msgstr "Tent"
+
+msgid "بيت باطون"
+msgstr "Concrete House"
+
+msgid "بيت زينقو"
+msgstr "Zinc House"
+
+msgid "ملك"
+msgstr "Owned"
+
+msgid "إيجار"
+msgstr "Rented"
+
+# ══ الزوجة ══
+msgid "الصورة"
+msgstr "Photo"
+
+msgid "اختياري — 4MB"
+msgstr "Optional — 4MB"
+
+# ══ المعيل ══
+msgid "صلة القرابة"
+msgstr "Relationship"
+
+msgid "عم/ـة"
+msgstr "Uncle/Aunt"
+
+msgid "خال/ـة"
+msgstr "Maternal Uncle/Aunt"
+
+msgid "جد/ة"
+msgstr "Grandfather/Grandmother"
+
+msgid "أخ"
+msgstr "Brother"
+
+msgid "أخت"
+msgstr "Sister"
+
+msgid "الدخل الشهري (₪)"
+msgstr "Monthly Income (₪)"
+
+msgid "عدد من يعيلهم"
+msgstr "Number of Dependents"
+
+# ══ أفراد الأسرة ══
+msgid "(اختياري — إذا أضفت فرداً يجب تعبئته كاملاً)"
+msgstr "(Optional — if a member is added, all fields must be filled)"
+
+msgid "إضافة فرد"
+msgstr "Add Member"
+
+# ══ الوضع العام ══
+msgid "اكتب الوضع العام للأسرة وقصتها هنا... (مطلوب)"
+msgstr "Write the family's general status and story here... (Required)"
+
+msgid "هذا الحقل مطلوب"
+msgstr "This field is required"
+
+# ══ الصور ══
+msgid "اضغط لرفع الصورة"
+msgstr "Click to upload photo"
+
+msgid "JPG • PNG — 4MB"
+msgstr "JPG • PNG — 4MB"
+
+# ══ placeholders ══
+msgid "الاسم"
+msgstr "Name"
+
+msgid "اسم الشارع"
+msgstr "Street name"
+
+msgid "أقرب معلم أو مسجد"
+msgstr "Nearest landmark or mosque"
+
+msgid "مطلوب"
+msgstr "Required"
+
+
+
+msgid "اضغط لرفع الملف أو اسحب وأفلت"
+msgstr "Click to upload or drag and drop"
+
+msgid "JPG • PNG • PDF — الحد الأقصى 4MB"
+msgstr "JPG • PNG • PDF — Max 4MB"
+
+msgid "يمكن رفع أكثر من ملف"
+msgstr "Multiple files allowed"
+
+# ══ أقسام ══
+msgid "بيانات اليتيم"
+msgstr "Orphan Data"
+
+msgid "بيانات الأم"
+msgstr "Mother's Data"
+
+msgid "بيانات الأب"
+msgstr "Father's Data"
+
+msgid "قصة اليتيم"
+msgstr "Orphan's Story"
+
+# ══ حقول اليتيم ══
+msgid "من فقد من الوالدين"
+msgstr "Lost Parent"
+
+msgid "يتيم الأب"
+msgstr "Fatherless"
+
+msgid "يتيم الأم"
+msgstr "Motherless"
+
+msgid "كلاهما"
+msgstr "Both"
+
+msgid "الصف الدراسي"
+msgstr "School Grade"
+
+msgid "اسم المدرسة"
+msgstr "School Name"
+
+msgid "صورة اليتيم"
+msgstr "Orphan's Photo"
+
+msgid "اضغط لرفع صورة اليتيم"
+msgstr "Click to upload orphan's photo"
+
+msgid "رياض الأطفال"
+msgstr "Kindergarten"
+
+# ══ الحالة ══
+msgid "الحالة"
+msgstr "Status"
+
+msgid "على قيد الحياة"
+msgstr "Alive"
+
+msgid "متوفية"
+msgstr "Deceased (F)"
+
+msgid "متوفي"
+msgstr "Deceased (M)"
+
+msgid "تاريخ الوفاة"
+msgstr "Date of Death"
+
+msgid "سبب الوفاة"
+msgstr "Cause of Death"
+
+msgid "شهيد"
+msgstr "Martyr"
+
+msgid "مرض"
+msgstr "Illness"
+
+msgid "طبيعي"
+msgstr "Natural"
+
+# ══ الأم ══
+msgid "-- اختر الوظيفة --"
+msgstr "-- Select Job --"
+
+msgid "موظفة حكومية"
+msgstr "Government Employee (F)"
+
+msgid "موظفة قطاع خاص"
+msgstr "Private Sector Employee (F)"
+
+msgid "معلمة"
+msgstr "Teacher (F)"
+
+msgid "ممرضة"
+msgstr "Nurse (F)"
+
+msgid "طبيبة"
+msgstr "Doctor (F)"
+
+msgid "لا تعمل"
+msgstr "Unemployed (F)"
+
+# ══ الأب ══
+msgid "الإيراد قبل الوفاة (₪)"
+msgstr "Income Before Death (₪)"
+
+msgid "المعاش بعد الوفاة (₪)"
+msgstr "Pension After Death (₪)"
+
+msgid "عدد الأبناء"
+msgstr "Number of Children"
+
+msgid "مزارع"
+msgstr "Farmer"
+
+msgid "معلم"
+msgstr "Teacher (M)"
+
+# ══ المعيل ══
+msgid "-- اختر الجنس --"
+msgstr "-- Select Gender --"
+
+msgid "القرابة لليتيم"
+msgstr "Relation to Orphan"
+
+# ══ القصة ══
+msgid "اكتب قصة اليتيم هنا... (مطلوب)"
+msgstr "Write the orphan's story here... (Required)"
+
+msgid "قصة اليتيم مطلوبة"
+msgstr "Orphan's story is required"
+
+msgid "بيانات المريض"
+msgstr "Patient Data"
+
+msgid "صورة المريض"
+msgstr "Patient's Photo"
+
+msgid "اضغط لرفع صورة المريض"
+msgstr "Click to upload patient's photo"
+
+msgid "القرابة للمريض"
+msgstr "Relation to Patient"
+
+msgid "أب"
+msgstr "Father"
+
+msgid "أم"
+msgstr "Mother"
+
+msgid "تفاصيل الحالة"
+msgstr "Case Details"
+
+msgid "اكتب تفاصيل الحالة الصحية هنا... (مطلوب)"
+msgstr "Write the health case details here... (Required)"
+
+msgid "تفاصيل الحالة مطلوبة"
+msgstr "Case details are required"
+
+
+
+msgid "يسعدنا استقبالك في مقر جمعيتنا"
+msgstr "We are pleased to welcome you to our association's headquarters."
+
+
+
+msgid "معلومات الاتصال"
+msgstr "Contact Information"
+
+
+msgid "9XXXXXXXX — 9 أرقام"
+msgstr "9XXXXXXXX — 9 digits"

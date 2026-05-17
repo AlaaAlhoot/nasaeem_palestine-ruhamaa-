@@ -1,0 +1,458 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load i18n %}
+{% load custom_filters %}
+
+{% block title %}{% if query %}{% trans "البحث عن" %}: {{ query }}{% else %}{% trans "البحث" %}{% endif %} - {{ site_settings|translate_field:"site_name" }}{% endblock %}
+
+{% block description %}{% if query %}{% trans "نتائج البحث عن" %}: {{ query }}{% else %}{% trans "البحث في موقع جمعية نسائم فلسطين الخيرية" %}{% endif %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .search-hero {
+        background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        color: white;
+        padding: 100px 0 50px;
+    }
+    
+    .search-form {
+        background: white;
+        border-radius: 50px;
+        padding: 10px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .search-input {
+        border: none;
+        padding: 15px 25px;
+        font-size: 1.1rem;
+        background: transparent;
+        width: 100%;
+        outline: none;
+    }
+    
+    .search-btn {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        padding: 15px 30px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .search-btn:hover {
+        background: var(--secondary-color);
+        color: var(--dark-color);
+        transform: scale(1.05);
+    }
+    
+    .result-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+        border-right: 4px solid transparent;
+    }
+    
+    .result-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        border-right-color: var(--primary-color);
+    }
+    
+    .result-title {
+        color: var(--primary-color);
+        font-weight: 700;
+        margin-bottom: 10px;
+        font-size: 1.3rem;
+    }
+    
+    .result-type {
+        background: var(--secondary-color);
+        color: var(--dark-color);
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: inline-block;
+        margin-bottom: 15px;
+    }
+    
+    .result-description {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 15px;
+    }
+    
+    .result-meta {
+        color: #999;
+        font-size: 0.9rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .result-image {
+        width: 80px;
+        height: 80px;
+        border-radius: 10px;
+        object-fit: cover;
+        margin-left: 20px;
+    }
+    
+    .no-results {
+        text-align: center;
+        padding: 60px 20px;
+        color: #666;
+    }
+    
+    .search-suggestions {
+        background: var(--bg-light);
+        border-radius: 15px;
+        padding: 30px;
+        margin-top: 30px;
+    }
+    
+    .suggestion-tag {
+        background: white;
+        color: var(--primary-color);
+        padding: 8px 15px;
+        border-radius: 20px;
+        text-decoration: none;
+        font-size: 0.9rem;
+        margin: 5px;
+        display: inline-block;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+    }
+    
+    .suggestion-tag:hover {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+        transform: translateY(-2px);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Search Hero -->
+<section class="search-hero text-center">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-4" data-aos="fade-up">
+            {% if query %}
+                {% trans "نتائج البحث" %}
+            {% else %}
+                {% trans "البحث" %}
+            {% endif %}
+        </h1>
+        
+        {% if query %}
+        <p class="lead mb-5" data-aos="fade-up" data-aos-delay="200">
+            {% trans "البحث عن" %}: <strong>"{{ query }}"</strong>
+            {% if total_results > 0 %}
+                <br>{% trans "تم العثور على" %} {{ total_results }} {% trans "نتيجة" %}
+            {% endif %}
+        </p>
+        {% endif %}
+        
+        <!-- Search Form -->
+        <div class="search-form" data-aos="fade-up" data-aos-delay="400">
+            <form method="get" class="d-flex">
+                <input type="text" name="q" class="search-input" placeholder="{% trans "ابحث في الموقع..." %}" value="{{ query }}">
+                <button type="submit" class="search-btn">
+                    <i class="fas fa-search me-2"></i>{% trans "بحث" %}
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Search Results -->
+<section class="py-5">
+    <div class="container">
+        {% if results %}
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Results -->
+                {% for result in results %}
+                <div class="result-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|mul:50 }}">
+                    <div class="d-flex">
+                        <div class="flex-grow-1">
+                            <span class="result-type">{{ result.type }}</span>
+                            <h3 class="result-title">
+                                <a href="{{ result.url }}" class="text-decoration-none">{{ result.title }}</a>
+                            </h3>
+                            <p class="result-description">{{ result.description }}</p>
+                            <div class="result-meta">
+                                <span>
+                                    <i class="fas fa-calendar me-1"></i>
+                                    {{ result.date|date:"d M Y" }}
+                                </span>
+                                <a href="{{ result.url }}" class="btn btn-sm btn-outline-primary">
+                                    {% trans "قراءة المزيد" %} <i class="fas fa-arrow-left ms-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                        {% if result.image %}
+                        <div>
+                            <img loading="lazy" src="{{ result.image }}" alt="{{ result.title }}" class="result-image">
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+                
+                <!-- Pagination -->
+                {% if results.has_other_pages %}
+                <div class="d-flex justify-content-center mt-5">
+                    <nav aria-label="{% trans "ترقيم نتائج البحث" %}">
+                        <ul class="pagination">
+                            {% if results.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?q={{ query }}&page={{ results.previous_page_number }}">{% trans "السابق" %}</a>
+                            </li>
+                            {% endif %}
+                            
+                            {% for num in results.paginator.page_range %}
+                            <li class="page-item {% if results.number == num %}active{% endif %}">
+                                <a class="page-link" href="?q={{ query }}&page={{ num }}">{{ num }}</a>
+                            </li>
+                            {% endfor %}
+                            
+                            {% if results.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?q={{ query }}&page={{ results.next_page_number }}">{% trans "التالي" %}</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- Search Sidebar -->
+            <div class="col-lg-4">
+                <div class="search-suggestions" data-aos="fade-left">
+                    <h4 class="mb-3">
+                        <i class="fas fa-lightbulb me-2" style="color: var(--secondary-color);"></i>
+                        {% trans "اقتراحات البحث" %}
+                    </h4>
+                    <div>
+                        <a href="?q={% trans "مشاريع" %}" class="suggestion-tag">{% trans "المشاريع" %}</a>
+                        <a href="?q={% trans "تبرعات" %}" class="suggestion-tag">{% trans "التبرعات" %}</a>
+                        <a href="?q={% trans "أيتام" %}" class="suggestion-tag">{% trans "كفالة الأيتام" %}</a>
+                        <a href="?q={% trans "تعليم" %}" class="suggestion-tag">{% trans "التعليم" %}</a>
+                        <a href="?q={% trans "مساعدات" %}" class="suggestion-tag">{% trans "المساعدات" %}</a>
+                        <a href="?q={% trans "قرآن" %}" class="suggestion-tag">{% trans "تحفيظ القرآن" %}</a>
+                        <a href="?q={% trans "مساجد" %}" class="suggestion-tag">{% trans "بناء المساجد" %}</a>
+                        <a href="?q={% trans "نساء" %}" class="suggestion-tag">{% trans "دور المرأة" %}</a>
+                        <a href="?q={% trans "فقراء" %}" class="suggestion-tag">{% trans "مساعدة الفقراء" %}</a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div class="search-suggestions mt-4" data-aos="fade-left" data-aos-delay="200">
+                    <h4 class="mb-3">
+                        <i class="fas fa-link me-2" style="color: var(--primary-color);"></i>
+                        {% trans "روابط سريعة" %}
+                    </h4>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'projects:all_projects' %}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-project-diagram me-2"></i>{% trans "جميع المشاريع" %}
+                        </a>
+                        <a href="{% url 'main:about' %}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-info-circle me-2"></i>{% trans "من نحن" %}
+                        </a>
+                        <a href="{% url 'main:goals' %}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-bullseye me-2"></i>{% trans "أهدافنا" %}
+                        </a>
+                        <a href="{% url 'contact:contact' %}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-envelope me-2"></i>{% trans "اتصل بنا" %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        {% elif query %}
+        <!-- No Results -->
+        <div class="no-results" data-aos="fade-up">
+            <i class="fas fa-search fa-5x mb-4" style="color: var(--primary-color); opacity: 0.5;"></i>
+            <h3 class="mb-3">{% trans "لم يتم العثور على نتائج" %}</h3>
+            <p class="mb-4">{% trans "لم نتمكن من العثور على أي نتائج تطابق بحثك عن" %} <strong>"{{ query }}"</strong></p>
+            
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="search-suggestions">
+                        <h4 class="mb-3">{% trans "نصائح للبحث" %}:</h4>
+                        <ul class="text-start list-unstyled">
+                            <li class="mb-2">
+                                <i class="fas fa-check-circle me-2" style="color: var(--secondary-color);"></i>
+                                {% trans "تأكد من صحة كتابة الكلمات" %}
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check-circle me-2" style="color: var(--secondary-color);"></i>
+                                {% trans "جرب كلمات مختلفة أو أكثر عمومية" %}
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check-circle me-2" style="color: var(--secondary-color);"></i>
+                                {% trans "استخدم كلمات أقل في البحث" %}
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check-circle me-2" style="color: var(--secondary-color);"></i>
+                                {% trans "جرب البحث بالمرادفات" %}
+                            </li>
+                        </ul>
+                        
+                        <h5 class="mt-4 mb-3">{% trans "اقتراحات البحث" %}:</h5>
+                        <div>
+                            <a href="?q={% trans "مشاريع" %}" class="suggestion-tag">{% trans "المشاريع" %}</a>
+                            <a href="?q={% trans "تبرعات" %}" class="suggestion-tag">{% trans "التبرعات" %}</a>
+                            <a href="?q={% trans "أهداف" %}" class="suggestion-tag">{% trans "الأهداف" %}</a>
+                            <a href="?q={% trans "مجلس إدارة" %}" class="suggestion-tag">{% trans "مجلس الإدارة" %}</a>
+                            <a href="?q={% trans "تواصل" %}" class="suggestion-tag">{% trans "التواصل" %}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        {% else %}
+        <!-- Search Page without query -->
+        <div class="text-center" data-aos="fade-up">
+            <i class="fas fa-search fa-5x mb-4" style="color: var(--primary-color); opacity: 0.3;"></i>
+            <h3 class="mb-3">{% trans "ابحث في موقعنا" %}</h3>
+            <p class="lead mb-5">{% trans "استخدم مربع البحث أعلاه للعثور على المحتوى الذي تبحث عنه" %}</p>
+            
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="search-suggestions">
+                        <h4 class="mb-3">{% trans "مواضيع شائعة" %}:</h4>
+                        <div>
+                            <a href="?q={% trans "مشاريع خيرية" %}" class="suggestion-tag">{% trans "المشاريع الخيرية" %}</a>
+                            <a href="?q={% trans "كفالة أيتام" %}" class="suggestion-tag">{% trans "كفالة الأيتام" %}</a>
+                            <a href="?q={% trans "مساعدات" %}" class="suggestion-tag">{% trans "المساعدات" %}</a>
+                            <a href="?q={% trans "تحفيظ قرآن" %}" class="suggestion-tag">{% trans "تحفيظ القرآن" %}</a>
+                            <a href="?q={% trans "بناء مساجد" %}" class="suggestion-tag">{% trans "بناء المساجد" %}</a>
+                            <a href="?q={% trans "دور المرأة" %}" class="suggestion-tag">{% trans "دور المرأة" %}</a>
+                            <a href="?q={% trans "تعليم" %}" class="suggestion-tag">{% trans "التعليم" %}</a>
+                            <a href="?q={% trans "تطوير" %}" class="suggestion-tag">{% trans "التطوير" %}</a>
+                        </div>
+                        
+                        <h5 class="mt-4 mb-3">{% trans "أقسام الموقع" %}:</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <a href="{% url 'main:about' %}" class="d-block p-3 bg-white rounded mb-2 text-decoration-none">
+                                    <i class="fas fa-info-circle me-2" style="color: var(--primary-color);"></i>
+                                    <strong>{% trans "من نحن" %}</strong>
+                                </a>
+                                <a href="{% url 'main:vision' %}" class="d-block p-3 bg-white rounded mb-2 text-decoration-none">
+                                    <i class="fas fa-eye me-2" style="color: var(--primary-color);"></i>
+                                    <strong>{% trans "رؤيتنا" %}</strong>
+                                </a>
+                                <a href="{% url 'main:goals' %}" class="d-block p-3 bg-white rounded mb-2 text-decoration-none">
+                                    <i class="fas fa-bullseye me-2" style="color: var(--primary-color);"></i>
+                                    <strong>{% trans "الأهداف" %}</strong>
+                                </a>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="{% url 'projects:all_projects' %}" class="d-block p-3 bg-white rounded mb-2 text-decoration-none">
+                                    <i class="fas fa-project-diagram me-2" style="color: var(--primary-color);"></i>
+                                    <strong>{% trans "المشاريع" %}</strong>
+                                </a>
+                                <a href="{% url 'main:board' %}" class="d-block p-3 bg-white rounded mb-2 text-decoration-none">
+                                    <i class="fas fa-users me-2" style="color: var(--primary-color);"></i>
+                                    <strong>{% trans "مجلس الإدارة" %}</strong>
+                                </a>
+                                <a href="{% url 'contact:contact' %}" class="d-block p-3 bg-white rounded mb-2 text-decoration-none">
+                                    <i class="fas fa-envelope me-2" style="color: var(--primary-color);"></i>
+                                    <strong>{% trans "اتصل بنا" %}</strong>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Highlight search terms in results
+function highlightSearchTerms() {
+    const query = "{{ query|escapejs }}";
+    if (!query) return;
+    
+    const terms = query.toLowerCase().split(' ');
+    const resultCards = document.querySelectorAll('.result-card');
+    
+    resultCards.forEach(card => {
+        const title = card.querySelector('.result-title a');
+        const description = card.querySelector('.result-description');
+        
+        [title, description].forEach(element => {
+            if (!element) return;
+            
+            let content = element.innerHTML;
+            terms.forEach(term => {
+                if (term.length < 2) return;
+                const regex = new RegExp(`(${term})`, 'gi');
+                content = content.replace(regex, '<mark style="background: var(--secondary-color); padding: 2px 4px; border-radius: 3px;">$1</mark>');
+            });
+            element.innerHTML = content;
+        });
+    });
+}
+
+// Auto-focus search input
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.querySelector('.search-input');
+    if (searchInput && !searchInput.value) {
+        searchInput.focus();
+    }
+    
+    // Highlight search terms
+    highlightSearchTerms();
+});
+
+// Search suggestions click tracking
+document.querySelectorAll('.suggestion-tag').forEach(tag => {
+    tag.addEventListener('click', function() {
+        // Analytics or tracking code can be added here
+        console.log('Search suggestion clicked:', this.textContent);
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    // تعريف النصوص المترجمة
+    const searchRequiredText = "{% trans 'يرجى إدخال كلمة البحث' %}";
+    const defaultPlaceholderText = "{% trans 'ابحث في الموقع...' %}";
+
+    // تحسين سلوك نموذج البحث
+    const searchForm = document.querySelector('.search-form form');
+    if (searchForm) {
+        searchForm.addEventListener('submit', function (e) {
+            const input = this.querySelector('.search-input');
+            if (!input.value.trim()) {
+                e.preventDefault();
+                input.focus();
+                input.setAttribute('placeholder', searchRequiredText);
+                setTimeout(() => {
+                    input.setAttribute('placeholder', defaultPlaceholderText);
+                }, 2000);
+            }
+        });
+    }
+});
+
+</script>
+{% endblock %}

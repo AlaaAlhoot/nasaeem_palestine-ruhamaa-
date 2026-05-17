@@ -1,0 +1,567 @@
+{% load static %}
+{% load i18n %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    /* الأسماء العربية — رب الأسرة */
+    [
+        ['family_first_name',      '{% trans "الاسم الأول" %}'],
+        ['family_father_name_h',   '{% trans "اسم الأب" %}'],
+        ['family_grand_name_h',    '{% trans "اسم الجد" %}'],
+        ['family_family_name_h',   '{% trans "اسم العائلة" %}'],
+
+    ].forEach(([id, lbl]) => bindArabicField(id, 'err_' + id, lbl));
+
+    /* الأسماء العربية — الزوجة */
+    [
+        ['wife_first_name',  '{% trans "اسم الزوجة" %}'],
+        ['wife_father_name', '{% trans "اسم أب الزوجة" %}'],
+        ['wife_grand_name',  '{% trans "اسم جد الزوجة" %}'],
+        ['wife_family_name', '{% trans "لقب الزوجة" %}'],
+    ].forEach(([id, lbl]) => bindArabicField(id, 'err_' + id, lbl));
+
+    /* الأسماء العربية — المعيل */
+    [
+        ['family_guardian_first_name',  '{% trans "اسم المعيل" %}'],
+        ['family_guardian_father_name', '{% trans "اسم أب المعيل" %}'],
+        ['family_guardian_grand_name',  '{% trans "اسم جد المعيل" %}'],
+        ['family_guardian_family_name', '{% trans "لقب المعيل" %}'],
+    ].forEach(([id, lbl]) => bindArabicField(id, 'err_' + id, lbl));
+
+    /* تواريخ الميلاد */
+    ['family_birth_date', 'wife_birth_date']
+        .forEach(id => bindDateField(id, 'err_' + id));
+
+    /* الأرقام */
+    bindNumberField('family_members_count',            'err_family_members_count',            '{% trans "عدد أفراد الأسرة" %}',  1);
+    bindNumberField('family_sick_count',               'err_family_sick_count',               '{% trans "عدد المرضى" %}',        0);
+    bindNumberField('family_monthly_rent',             '',                                    '{% trans "مبلغ الإيجار" %}',      0);
+    bindNumberField('family_guardian_monthly_income',  'err_family_guardian_monthly_income',  '{% trans "الدخل الشهري" %}',      0);
+    bindNumberField('family_guardian_dependents',      'err_family_guardian_dependents',      '{% trans "عدد المُعالين" %}',     1);
+
+    /* أرقام الهوية مع تحقق API */
+    bindIdField('family_id_number',         'err_family_id_number');
+    bindIdField('wife_id_number',           'err_wife_id_number');
+    bindIdField('family_guardian_id_number','err_family_guardian_id_number');
+});
+
+/* ── إظهار/إخفاء قسم الزوجة ── */
+function toggleWifeSection(v) {
+    document.getElementById('wifeSection')?.classList.toggle('d-none', v !== '{% trans "متزوج" %}');
+}
+</script>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     بيانات رب الأسرة
+══════════════════════════════════════════════════════════ -->
+<div class="sec-title mb-3"><span>👨‍👩‍👧</span> {% trans "بيانات رب الأسرة" %}</div>
+<div class="row g-3 mb-4">
+
+    <div class="col-sm-6 col-md-3">
+        <label class="form-label">{% trans "الاسم الأول" %} <span class="req">*</span></label>
+        <input type="text" id="family_first_name" class="form-control" placeholder="{% trans 'الاسم' %}">
+        <div class="field-err" id="err_family_first_name"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-sm-6 col-md-3">
+        <label class="form-label">{% trans "اسم الأب" %} <span class="req">*</span></label>
+        <input type="text" id="family_father_name_h" class="form-control" placeholder="{% trans 'اسم الأب' %}">
+        <div class="field-err" id="err_family_father_name_h"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-sm-6 col-md-3">
+        <label class="form-label">{% trans "اسم الجد" %} <span class="req">*</span></label>
+        <input type="text" id="family_grand_name_h" class="form-control" placeholder="{% trans 'اسم الجد' %}">
+        <div class="field-err" id="err_family_grand_name_h"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-sm-6 col-md-3">
+        <label class="form-label">{% trans "اسم العائلة" %} <span class="req">*</span></label>
+        <input type="text" id="family_family_name_h" class="form-control" placeholder="{% trans 'اسم العائلة' %}">
+        <div class="field-err" id="err_family_family_name_h"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">{% trans "تاريخ الميلاد" %} <span class="req">*</span></label>
+        <input type="date" id="family_birth_date" class="form-control" max="">
+        <div class="field-err" id="err_family_birth_date"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">{% trans "رقم الهوية" %} <span class="req">*</span></label>
+        <div style="position:relative">
+            <input type="text" id="family_id_number" class="form-control" maxlength="9"
+                   placeholder="9XXXXXXXX" inputmode="numeric">
+        </div>
+        <div class="field-err" id="err_family_id_number"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">{% trans "الجنس" %} <span class="req">*</span></label>
+        <select id="family_gender" class="form-select form-control">
+            <option value="">{% trans "-- اختر --" %}</option>
+            <option>{% trans "ذكر" %}</option>
+            <option>{% trans "أنثى" %}</option>
+        </select>
+        <div class="field-err" id="err_family_gender"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">{% trans "الحالة الاجتماعية" %} <span class="req">*</span></label>
+        <select id="family_marital_status" class="form-select form-control"
+                onchange="toggleWifeSection(this.value)">
+            <option value="">{% trans "-- اختر --" %}</option>
+            <option value="متزوج">{% trans "متزوج/ـة" %}</option>
+            <option value="أرمل">{% trans "أرمل/ـة" %}</option>
+            <option value="مطلق">{% trans "مطلق/ـة" %}</option>
+        </select>
+        <div class="field-err" id="err_family_marital_status"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">{% trans "الحالة الصحية" %} <span class="req">*</span></label>
+        <select id="family_health_status" class="form-select form-control">
+            <option value="">{% trans "-- اختر --" %}</option>
+            <option>{% trans "سليم" %}</option>
+            <option>{% trans "مرض مزمن" %}</option>
+            <option>{% trans "ذوو احتياجات خاصة" %}</option>
+            <option>{% trans "مصاب حرب" %}</option>
+        </select>
+        <div class="field-err" id="err_family_health_status"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">{% trans "المستوى التعليمي" %} <span class="req">*</span></label>
+        <select id="family_education_level" class="form-select form-control">
+            <option value="">{% trans "-- اختر --" %}</option>
+            <option>{% trans "غير متعلم" %}</option>
+            <option>{% trans "ابتدائي" %}</option>
+            <option>{% trans "إعدادي" %}</option>
+            <option>{% trans "ثانوي" %}</option>
+            <option>{% trans "جامعي" %}</option>
+            <option>{% trans "ماجستير" %}</option>
+        </select>
+        <div class="field-err" id="err_family_education_level"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">{% trans "المهنة" %} <span class="req">*</span></label>
+        <select id="family_job" class="form-select form-control">
+            <option value="">{% trans "-- اختر --" %}</option>
+            <option>{% trans "موظف حكومي" %}</option>
+            <option>{% trans "موظف قطاع خاص" %}</option>
+            <option>{% trans "تاجر" %}</option>
+            <option>{% trans "طبيب" %}</option>
+            <option>{% trans "مهندس" %}</option>
+            <option>{% trans "معلم/ـة" %}</option>
+            <option>{% trans "ممرض/ـة" %}</option>
+            <option>{% trans "مقاول" %}</option>
+            <option>{% trans "سائق" %}</option>
+            <option>{% trans "عامل" %}</option>
+            <option>{% trans "ربة بيت" %}</option>
+            <option>{% trans "متقاعد" %}</option>
+            <option>{% trans "لا يعمل" %}</option>
+            <option>{% trans "أخرى" %}</option>
+        </select>
+        <div class="field-err" id="err_family_job"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">{% trans "الصورة الشخصية" %} <span class="req">*</span></label>
+        <div class="photo-box" id="family_photo_box"
+             onclick="document.getElementById('family_photo').click()">
+            <input type="file" id="family_photo" accept=".jpg,.jpeg,.png"
+                   onchange="previewPhoto(this,'familyPhotoPreview','familyPhotoHolder','family_photo_box')"
+                   onclick="event.stopPropagation()">
+            <img loading="lazy" id="familyPhotoPreview" class="photo-preview" src="" alt="">
+            <div id="familyPhotoHolder">
+                <div style="font-size:1.8rem;margin-bottom:4px">📷</div>
+                <div class="file-box-text">{% trans "اضغط لرفع الصورة" %}<br><small>{% trans "JPG • PNG — 4MB" %}</small></div>
+            </div>
+        </div>
+        <div class="field-err" id="err_family_photo"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">{% trans "عدد أفراد الأسرة" %} <span class="req">*</span></label>
+        <input type="number" id="family_members_count" class="form-control" placeholder="1" min="1" value="1">
+        <div class="field-err" id="err_family_members_count"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">{% trans "عدد المرضى بالأسرة" %} <span class="req">*</span></label>
+        <input type="number" id="family_sick_count" class="form-control" placeholder="0" min="0" value="0">
+        <div class="field-err" id="err_family_sick_count"><span>⚠️</span><span></span></div>
+    </div>
+
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     العنوان الحالي
+══════════════════════════════════════════════════════════ -->
+<div class="sec-title mb-3"><span>📍</span> {% trans "العنوان الحالي" %}</div>
+<div class="row g-3 mb-3">
+
+    <div class="col-md-4">
+        <label class="form-label">{% trans "المدينة" %} <span class="req">*</span></label>
+        <select id="family_current_city" class="form-select form-control">
+            <option value="">{% trans "-- اختر --" %}</option>
+            <option>{% trans "رفح" %}</option>
+            <option>{% trans "خانيونس" %}</option>
+            <option>{% trans "القرارة" %}</option>
+            <option>{% trans "دير البلح" %}</option>
+            <option>{% trans "الزوايدة" %}</option>
+            <option>{% trans "النصيرات" %}</option>
+            <option>{% trans "المغازي" %}</option>
+            <option>{% trans "البريج" %}</option>
+            <option>{% trans "مدينة غزة" %}</option>
+            <option>{% trans "شمال غزة" %}</option>
+            <option>{% trans "شرق غزة" %}</option>
+            <option>{% trans "غرب غزة" %}</option>
+            <option>{% trans "غير محدد" %}</option>
+        </select>
+        <div class="field-err" id="err_family_current_city"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">{% trans "الشارع" %} <span class="req">*</span></label>
+        <input type="text" id="family_current_street" class="form-control"
+               placeholder="{% trans 'اسم الشارع' %}" data-type="address">
+        <div class="field-err" id="err_family_current_street"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">{% trans "أقرب معلم/مسجد" %} <span class="req">*</span></label>
+        <input type="text" id="family_current_landmark" class="form-control"
+               placeholder="{% trans 'أقرب معلم أو مسجد' %}" data-type="address">
+        <div class="field-err" id="err_family_current_landmark"><span>⚠️</span><span></span></div>
+    </div>
+
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     العنوان السابق
+══════════════════════════════════════════════════════════ -->
+<div class="sec-title mb-3">
+    <span>📍</span> {% trans "العنوان السابق" %}
+</div>
+<div class="row g-3 mb-4">
+
+    <div class="col-md-4">
+        <label class="form-label">{% trans "المدينة" %}<span class="req">*</span></label>
+        <select id="family_previous_city" class="form-select form-control" required>
+            <option value="">{% trans "-- اختر --" %}</option>
+            <option>{% trans "رفح" %}</option>
+            <option>{% trans "خانيونس" %}</option>
+            <option>{% trans "القرارة" %}</option>
+            <option>{% trans "دير البلح" %}</option>
+            <option>{% trans "الزوايدة" %}</option>
+            <option>{% trans "النصيرات" %}</option>
+            <option>{% trans "المغازي" %}</option>
+            <option>{% trans "البريج" %}</option>
+            <option>{% trans "مدينة غزة" %}</option>
+            <option>{% trans "شمال غزة" %}</option>
+            <option>{% trans "شرق غزة" %}</option>
+            <option>{% trans "غرب غزة" %}</option>
+            <option>{% trans "غير محدد" %}</option>
+        </select>
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">{% trans "الشارع" %}<span class="req">*</span></label>
+        <input type="text" id="family_previous_street" class="form-control"
+               placeholder="{% trans 'اسم الشارع' %}" data-type="address" required>
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">{% trans "أقرب معلم/مسجد" %}<span class="req">*</span></label>
+        <input type="text" id="family_previous_landmark" class="form-control"
+               placeholder="{% trans 'أقرب معلم أو مسجد' %}" data-type="address" required>
+    </div>
+
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     السكن
+══════════════════════════════════════════════════════════ -->
+<div class="sec-title mb-3"><span>🏠</span> {% trans "السكن" %}</div>
+<div class="row g-3 mb-4">
+
+    <div class="col-md-4">
+        <label class="form-label">{% trans "نوع السكن" %} <span class="req">*</span></label>
+        <select id="family_housing_type" class="form-select form-control">
+            <option value="">{% trans "-- اختر --" %}</option>
+            <option>{% trans "خيمة" %}</option>
+            <option>{% trans "بيت باطون" %}</option>
+            <option>{% trans "بيت زينقو" %}</option>
+        </select>
+        <div class="field-err" id="err_family_housing_type"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">{% trans "ملكية السكن" %} <span class="req">*</span></label>
+        <select id="family_housing_ownership" class="form-select form-control"
+                onchange="document.getElementById('family_rent_wrap').classList.toggle('d-none',this.value!=='{% trans "إيجار" %}')">
+            <option value="">{% trans "-- اختر --" %}</option>
+            <option>{% trans "ملك" %}</option>
+            <option>{% trans "إيجار" %}</option>
+        </select>
+        <div class="field-err" id="err_family_housing_ownership"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-4 d-none" id="family_rent_wrap">
+        <label class="form-label">{% trans "مبلغ الإيجار (₪)" %} <span class="req">*</span></label>
+        <input type="number" id="family_monthly_rent" class="form-control" placeholder="0" min="0">
+        <div class="field-err" id="err_family_monthly_rent"><span>⚠️</span><span></span></div>
+    </div>
+
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     بيانات الزوجة
+══════════════════════════════════════════════════════════ -->
+<div id="wifeSection" class="d-none">
+    <div class="sec-title mb-3"><span>👩</span> {% trans "بيانات الزوجة" %}</div>
+    <div class="row g-3 mb-4">
+
+        <div class="col-sm-6 col-md-3">
+            <label class="form-label">{% trans "الاسم الأول" %} <span class="req">*</span></label>
+            <input type="text" id="wife_first_name" class="form-control" placeholder="{% trans 'الاسم' %}">
+            <div class="field-err" id="err_wife_first_name"><span>⚠️</span><span></span></div>
+        </div>
+
+        <div class="col-sm-6 col-md-3">
+            <label class="form-label">{% trans "اسم الأب" %} <span class="req">*</span></label>
+            <input type="text" id="wife_father_name" class="form-control" placeholder="{% trans 'اسم الأب' %}">
+            <div class="field-err" id="err_wife_father_name"><span>⚠️</span><span></span></div>
+        </div>
+
+        <div class="col-sm-6 col-md-3">
+            <label class="form-label">{% trans "اسم الجد" %} <span class="req">*</span></label>
+            <input type="text" id="wife_grand_name" class="form-control" placeholder="{% trans 'اسم الجد' %}">
+            <div class="field-err" id="err_wife_grand_name"><span>⚠️</span><span></span></div>
+        </div>
+
+        <div class="col-sm-6 col-md-3">
+            <label class="form-label">{% trans "اسم العائلة" %} <span class="req">*</span></label>
+            <input type="text" id="wife_family_name" class="form-control" placeholder="{% trans 'اسم العائلة' %}">
+            <div class="field-err" id="err_wife_family_name"><span>⚠️</span><span></span></div>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">{% trans "تاريخ الميلاد" %} <span class="req">*</span></label>
+            <input type="date" id="wife_birth_date" class="form-control" max="">
+            <div class="field-err" id="err_wife_birth_date"><span>⚠️</span><span></span></div>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">{% trans "رقم الهوية" %} <span class="req">*</span></label>
+            <div style="position:relative">
+                <input type="text" id="wife_id_number" class="form-control" maxlength="9"
+                       placeholder="9XXXXXXXX" inputmode="numeric">
+            </div>
+            <div class="field-err" id="err_wife_id_number"><span>⚠️</span><span></span></div>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">{% trans "الجنس" %}</label>
+            <input type="text" class="form-control" value="{% trans 'أنثى' %}" readonly
+                   style="background:var(--bg-secondary,#f4f9f6);cursor:not-allowed">
+            <input type="hidden" id="wife_gender" value="أنثى">
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">{% trans "الحالة الصحية" %} <span class="req">*</span></label>
+            <select id="wife_health_status" class="form-select form-control">
+                <option value="">{% trans "-- اختر --" %}</option>
+                <option>{% trans "سليمة" %}</option>
+                <option>{% trans "مرض مزمن" %}</option>
+                <option>{% trans "ذوو احتياجات خاصة" %}</option>
+                <option>{% trans "مصاب حرب" %}</option>
+            </select>
+            <div class="field-err" id="err_wife_health_status"><span>⚠️</span><span></span></div>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">{% trans "المستوى التعليمي" %} <span class="req">*</span></label>
+            <select id="wife_education_level" class="form-select form-control">
+                <option value="">{% trans "-- اختر --" %}</option>
+                <option>{% trans "غير متعلم" %}</option>
+                <option>{% trans "ابتدائي" %}</option>
+                <option>{% trans "إعدادي" %}</option>
+                <option>{% trans "ثانوي" %}</option>
+                <option>{% trans "جامعي" %}</option>
+                <option>{% trans "ماجستير" %}</option>
+            </select>
+            <div class="field-err" id="err_wife_education_level"><span>⚠️</span><span></span></div>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">{% trans "الصورة" %} <span class="opt">({% trans "اختياري" %})</span></label>
+            <div class="photo-box" id="wife_photo_box"
+                 onclick="document.getElementById('wife_photo').click()">
+                <input type="file" id="wife_photo" accept=".jpg,.jpeg,.png"
+                       onchange="previewPhoto(this,'wifePhotoPreview','wifePhotoHolder','wife_photo_box')"
+                       onclick="event.stopPropagation()">
+                <img loading="lazy" id="wifePhotoPreview" class="photo-preview" src="" alt="">
+                <div id="wifePhotoHolder">
+                    <div style="font-size:1.5rem">📷</div>
+                    <div class="file-box-text">{% trans "اختياري — 4MB" %}</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     المعيل الحالي
+══════════════════════════════════════════════════════════ -->
+<div class="sec-title mb-3"><span>🧑</span> {% trans "المعيل الحالي" %}</div>
+<div class="row g-3 mb-4">
+
+    <div class="col-sm-6 col-md-3">
+        <label class="form-label">{% trans "الاسم الأول" %} <span class="req">*</span></label>
+        <input type="text" id="family_guardian_first_name" class="form-control" placeholder="{% trans 'الاسم' %}">
+        <div class="field-err" id="err_family_guardian_first_name"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-sm-6 col-md-3">
+        <label class="form-label">{% trans "اسم الأب" %} <span class="req">*</span></label>
+        <input type="text" id="family_guardian_father_name" class="form-control" placeholder="{% trans 'اسم الأب' %}">
+        <div class="field-err" id="err_family_guardian_father_name"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-sm-6 col-md-3">
+        <label class="form-label">{% trans "اسم الجد" %} <span class="req">*</span></label>
+        <input type="text" id="family_guardian_grand_name" class="form-control" placeholder="{% trans 'اسم الجد' %}">
+        <div class="field-err" id="err_family_guardian_grand_name"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-sm-6 col-md-3">
+        <label class="form-label">{% trans "اسم العائلة" %} <span class="req">*</span></label>
+        <input type="text" id="family_guardian_family_name" class="form-control" placeholder="{% trans 'اسم العائلة' %}">
+        <div class="field-err" id="err_family_guardian_family_name"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">{% trans "رقم الهوية" %} <span class="req">*</span></label>
+        <div style="position:relative">
+            <input type="text" id="family_guardian_id_number" class="form-control" maxlength="9"
+                   placeholder="9XXXXXXXX" inputmode="numeric">
+        </div>
+        <div class="field-err" id="err_family_guardian_id_number"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">{% trans "الجنس" %} <span class="req">*</span></label>
+        <select id="family_guardian_gender" class="form-select form-control">
+            <option value="">{% trans "-- اختر --" %}</option>
+            <option>{% trans "ذكر" %}</option>
+            <option>{% trans "أنثى" %}</option>
+        </select>
+        <div class="field-err" id="err_family_guardian_gender"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">{% trans "صلة القرابة" %} <span class="req">*</span></label>
+        <select id="family_guardian_relation" class="form-select form-control">
+            <option value="">{% trans "-- اختر --" %}</option>
+            <option value="عم">{% trans "عم/ـة" %}</option>
+            <option value="خال">{% trans "خال/ـة" %}</option>
+            <option value="جد">{% trans "جد/ة" %}</option>
+            <option value="أخ">{% trans "أخ" %}</option>
+            <option value="أخت">{% trans "أخت" %}</option>
+            <option value="أخرى">{% trans "أخرى" %}</option>
+        </select>
+        <div class="field-err" id="err_family_guardian_relation"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">{% trans "المهنة" %} <span class="req">*</span></label>
+        <select id="family_guardian_job" class="form-select form-control">
+            <option value="">{% trans "-- اختر المهنة --" %}</option>
+            <option>{% trans "موظف حكومي" %}</option>
+            <option>{% trans "موظف قطاع خاص" %}</option>
+            <option>{% trans "تاجر" %}</option>
+            <option>{% trans "معلم/ـة" %}</option>
+            <option>{% trans "عامل" %}</option>
+            <option>{% trans "لا يعمل" %}</option>
+            <option>{% trans "أخرى" %}</option>
+        </select>
+        <div class="field-err" id="err_family_guardian_job"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">{% trans "الحالة الصحية" %} <span class="req">*</span></label>
+        <select id="family_guardian_health_status" class="form-select form-control">
+            <option value="">{% trans "-- اختر --" %}</option>
+            <option>{% trans "سليم" %}</option>
+            <option>{% trans "مرض مزمن" %}</option>
+            <option>{% trans "ذوو احتياجات خاصة" %}</option>
+            <option>{% trans "مصاب حرب" %}</option>
+        </select>
+        <div class="field-err" id="err_family_guardian_health_status"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">{% trans "المستوى التعليمي" %} <span class="req">*</span></label>
+        <select id="family_guardian_education_level" class="form-select form-control">
+            <option value="">{% trans "-- اختر --" %}</option>
+            <option>{% trans "غير متعلم" %}</option>
+            <option>{% trans "ابتدائي" %}</option>
+            <option>{% trans "إعدادي" %}</option>
+            <option>{% trans "ثانوي" %}</option>
+            <option>{% trans "جامعي" %}</option>
+            <option>{% trans "ماجستير" %}</option>
+        </select>
+        <div class="field-err" id="err_family_guardian_education_level"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">{% trans "الدخل الشهري (₪)" %} <span class="req">*</span></label>
+        <input type="number" id="family_guardian_monthly_income" class="form-control" placeholder="0" min="0">
+        <div class="field-err" id="err_family_guardian_monthly_income"><span>⚠️</span><span></span></div>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">{% trans "عدد من يعيلهم" %} <span class="req">*</span></label>
+        <input type="number" id="family_guardian_dependents" class="form-control" placeholder="1" min="1" value="1">
+        <div class="field-err" id="err_family_guardian_dependents"><span>⚠️</span><span></span></div>
+    </div>
+
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     أفراد الأسرة
+══════════════════════════════════════════════════════════ -->
+<div class="sec-title mb-3">
+    <span>👨‍👩‍👧</span> {% trans "أفراد الأسرة" %}
+    <span style="font-size:0.72rem;color:#9ca3af">{% trans "(اختياري — إذا أضفت فرداً يجب تعبئته كاملاً)" %}</span>
+</div>
+<div id="familyMembersContainer" class="mb-3"></div>
+<button type="button" class="btn-add-member mb-4"
+        onclick="addMember('familyMembersContainer')">
+    <span>➕</span> {% trans "إضافة فرد" %}
+</button>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     الوضع العام للأسرة وقصتها
+══════════════════════════════════════════════════════════ -->
+<div class="sec-title mb-3"><span>📋</span> {% trans "الوضع العام للأسرة وقصتها" %}</div>
+<div class="mb-2">
+    <textarea id="family_general_status" class="form-control" rows="5" maxlength="1000"
+              placeholder="{% trans 'اكتب الوضع العام للأسرة وقصتها هنا... (مطلوب)' %}"
+              oninput="document.getElementById('family_status_count').textContent=this.value.length"></textarea>
+    <div class="char-count"><span id="family_status_count">0</span>/1000</div>
+    <div class="field-err" id="err_family_general_status"><span>⚠️</span><span>{% trans "هذا الحقل مطلوب" %}</span></div>
+</div>

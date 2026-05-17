@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}
+    {% trans "خطأ أمني" %} (403)
+{% endblock %}
+
+{% block content %}
+<div class="container text-center py-5">
+    <h1 class="display-1 text-danger">403</h1>
+    <h2 class="mb-4">{% trans "فشل في التحقق الأمني" %}</h2>
+    <p class="lead">
+        {% trans "فشل النظام في التحقق من الإجراء المطلوب (CSRF) لأسباب أمنية." %}
+        {% trans "عادةً ما يحدث هذا بسبب انتهاء صلاحية الجلسة أو الكوكيز بعد فترة طويلة من عدم النشاط." %}
+    </p>
+
+    <hr class="my-4">
+
+    <h3>{% trans "حل سريع ومقترح" %}</h3>
+    <p>{% trans "يرجى الضغط على الزر أدناه لمسح بيانات الجلسة وإعادة تحميل الصفحة، مما سيسمح للنظام بتوليد توكن جديد." %}</p>
+    
+    <button class="btn btn-primary btn-lg mt-3" onclick="handleCsrfError()">
+        <i class="fas fa-redo-alt"></i> {% trans "إصلاح وإعادة تحميل الصفحة" %}
+    </button>
+    
+    <a href="/" class="btn btn-secondary btn-lg mt-3">
+        <i class="fas fa-home"></i> {% trans "العودة إلى الرئيسية" %}
+    </a>
+
+</div>
+{% endblock content %}
+
+{% block custom_js %}
+<script>
+    function handleCsrfError() {
+        // 1. مسح الكوكيز الضرورية (الجلسة و CSRF)
+        const d = new Date(0).toUTCString();
+        
+        // مسح الـ csrftoken
+        document.cookie = 'csrftoken=; Path=/; Expires=' + d + '; SameSite=Lax;';
+        
+        // مسح الـ sessionid
+        document.cookie = 'sessionid=; Path=/; Expires=' + d + '; SameSite=Lax;';
+        
+        // 2. إعادة تحميل الصفحة لطلب توكن جديد
+        window.location.reload(true);
+    }
+</script>
+{% endblock custom_js %}

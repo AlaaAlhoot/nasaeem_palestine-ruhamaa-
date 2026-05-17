@@ -1,0 +1,198 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - جمعية نسائم فلسطين</title>
+<link href="{% static 'bootstrap/bootstrap.rtl.min.css' %}" rel="stylesheet">
+<link href="{% static 'bootstrap/all.min.css' %}" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(270deg, #6B8E23, #5a7a1f);
+            background-size: 400% 400%;
+            animation: gradientMove 10s ease infinite;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        .login-card {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            max-width: 360px;
+            width: 100%;
+            padding: 2rem;
+            animation: fadeInUp 1s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo-img {
+            width: 70px;
+            height: 70px;
+            object-fit: contain;
+            margin-bottom: 1rem;
+        }
+
+        .login-card h4 {
+            font-weight: bold;
+            color: #2e4d00;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-card p {
+            color: #666;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .form-control:focus {
+            border-color: #6B8E23;
+            box-shadow: 0 0 5px rgba(107, 142, 35, 0.5);
+        }
+
+        .btn-primary {
+            background-color: #6B8E23;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #5a7a1f;
+        }
+
+        .alert-danger ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .footer-note {
+            font-size: 0.85rem;
+            color: #555;
+            margin-top: 1.5rem;
+            text-align: center;
+            background: #f8f9fa;
+            padding: 0.75rem;
+            border-radius: 10px;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+            min-height: 40px;
+        }
+
+        .toggle-password {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-card text-center">
+        <img loading="lazy" src="{% static 'images/logo.png' %}" alt="Logo" class="logo-img">
+
+        <h4>تسجيل الدخول</h4>
+        <p id="greeting">مرحبًا بك في بوابة جمعية نسائم فلسطين الخيرية</p>
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% if form.errors %}
+                <div class="alert alert-danger text-start">
+                    <strong>حدث خطأ:</strong>
+                    <ul>
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                        {% for error in form.non_field_errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <div class="mb-3 text-start">
+                <label class="form-label">اسم المستخدم</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                    <input type="text" class="form-control" name="username" required>
+                </div>
+            </div>
+
+            <div class="mb-3 text-start">
+                <label class="form-label">كلمة المرور</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                    <input type="password" class="form-control" name="password" id="password" required>
+                    <span class="input-group-text toggle-password" onclick="togglePassword()">
+                        <i class="fas fa-eye"></i>
+                    </span>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mb-2">
+                <i class="fas fa-sign-in-alt me-2"></i> دخول
+            </button>
+
+            <div class="text-center mb-2">
+                <a href="{% url 'main:home' %}" class="text-muted">
+                    <i class="fas fa-arrow-right me-1"></i> العودة للموقع الرئيسي
+                </a>
+            </div>
+
+            <div class="footer-note" id="signature"></div>
+        </form>
+    </div>
+
+    <script>
+        // ترحيب ديناميكي حسب الوقت
+        const hour = new Date().getHours();
+        const greeting = hour < 12 ? "صباح الخير" : hour < 18 ? "مساء الخير" : "ليلة سعيدة";
+        document.getElementById("greeting").textContent = greeting + "، مرحبًا بك في بوابة جمعية نسائم فلسطين الخيرية";
+
+        // توقيع بتأثير كتابة تدريجي
+        const signatureParts = [
+            '<i class="fas fa-code"></i> ',
+            'طور بكل حب بواسطة ',
+            '<strong>علاء عماد الحوت</strong>',
+            ' | للتواصل: ',
+            '<a href="tel:0598964850" class="text-decoration-none text-dark">0598964850</a>'
+        ];
+        let i = 0, j = 0, current = '';
+        function typeWriter() {
+            if (i < signatureParts.length) {
+                current += signatureParts[i].charAt(j);
+                document.getElementById("signature").innerHTML = current;
+                j++;
+                if (j >= signatureParts[i].length) {
+                    current += ' ';
+                    i++;
+                    j = 0;
+                }
+                setTimeout(typeWriter, 30);
+            }
+        }
+        typeWriter();
+
+        // زر إظهار كلمة المرور
+        function togglePassword() {
+            const input = document.getElementById("password");
+            input.type = input.type === "password" ? "text" : "password";
+        }
+    </script>
+</body>
+</html>

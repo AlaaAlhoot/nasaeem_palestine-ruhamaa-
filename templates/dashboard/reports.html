@@ -1,0 +1,867 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'vendor/sweetalert2/sweetalert2.min.css' %}">
+<style>
+    .report-card {
+        transition: all 0.3s ease;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .report-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    .report-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .report-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .report-description {
+        font-size: 0.9rem;
+        color: #6c757d;
+        margin-bottom: 1rem;
+    }
+
+    .stats-box {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stats-item {
+        text-align: center;
+    }
+
+    .stats-number {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .stats-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+
+    .generate-btn {
+        width: 100%;
+        padding: 0.7rem;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .generate-btn:hover {
+        transform: scale(1.05);
+    }
+
+    .modal-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control, .form-select {
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+        padding: 0.6rem 0.9rem;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+
+    .loading-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .loading-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    }
+
+    .loading-spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #667eea;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        color: #2c3e50;
+        border-bottom: 3px solid #667eea;
+        padding-bottom: 0.5rem;
+    }
+
+    .checkbox-group {
+        max-height: 300px;
+        overflow-y: auto;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 1rem;
+        background: #f8f9fa;
+    }
+
+    .form-check {
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        background: white;
+        border-radius: 6px;
+        border: 1px solid #e0e0e0;
+    }
+
+    .form-check:hover {
+        background: #f0f0f0;
+    }
+
+    .form-check-input:checked {
+        background-color: #667eea;
+        border-color: #667eea;
+    }
+
+    .form-check-label {
+        font-weight: 500;
+        cursor: pointer;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    
+    <!-- إحصائيات سريعة -->
+    <div class="stats-box">
+        <div class="row">
+            <div class="col-md-3 stats-item">
+                <div class="stats-number">{{ projects_count }}</div>
+                <div class="stats-label"><i class="fas fa-project-diagram me-2"></i>المشاريع</div>
+            </div>
+            <div class="col-md-3 stats-item">
+                <div class="stats-number">{{ users_count }}</div>
+                <div class="stats-label"><i class="fas fa-users me-2"></i>المستخدمين</div>
+            </div>
+            <div class="col-md-3 stats-item">
+                <div class="stats-number">{{ messages_count }}</div>
+                <div class="stats-label"><i class="fas fa-envelope me-2"></i>الرسائل</div>
+            </div>
+            <div class="col-md-3 stats-item">
+                <div class="stats-number">{{ newsletter_count }}</div>
+                <div class="stats-label"><i class="fas fa-newspaper me-2"></i>الاشتراكات</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- التقارير الرئيسية -->
+    <h3 class="section-title"><i class="fas fa-file-alt me-2"></i>التقارير الرئيسية</h3>
+    <div class="row mb-4">
+        <!-- التقرير الشهري -->
+        <div class="col-md-3 mb-3">
+            <div class="report-card p-4 text-center h-100">
+                <div class="report-icon text-primary">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <h5 class="report-title">التقرير الشهري</h5>
+                <p class="report-description">تقرير شامل للشهر الحالي</p>
+                <button class="btn btn-primary generate-btn" onclick="generateReport('monthly_summary')">
+                    <i class="fas fa-download me-2"></i>توليد التقرير
+                </button>
+            </div>
+        </div>
+
+        <!-- التقرير السنوي -->
+        <div class="col-md-3 mb-3">
+            <div class="report-card p-4 text-center h-100">
+                <div class="report-icon text-success">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <h5 class="report-title">التقرير السنوي</h5>
+                <p class="report-description">تقرير شامل لآخر 365 يوم</p>
+                <button class="btn btn-success generate-btn" onclick="generateReport('yearly_summary')">
+                    <i class="fas fa-download me-2"></i>توليد التقرير
+                </button>
+            </div>
+        </div>
+
+        <!-- تقرير المشاريع -->
+        <div class="col-md-3 mb-3">
+            <div class="report-card p-4 text-center h-100">
+                <div class="report-icon text-info">
+                    <i class="fas fa-project-diagram"></i>
+                </div>
+                <h5 class="report-title">تقرير المشاريع</h5>
+                <p class="report-description">تقرير مفصل للمشاريع</p>
+                <button class="btn btn-info generate-btn" onclick="openProjectsModal()">
+                    <i class="fas fa-cog me-2"></i>تخصيص وتوليد
+                </button>
+            </div>
+        </div>
+
+        <!-- تقرير نشاط المستخدمين -->
+        <div class="col-md-3 mb-3">
+            <div class="report-card p-4 text-center h-100">
+                <div class="report-icon text-warning">
+                    <i class="fas fa-user-clock"></i>
+                </div>
+                <h5 class="report-title">نشاط المستخدمين</h5>
+                <p class="report-description">تقرير شامل للنشاطات</p>
+                <button class="btn btn-warning generate-btn" onclick="openUserActivityModal()">
+                    <i class="fas fa-cog me-2"></i>تخصيص وتوليد
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- التقرير المخصص المتقدم -->
+    <h3 class="section-title"><i class="fas fa-magic me-2"></i>تقرير مخصص متقدم</h3>
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="report-card p-4 text-center">
+                <div class="report-icon text-danger" style="font-size: 4rem;">
+                    <i class="fas fa-file-export"></i>
+                </div>
+                <h5 class="report-title" style="font-size: 1.3rem;">تقرير متقدم - اختر ما تريد تصديره</h5>
+                <p class="report-description">قم بتحديد أنواع التقارير والفترة الزمنية للحصول على تقرير شامل</p>
+                <button class="btn btn-danger btn-lg generate-btn" style="max-width: 400px; margin: 0 auto;" onclick="openAdvancedCustomModal()">
+                    <i class="fas fa-tools me-2"></i>إنشاء تقرير مخصص متقدم
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- التقارير التفصيلية -->
+    <h3 class="section-title"><i class="fas fa-chart-bar me-2"></i>التقارير التفصيلية</h3>
+    <div class="row mb-4">
+        <!-- تقرير الرسائل -->
+        <div class="col-md-3 mb-3">
+            <div class="report-card p-3 text-center h-100">
+                <div class="report-icon text-warning" style="font-size: 2.5rem;">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <h6 class="report-title" style="font-size: 1rem;">رسائل التواصل</h6>
+                <button class="btn btn-warning btn-sm generate-btn" onclick="openMessagesModal()">
+                    <i class="fas fa-cog me-1"></i>تخصيص
+                </button>
+            </div>
+        </div>
+
+        <!-- تقرير الإحصائيات -->
+        <div class="col-md-3 mb-3">
+            <div class="report-card p-3 text-center h-100">
+                <div class="report-icon text-danger" style="font-size: 2.5rem;">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h6 class="report-title" style="font-size: 1rem;">الإحصائيات</h6>
+                <button class="btn btn-danger btn-sm generate-btn" onclick="generateReport('statistics')">
+                    <i class="fas fa-download me-1"></i>توليد
+                </button>
+            </div>
+        </div>
+
+        <!-- تقرير الأهداف -->
+        <div class="col-md-3 mb-3">
+            <div class="report-card p-3 text-center h-100">
+                <div class="report-icon text-primary" style="font-size: 2.5rem;">
+                    <i class="fas fa-bullseye"></i>
+                </div>
+                <h6 class="report-title" style="font-size: 1rem;">الأهداف</h6>
+                <button class="btn btn-primary btn-sm generate-btn" onclick="generateReport('goals')">
+                    <i class="fas fa-download me-1"></i>توليد
+                </button>
+            </div>
+        </div>
+
+        <!-- تقرير مجلس الإدارة -->
+        <div class="col-md-3 mb-3">
+            <div class="report-card p-3 text-center h-100">
+                <div class="report-icon text-secondary" style="font-size: 2.5rem;">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <h6 class="report-title" style="font-size: 1rem;">مجلس الإدارة</h6>
+                <button class="btn btn-secondary btn-sm generate-btn" onclick="generateReport('board_members')">
+                    <i class="fas fa-download me-1"></i>توليد
+                </button>
+            </div>
+        </div>
+
+        <!-- تقرير الأسئلة الشائعة -->
+        <div class="col-md-3 mb-3">
+            <div class="report-card p-3 text-center h-100">
+                <div class="report-icon text-success" style="font-size: 2.5rem;">
+                    <i class="fas fa-question-circle"></i>
+                </div>
+                <h6 class="report-title" style="font-size: 1rem;">الأسئلة الشائعة</h6>
+                <button class="btn btn-success btn-sm generate-btn" onclick="generateReport('faqs')">
+                    <i class="fas fa-download me-1"></i>توليد
+                </button>
+            </div>
+        </div>
+
+        <!-- تقرير الشركاء -->
+        <div class="col-md-3 mb-3">
+            <div class="report-card p-3 text-center h-100">
+                <div class="report-icon text-info" style="font-size: 2.5rem;">
+                    <i class="fas fa-handshake"></i>
+                </div>
+                <h6 class="report-title" style="font-size: 1rem;">الشركاء</h6>
+                <button class="btn btn-info btn-sm generate-btn" onclick="generateReport('partners')">
+                    <i class="fas fa-download me-1"></i>توليد
+                </button>
+            </div>
+        </div>
+
+        <!-- تقرير الاشتراكات البريدية -->
+        <div class="col-md-3 mb-3">
+            <div class="report-card p-3 text-center h-100">
+                <div class="report-icon text-warning" style="font-size: 2.5rem;">
+                    <i class="fas fa-newspaper"></i>
+                </div>
+                <h6 class="report-title" style="font-size: 1rem;">الاشتراكات البريدية</h6>
+                <button class="btn btn-warning btn-sm generate-btn" onclick="generateReport('newsletters')">
+                    <i class="fas fa-download me-1"></i>توليد
+                </button>
+            </div>
+        </div>
+
+        <!-- تقرير وسائل التواصل -->
+        <div class="col-md-3 mb-3">
+            <div class="report-card p-3 text-center h-100">
+                <div class="report-icon text-danger" style="font-size: 2.5rem;">
+                    <i class="fas fa-share-alt"></i>
+                </div>
+                <h6 class="report-title" style="font-size: 1rem;">وسائل التواصل</h6>
+                <button class="btn btn-danger btn-sm generate-btn" onclick="generateReport('social_media')">
+                    <i class="fas fa-download me-1"></i>توليد
+                </button>
+            </div>
+        </div>
+
+        <!-- تقرير السلايدر -->
+        <div class="col-md-3 mb-3">
+            <div class="report-card p-3 text-center h-100">
+                <div class="report-icon text-primary" style="font-size: 2.5rem;">
+                    <i class="fas fa-images"></i>
+                </div>
+                <h6 class="report-title" style="font-size: 1rem;">السلايدر</h6>
+                <button class="btn btn-primary btn-sm generate-btn" onclick="generateReport('sliders')">
+                    <i class="fas fa-download me-1"></i>توليد
+                </button>
+            </div>
+        </div>
+
+        <!-- تقرير معلومات التواصل -->
+        <div class="col-md-3 mb-3">
+            <div class="report-card p-3 text-center h-100">
+                <div class="report-icon text-secondary" style="font-size: 2.5rem;">
+                    <i class="fas fa-address-book"></i>
+                </div>
+                <h6 class="report-title" style="font-size: 1rem;">معلومات التواصل</h6>
+                <button class="btn btn-secondary btn-sm generate-btn" onclick="generateReport('contact_info')">
+                    <i class="fas fa-download me-1"></i>توليد
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- رابط سجل التقارير -->
+    <div class="text-center mt-4">
+        <a href="{% url 'dashboard:report_logs' %}" class="btn btn-lg btn-outline-primary">
+            <i class="fas fa-history me-2"></i>عرض سجل التقارير
+        </a>
+    </div>
+
+</div>
+
+<!-- Modal المشاريع -->
+<div class="modal fade" id="projectsModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-project-diagram me-2"></i>تقرير المشاريع</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="projectsForm">
+                    <div class="mb-3">
+                        <label class="form-label">التصنيف</label>
+                        <select class="form-select" id="categoryId" name="category_id">
+                            <option value="all">جميع التصنيفات</option>
+                            {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.name_ar }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">الفترة الزمنية</label>
+                        <select class="form-select" id="projectsPeriodType" name="period_type">
+                            <option value="monthly">الشهر الحالي</option>
+                            <option value="yearly">السنة الحالية</option>
+                            <option value="custom">فترة مخصصة</option>
+                            <option value="all">جميع الفترات</option>
+                        </select>
+                    </div>
+                    <div id="projectsCustomDateRange" style="display: none;">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">من تاريخ</label>
+                                <input type="date" class="form-control" id="projectsDateFrom" name="date_from">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">إلى تاريخ</label>
+                                <input type="date" class="form-control" id="projectsDateTo" name="date_to">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                <button type="button" class="btn btn-info" onclick="generateProjectsReport()">
+                    <i class="fas fa-download me-2"></i>توليد التقرير
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal نشاط المستخدمين -->
+<div class="modal fade" id="userActivityModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-user-clock me-2"></i>تقرير نشاط المستخدمين</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="userActivityForm">
+                    <div class="mb-3">
+                        <label class="form-label">المستخدم</label>
+                        <select class="form-select" id="userId" name="user_id">
+                            <option value="all">جميع المستخدمين</option>
+                            {% for user in users %}
+                            <option value="{{ user.id }}">{{ user.username }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">الفترة الزمنية</label>
+                        <select class="form-select" id="periodType" name="period_type">
+                            <option value="monthly">الشهر الحالي</option>
+                            <option value="yearly">السنة الحالية</option>
+                            <option value="custom">فترة مخصصة</option>
+                        </select>
+                    </div>
+                    <div id="customDateRange" style="display: none;">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">من تاريخ</label>
+                                <input type="date" class="form-control" id="dateFrom" name="date_from">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">إلى تاريخ</label>
+                                <input type="date" class="form-control" id="dateTo" name="date_to">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                <button type="button" class="btn btn-warning" onclick="generateUserActivityReport()">
+                    <i class="fas fa-download me-2"></i>توليد التقرير
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal الرسائل -->
+<div class="modal fade" id="messagesModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-envelope me-2"></i>تقرير رسائل التواصل</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="messagesForm">
+                    <div class="mb-3">
+                        <label class="form-label">الفترة الزمنية</label>
+                        <select class="form-select" id="messagesPeriodType" name="period_type">
+                            <option value="monthly">الشهر الحالي</option>
+                            <option value="yearly">السنة الحالية</option>
+                            <option value="custom">فترة مخصصة</option>
+                            <option value="all">جميع الفترات</option>
+                        </select>
+                    </div>
+                    <div id="messagesCustomDateRange" style="display: none;">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">من تاريخ</label>
+                                <input type="date" class="form-control" id="messagesDateFrom" name="date_from">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">إلى تاريخ</label>
+                                <input type="date" class="form-control" id="messagesDateTo" name="date_to">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                <button type="button" class="btn btn-warning" onclick="generateMessagesReport()">
+                    <i class="fas fa-download me-2"></i>توليد التقرير
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal التقرير المخصص المتقدم -->
+<div class="modal fade" id="advancedCustomModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-magic me-2"></i>تقرير مخصص متقدم</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="advancedCustomForm">
+                    <div class="mb-3">
+                        <label class="form-label"><i class="fas fa-check-double me-2"></i>اختر التقارير المطلوبة:</label>
+                        <div class="checkbox-group">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="projects" id="check_projects" checked>
+                                <label class="form-check-label" for="check_projects">
+                                    <i class="fas fa-project-diagram me-2"></i>المشاريع
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="users" id="check_users" checked>
+                                <label class="form-check-label" for="check_users">
+                                    <i class="fas fa-users me-2"></i>المستخدمين
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="messages" id="check_messages" checked>
+                                <label class="form-check-label" for="check_messages">
+                                    <i class="fas fa-envelope me-2"></i>الرسائل
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="newsletters" id="check_newsletters">
+                                <label class="form-check-label" for="check_newsletters">
+                                    <i class="fas fa-newspaper me-2"></i>الاشتراكات البريدية
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="faqs" id="check_faqs">
+                                <label class="form-check-label" for="check_faqs">
+                                    <i class="fas fa-question-circle me-2"></i>الأسئلة الشائعة
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label"><i class="fas fa-calendar-alt me-2"></i>الفترة الزمنية</label>
+                        <select class="form-select" id="advancedPeriodType" name="period_type">
+                            <option value="monthly">الشهر الحالي</option>
+                            <option value="yearly">السنة الحالية</option>
+                            <option value="custom">فترة مخصصة</option>
+                            <option value="all">جميع الفترات</option>
+                        </select>
+                    </div>
+                    <div id="advancedCustomDateRange" style="display: none;">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">من تاريخ</label>
+                                <input type="date" class="form-control" id="advancedDateFrom" name="date_from">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">إلى تاريخ</label>
+                                <input type="date" class="form-control" id="advancedDateTo" name="date_to">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                <button type="button" class="btn btn-danger" onclick="generateAdvancedCustomReport()">
+                    <i class="fas fa-file-export me-2"></i>توليد التقرير الشامل
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-content">
+        <div class="loading-spinner"></div>
+        <h5 class="mt-3">جاري توليد التقرير...</h5>
+        <p class="text-muted">يرجى الانتظار، سيتم تحميل الملف تلقائياً</p>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'vendor/sweetalert2/sweetalert2.min.js' %}"></script>
+<script>
+    // إظهار/إخفاء حقول التاريخ المخصصة - المشاريع
+    document.getElementById('projectsPeriodType').addEventListener('change', function() {
+        const customRange = document.getElementById('projectsCustomDateRange');
+        customRange.style.display = this.value === 'custom' ? 'block' : 'none';
+    });
+
+    // إظهار/إخفاء حقول التاريخ المخصصة - نشاط المستخدمين
+    document.getElementById('periodType').addEventListener('change', function() {
+        const customRange = document.getElementById('customDateRange');
+        customRange.style.display = this.value === 'custom' ? 'block' : 'none';
+    });
+
+    // إظهار/إخفاء حقول التاريخ المخصصة - الرسائل
+    document.getElementById('messagesPeriodType').addEventListener('change', function() {
+        const customRange = document.getElementById('messagesCustomDateRange');
+        customRange.style.display = this.value === 'custom' ? 'block' : 'none';
+    });
+
+    // إظهار/إخفاء حقول التاريخ المخصصة - التقرير المتقدم
+    document.getElementById('advancedPeriodType').addEventListener('change', function() {
+        const customRange = document.getElementById('advancedCustomDateRange');
+        customRange.style.display = this.value === 'custom' ? 'block' : 'none';
+    });
+
+    // فتح مودال المشاريع
+    function openProjectsModal() {
+        const modal = new bootstrap.Modal(document.getElementById('projectsModal'));
+        modal.show();
+    }
+
+    // فتح مودال نشاط المستخدمين
+    function openUserActivityModal() {
+        const modal = new bootstrap.Modal(document.getElementById('userActivityModal'));
+        modal.show();
+    }
+
+    // فتح مودال الرسائل
+    function openMessagesModal() {
+        const modal = new bootstrap.Modal(document.getElementById('messagesModal'));
+        modal.show();
+    }
+
+    // فتح مودال التقرير المخصص المتقدم
+    function openAdvancedCustomModal() {
+        const modal = new bootstrap.Modal(document.getElementById('advancedCustomModal'));
+        modal.show();
+    }
+
+    // توليد تقرير بسيط
+    function generateReport(reportType) {
+        const data = {
+            type: reportType,
+            period_type: 'all'
+        };
+        submitReportRequest(data);
+    }
+
+    // توليد تقرير المشاريع
+    function generateProjectsReport() {
+        const categoryId = document.getElementById('categoryId').value;
+        const periodType = document.getElementById('projectsPeriodType').value;
+        const dateFrom = document.getElementById('projectsDateFrom').value;
+        const dateTo = document.getElementById('projectsDateTo').value;
+
+        const data = {
+            type: 'projects_report',
+            category_id: categoryId,
+            period_type: periodType,
+            date_from: dateFrom || null,
+            date_to: dateTo || null
+        };
+
+        // إخفاء المودال
+        const modal = bootstrap.Modal.getInstance(document.getElementById('projectsModal'));
+        modal.hide();
+
+        submitReportRequest(data);
+    }
+
+    // توليد تقرير نشاط المستخدمين
+    function generateUserActivityReport() {
+        const userId = document.getElementById('userId').value;
+        const periodType = document.getElementById('periodType').value;
+        const dateFrom = document.getElementById('dateFrom').value;
+        const dateTo = document.getElementById('dateTo').value;
+
+        const data = {
+            type: 'users_activity',
+            user_id: userId,
+            period_type: periodType,
+            date_from: dateFrom || null,
+            date_to: dateTo || null
+        };
+
+        // إخفاء المودال
+        const modal = bootstrap.Modal.getInstance(document.getElementById('userActivityModal'));
+        modal.hide();
+
+        submitReportRequest(data);
+    }
+
+    // توليد تقرير الرسائل
+    function generateMessagesReport() {
+        const periodType = document.getElementById('messagesPeriodType').value;
+        const dateFrom = document.getElementById('messagesDateFrom').value;
+        const dateTo = document.getElementById('messagesDateTo').value;
+
+        const data = {
+            type: 'messages_report',
+            period_type: periodType,
+            date_from: dateFrom || null,
+            date_to: dateTo || null
+        };
+
+        // إخفاء المودال
+        const modal = bootstrap.Modal.getInstance(document.getElementById('messagesModal'));
+        modal.hide();
+
+        submitReportRequest(data);
+    }
+
+    // توليد التقرير المخصص المتقدم
+    function generateAdvancedCustomReport() {
+        const selectedReports = [];
+        const checkboxes = document.querySelectorAll('#advancedCustomForm input[type="checkbox"]:checked');
+        checkboxes.forEach(cb => selectedReports.push(cb.value));
+
+        if (selectedReports.length === 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'تنبيه',
+                text: 'يرجى اختيار تقرير واحد على الأقل'
+            });
+            return;
+        }
+
+        const periodType = document.getElementById('advancedPeriodType').value;
+        const dateFrom = document.getElementById('advancedDateFrom').value;
+        const dateTo = document.getElementById('advancedDateTo').value;
+
+        const data = {
+            type: 'advanced_custom',
+            selected_reports: selectedReports,
+            period_type: periodType,
+            date_from: dateFrom || null,
+            date_to: dateTo || null
+        };
+
+        // إخفاء المودال
+        const modal = bootstrap.Modal.getInstance(document.getElementById('advancedCustomModal'));
+        modal.hide();
+
+        submitReportRequest(data);
+    }
+
+    // إرسال طلب التقرير
+    function submitReportRequest(data) {
+        // إظهار شاشة التحميل
+        document.getElementById('loadingOverlay').style.display = 'flex';
+
+        fetch("{% url 'dashboard:generate_report_api' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('فشل توليد التقرير');
+            }
+            return response.blob();
+        })
+        .then(blob => {
+            // إخفاء شاشة التحميل
+            document.getElementById('loadingOverlay').style.display = 'none';
+
+            // تحميل الملف
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `report_${Date.now()}.xlsx`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            a.remove();
+
+            // رسالة نجاح
+            Swal.fire({
+                icon: 'success',
+                title: 'تم بنجاح',
+                text: 'تم توليد وتحميل التقرير بنجاح',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        })
+        .catch(error => {
+            // إخفاء شاشة التحميل
+            document.getElementById('loadingOverlay').style.display = 'none';
+
+            Swal.fire({
+                icon: 'error',
+                title: 'خطأ',
+                text: 'حدث خطأ أثناء توليد التقرير'
+            });
+            console.error('Error:', error);
+        });
+    }
+</script>
+{% endblock %}

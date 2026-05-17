@@ -1,0 +1,169 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}نشاط المستخدمين{% endblock %}
+
+{% block extra_css %}
+<style>
+.filter-card{background:#fff;border-radius:8px;padding:15px;margin-bottom:20px;box-shadow:0 2px 4px rgba(0,0,0,.1)}
+.stats-row .stat-box{background:linear-gradient(135deg,#6B8E23,#5a7a1f);color:#fff;padding:15px;border-radius:8px;text-align:center;margin-bottom:15px}
+.log-item{background:#fff;border-radius:8px;padding:15px;margin-bottom:10px;border-right:4px solid #6B8E23;transition:transform .2s}
+.log-item:hover{transform:translateX(-5px);box-shadow:0 4px 8px rgba(0,0,0,.15)}
+.badge-create{background:#28a745}.badge-update{background:#17a2b8}.badge-delete{background:#dc3545}
+.badge-login{background:#6B8E23}.badge-logout{background:#6c757d}.badge-view{background:#ffc107}
+.badge-info{background:#17a2b8}.badge-warning{background:#ffc107}.badge-error{background:#dc3545}.badge-success{background:#28a745}
+@media(max-width:768px){.filter-card .row{flex-direction:column}.stat-box{margin-bottom:10px}}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- العنوان -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4><i class="fas fa-history"></i> نشاط المستخدمين</h4>
+        <span class="badge bg-secondary">{{ stats.total }} سجل</span>
+    </div>
+
+    <!-- الإحصائيات -->
+    <div class="row stats-row mb-3">
+        <div class="col-md-3">
+            <div class="stat-box">
+                <h5>{{ stats.total }}</h5>
+                <small>إجمالي السجلات</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-box">
+                <h5>{{ stats.today }}</h5>
+                <small>نشاط اليوم</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-box">
+                <h5>{{ active_users.count }}</h5>
+                <small>مستخدمين نشطين</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-box">
+                <h5>{{ logs_page.paginator.num_pages }}</h5>
+                <small>عدد الصفحات</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- الفلاتر -->
+    <div class="filter-card">
+        <form method="get" id="filterForm">
+            <div class="row g-2">
+                <div class="col-md-3">
+                    <input type="text" class="form-control form-control-sm" name="search" 
+                           placeholder="بحث..." value="{{ search_query }}">
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select form-select-sm" name="action">
+                        <option value="">كل الإجراءات</option>
+                        <option value="create" {% if action_filter == 'create' %}selected{% endif %}>إنشاء</option>
+                        <option value="update" {% if action_filter == 'update' %}selected{% endif %}>تحديث</option>
+                        <option value="delete" {% if action_filter == 'delete' %}selected{% endif %}>حذف</option>
+                        <option value="login" {% if action_filter == 'login' %}selected{% endif %}>دخول</option>
+                        <option value="logout" {% if action_filter == 'logout' %}selected{% endif %}>خروج</option>
+                        <option value="view" {% if action_filter == 'view' %}selected{% endif %}>مشاهدة</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select form-select-sm" name="level">
+                        <option value="">كل المستويات</option>
+                        <option value="info" {% if level_filter == 'info' %}selected{% endif %}>معلومات</option>
+                        <option value="warning" {% if level_filter == 'warning' %}selected{% endif %}>تحذير</option>
+                        <option value="error" {% if level_filter == 'error' %}selected{% endif %}>خطأ</option>
+                        <option value="success" {% if level_filter == 'success' %}selected{% endif %}>نجاح</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select form-select-sm" name="user">
+                        <option value="">كل المستخدمين</option>
+                        {% for u in active_users %}
+                            <option value="{{ u.id }}" {% if user_filter == u.id|stringformat:"s" %}selected{% endif %}>
+                                {{ u.username }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-1">
+                    <input type="date" class="form-control form-control-sm" name="date_from" value="{{ date_from }}">
+                </div>
+                <div class="col-md-1">
+                    <input type="date" class="form-control form-control-sm" name="date_to" value="{{ date_to }}">
+                </div>
+                <div class="col-md-1">
+                    <button type="submit" class="btn btn-sm btn-success w-100">
+                        <i class="fas fa-filter"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- السجلات -->
+    {% for log in logs_page %}
+    <div class="log-item">
+        <div class="d-flex justify-content-between align-items-start">
+            <div class="flex-grow-1">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <span class="badge badge-{{ log.action }}">{{ log.get_action_display }}</span>
+                    <span class="badge badge-{{ log.level }}">{{ log.get_level_display }}</span>
+                    <strong>{{ log.username }}</strong>
+                </div>
+                <h6 class="mb-1">{{ log.title }}</h6>
+                <p class="text-muted mb-1 small">{{ log.description }}</p>
+                <div class="small text-muted">
+                    <i class="fas fa-clock"></i> {{ log.timestamp|date:"Y/m/d H:i" }}
+                    {% if log.ip_address %}
+                        | <i class="fas fa-map-marker-alt"></i> {{ log.ip_address }}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="alert alert-info text-center">
+        <i class="fas fa-info-circle"></i> لا توجد سجلات مطابقة
+    </div>
+    {% endfor %}
+
+    <!-- الترقيم -->
+    {% if logs_page.has_other_pages %}
+    <nav>
+        <ul class="pagination justify-content-center">
+            {% if logs_page.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ logs_page.previous_page_number }}&search={{ search_query }}&action={{ action_filter }}&level={{ level_filter }}&user={{ user_filter }}&date_from={{ date_from }}&date_to={{ date_to }}">
+                        السابق
+                    </a>
+                </li>
+            {% endif %}
+            <li class="page-item active">
+                <span class="page-link">{{ logs_page.number }} / {{ logs_page.paginator.num_pages }}</span>
+            </li>
+            {% if logs_page.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ logs_page.next_page_number }}&search={{ search_query }}&action={{ action_filter }}&level={{ level_filter }}&user={{ user_filter }}&date_from={{ date_from }}&date_to={{ date_to }}">
+                        التالي
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// إعادة تحميل تلقائية كل 30 ثانية
+setInterval(()=>{
+    if(document.visibilityState==='visible') location.reload()
+},30000);
+</script>
+{% endblock %}

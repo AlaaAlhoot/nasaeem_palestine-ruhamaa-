@@ -1,0 +1,1676 @@
+    .progress-metrics h3 {
+        color: var(--primary-color);
+        font-weight: 800;
+        margin-bottom: 30px;
+        font-size: 1.5rem;
+    }
+
+    .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    /* Metric Card Enhanced */
+    .metric-card {
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        min-height: 320px;
+    }
+
+    .metric-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(107,142,35,0.05), transparent);
+        transition: left 0.6s ease;
+    }
+
+    .metric-card:hover,
+    .metric-card:focus-visible { /* تحسين: إضافة حالة التركيز */
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        outline: none;
+    }
+
+    .metric-card:hover::before,
+    .metric-card:focus-visible::before { /* تحسين: إضافة حالة التركيز */
+        left: 100%;
+    }
+
+    .metric-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 15px;
+    }
+
+    .metric-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: white;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .metric-percentage {
+        font-size: 1.8rem;
+        font-weight: 900;
+        color: var(--primary-color);
+    }
+
+    .metric-label {
+        font-size: 0.9rem;
+        color: #666;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+
+    .metric-values {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .metric-value {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        align-items: center;
+        gap: 15px;
+        padding: 12px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        border-right: 3px solid transparent;
+    }
+
+    .metric-value:nth-child(1) {
+        border-right-color: #28a745;
+    }
+
+    .metric-value:nth-child(2) {
+        border-right-color: #ffc107;
+    }
+
+    .metric-value:nth-child(3) {
+        border-right-color: #dc3545;
+    }
+
+    .metric-value:hover {
+        transform: translateX(-5px);
+        box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+    }
+
+    .metric-value-label {
+        font-size: 0.75rem;
+        color: #888;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+        white-space: nowrap;
+        min-width: 50px;
+    }
+
+    .metric-value-number {
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: var(--primary-color);
+        text-align: right;
+        word-break: break-word;
+        line-height: 1.2;
+        /* ==== إصلاح المشكلة الأساسية ==== */
+        min-width: 0;
+    }
+
+    /* Progress Bar */
+    .progress-bar-wrapper {
+        margin-top: 20px;
+    }
+
+    .progress-bar-container {
+        height: 10px;
+        background: #e0e0e0;
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        border-radius: 10px;
+        transition: width 1.5s cubic-bezier(0.65, 0, 0.35, 1);
+        position: relative;
+        box-shadow: 0 2px 8px rgba(107,142,35,0.3);
+    }
+
+    /* Responsive */
+    @media (max-width: 1400px) {
+        .metric-value-number {
+            font-size: 1rem;
+        }
+        
+        .metric-card {
+            min-height: 340px;
+        }
+    }
+
+    @media (max-width: 1200px) {
+        .metrics-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .metric-card {
+            min-height: auto;
+        }
+        
+        .metric-values {
+            /* هذا هو تنسيق التابلت (الأفقي) */
+            flex-direction: row;
+            justify-content: space-around;
+        }
+        
+        .metric-value {
+            flex-direction: column;
+            text-align: center;
+            flex: 1;
+        }
+        
+        .metric-value-number {
+            text-align: center;
+            font-size: 1.3rem;
+        }
+    }
+    .progress-bar-wrapper {
+        margin-top: 15px;
+    }
+
+    .progress-bar-container {
+        height: 12px;
+        background: #e0e0e0;
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        border-radius: 10px;
+        transition: width 1s cubic-bezier(0.65, 0, 0.35, 1);
+        position: relative;
+        box-shadow: 0 2px 8px rgba(107,142,35,0.3);
+    }
+    
+    .progress-fill::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+        animation: shimmerProgress 2.5s infinite;
+    }
+    
+    @keyframes shimmerProgress {
+        0% { left: -100%; }
+        100% { left: 100%; }
+    }
+
+    /* Circular Progress Gauge */
+    .circular-progress-container {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        flex-wrap: wrap;
+        margin-top: 30px;
+    }
+
+    .circular-progress {
+        text-align: center;
+    }
+
+    .circular-gauge {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        margin: 0 auto 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+
+    .circular-gauge svg {
+        transform: rotate(-90deg);
+        width: 100%;
+        height: 100%;
+    }
+
+    .circular-gauge-bg {
+        fill: none;
+        stroke: #e9ecef;
+        stroke-width: 10;
+    }
+    
+    .circular-gauge-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 1.5rem;
+        font-weight: 900;
+        color: var(--primary-color);
+    }
+
+    .circular-label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    /* Stats Grid Enhanced */
+    .stats-grid {
+        background: linear-gradient(145deg, rgba(255,255,255,0.98), rgba(248,249,250,0.98));
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 35px;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+        border: 1px solid rgba(255,255,255,0.6);
+        margin-bottom: 30px;
+    }
+
+    .stats-grid h5 {
+        color: var(--primary-color);
+        font-weight: 800;
+        margin-bottom: 25px;
+        font-size: 1.2rem;
+    }
+    
+    .stat-item {
+        text-align: center;
+        padding: 20px 15px;
+        border-radius: 15px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        background: white;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.06);
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 15px;
+    }
+
+    .stat-item::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(107,142,35,0.1), transparent);
+        transition: left 0.6s ease;
+    }
+    
+    .stat-item:hover,
+    .stat-item:focus-visible { /* تحسين: إضافة حالة التركيز */
+        background: linear-gradient(135deg, #f8f9fa, #ffffff);
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        outline: none;
+    }
+
+    .stat-item:hover::before,
+    .stat-item:focus-visible::before { /* تحسين: إضافة حالة التركيز */
+        left: 100%;
+    }
+    
+    .stat-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 12px;
+        font-size: 1.5rem;
+        color: white;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        transition: transform 0.3s ease;
+    }
+
+    .stat-item:hover .stat-icon,
+    .stat-item:focus-visible .stat-icon { /* تحسين: إضافة حالة التركيز */
+        transform: scale(1.15) rotate(5deg);
+    }
+    
+    .stat-number {
+        font-size: 1.8rem;
+        font-weight: 900;
+        color: var(--primary-color);
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .stat-label {
+        font-size: 0.85rem;
+        color: #666;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    /* Action Buttons Enhanced */
+    .action-buttons {
+        position: sticky;
+        top: 100px;
+        background: linear-gradient(145deg, rgba(255,255,255,0.98), rgba(248,249,250,0.98));
+        backdrop-filter: blur(20px);
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+        margin-bottom: 30px;
+        border: 1px solid rgba(255,255,255,0.6);
+    }
+
+    .action-buttons h5 {
+        color: var(--primary-color);
+        font-weight: 800;
+        margin-bottom: 20px;
+        font-size: 1.2rem;
+    }
+    
+    .like-btn {
+        background: white;
+        border: 2px solid #e74c3c;
+        color: #e74c3c;
+        padding: 14px 28px;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        font-weight: 700;
+        width: 100%;
+        margin-bottom: 15px;
+        box-shadow: 0 5px 15px rgba(231,76,60,0.2);
+        font-size: 1rem;
+    }
+    
+    .like-btn:hover, 
+    .like-btn.liked,
+    .like-btn:focus-visible { /* تحسين: إضافة حالة التركيز */
+        background: #e74c3c;
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(231,76,60,0.4);
+        outline: none;
+    }
+
+    .like-btn.liked {
+        animation: likeAnimation 0.6s ease;
+    }
+
+    @keyframes likeAnimation {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+    }
+    
+    .share-btn {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        border: none;
+        padding: 14px 28px;
+        border-radius: 50px;
+        font-weight: 700;
+        width: 100%;
+        transition: all 0.3s ease;
+        margin-bottom: 15px;
+        box-shadow: 0 5px 15px rgba(107,142,35,0.3);
+        font-size: 1rem;
+    }
+    
+    .share-btn:hover,
+    .share-btn:focus-visible { /* تحسين: إضافة حالة التركيز */
+        background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(107,142,35,0.4);
+        outline: none;
+    }
+
+    .contact-btn {
+        background: white;
+        color: var(--primary-color);
+        border: 2px solid var(--primary-color);
+        padding: 14px 28px;
+        border-radius: 50px;
+        font-weight: 700;
+        width: 100%;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: block;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(107,142,35,0.2);
+        font-size: 1rem;
+    }
+
+    .contact-btn:hover,
+    .contact-btn:focus-visible { /* تحسين: إضافة حالة التركيز */
+        background: var(--primary-color);
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(107,142,35,0.4);
+        text-decoration: none;
+        outline: none;
+    }
+    
+    /* Media Section with Swiper */
+    .media-slider {
+        margin: 40px 0;
+    }
+    
+    .media-nav {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 30px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .media-nav-btn {
+        padding: 12px 28px;
+        border: 2px solid var(--primary-color);
+        background: white;
+        color: var(--primary-color);
+        border-radius: 25px;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+    }
+    
+    .media-nav-btn.active, 
+    .media-nav-btn:hover,
+    .media-nav-btn:focus-visible { /* تحسين: إضافة حالة التركيز */
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 20px rgba(107,142,35,0.3);
+        outline: none;
+    }
+    
+    .media-content {
+        display: none;
+    }
+    
+    .media-content.active {
+        display: block;
+        animation: fadeInContent 0.5s ease;
+    }
+
+    @keyframes fadeInContent {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Swiper Enhanced */
+    .swiper-container {
+        width: 100%;
+        padding: 20px 0 50px;
+    }
+
+    .image-item {
+        position: relative;
+        border-radius: 20px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        height: 450px;
+        width: 100%;
+    }
+    
+    .image-item:hover,
+    .image-item:focus-visible { /* تحسين: إضافة حالة التركيز */
+        transform: translateY(-10px);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        outline: none;
+    }
+    
+    .image-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .image-item:hover img,
+    .image-item:focus-visible img { /* تحسين: إضافة حالة التركيز */
+        transform: scale(1.1);
+    }
+
+    .image-item::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.7) 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .image-item:hover::after,
+    .image-item:focus-visible::after { /* تحسين: إضافة حالة التركيز */
+        opacity: 1;
+    }
+
+    .image-caption {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 25px;
+        color: white;
+        font-weight: 700;
+        font-size: 1.1rem;
+        transform: translateY(100%);
+        transition: transform 0.3s ease;
+        z-index: 2;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+
+    .image-item:hover .image-caption,
+    .image-item:focus-visible .image-caption { /* تحسين: إضافة حالة التركيز */
+        transform: translateY(0);
+    }
+
+    /* Swiper Navigation Enhanced */
+    .swiper-button-next, .swiper-button-prev {
+        color: var(--primary-color);
+        background: white;
+        width: 55px;
+        height: 55px;
+        border-radius: 50%;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+        transition: all 0.3s ease;
+    }
+
+    .swiper-button-next:hover, 
+    .swiper-button-prev:hover,
+    .swiper-button-next:focus-visible, 
+    .swiper-button-prev:focus-visible { /* تحسين: إضافة حالة التركيز */
+        background: var(--primary-color);
+        color: white;
+        transform: scale(1.1);
+        box-shadow: 0 10px 35px rgba(107,142,35,0.4);
+        outline: none;
+    }
+
+    .swiper-button-next:after, .swiper-button-prev:after {
+        font-size: 22px;
+        font-weight: 900;
+    }
+
+    .swiper-pagination-bullet {
+        width: 12px;
+        height: 12px;
+        background: #ccc;
+        opacity: 1;
+        transition: all 0.3s ease;
+    }
+
+    .swiper-pagination-bullet-active {
+        background: var(--primary-color);
+        width: 35px;
+        border-radius: 6px;
+    }
+    
+    /* Video Enhanced */
+    .video-container {
+        position: relative;
+        border-radius: 20px;
+        overflow: hidden;
+        background: #000;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        margin-bottom: 25px;
+    }
+
+    .video-wrapper {
+        position: relative;
+        padding-bottom: 56.25%;
+        height: 0;
+        overflow: hidden;
+    }
+
+    .video-wrapper iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+
+    .video-info {
+        background: linear-gradient(145deg, #f8f9fa, #ffffff);
+        padding: 20px;
+    }
+
+    .video-info h5 {
+        color: var(--primary-color);
+        font-weight: 700;
+        margin-bottom: 10px;
+        font-size: 1.2rem;
+    }
+
+    .video-info p {
+        color: #666;
+        margin-bottom: 15px;
+        line-height: 1.6;
+    }
+
+    .youtube-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 24px;
+        background: #ff0000;
+        color: white;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(255,0,0,0.3);
+    }
+
+    .youtube-btn:hover,
+    .youtube-btn:focus-visible { /* تحسين: إضافة حالة التركيز */
+        background: #cc0000;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(255,0,0,0.4);
+        color: white;
+        text-decoration: none;
+        outline: none;
+    }
+
+    .youtube-btn i {
+        font-size: 1.2rem;
+    }
+    
+    /* Keywords Tags */
+    .keywords-section {
+        margin-top: 40px;
+        padding: 30px;
+        background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    .keywords-section h4 {
+        color: var(--primary-color);
+        font-weight: 800;
+        margin-bottom: 20px;
+        font-size: 1.3rem;
+    }
+
+    .keywords-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .keyword-tag {
+        padding: 10px 20px;
+        background: white;
+        color: var(--primary-color);
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        border: 2px solid var(--primary-color);
+    }
+
+    .keyword-tag:hover,
+    .keyword-tag:focus-visible { /* تحسين: إضافة حالة التركيز */
+        background: var(--primary-color);
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 20px rgba(107,142,35,0.3);
+        outline: none;
+    }
+
+    .keyword-tag i {
+        margin-left: 5px;
+    }
+    
+    /* Share Modal Enhanced */
+    .share-modal .modal-content {
+        border-radius: 20px;
+        border: none;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+
+    .share-modal .modal-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        border-radius: 20px 20px 0 0;
+        padding: 25px;
+    }
+
+    .share-modal .modal-title {
+        font-weight: 800;
+    }
+
+    .share-options {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        padding: 25px;
+    }
+    
+    .share-item {
+        padding: 20px;
+        border-radius: 15px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 700;
+        color: white;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    }
+
+    .share-item:hover,
+    .share-item:focus-visible { /* تحسين: إضافة حالة التركيز */
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+        outline: none;
+    }
+
+    .share-item i {
+        font-size: 2.2rem;
+        margin-bottom: 12px;
+        display: block;
+    }
+    
+    .share-facebook { background: linear-gradient(135deg, #3b5998, #2d4373); }
+    .share-twitter { background: linear-gradient(135deg, #1da1f2, #0c85d0); }
+    .share-whatsapp { background: linear-gradient(135deg, #25d366, #1da851); }
+    .share-telegram { background: linear-gradient(135deg, #0088cc, #006699); }
+
+    .url-copy-section {
+        padding: 25px;
+        background: #f8f9fa;
+        border-radius: 0 0 20px 20px;
+    }
+
+    .url-copy-input {
+        display: flex;
+        gap: 12px;
+    }
+
+    .url-copy-input input {
+        flex: 1;
+        padding: 14px 20px;
+        border: 2px solid #e0e0e0;
+        border-radius: 25px;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+    }
+
+    .url-copy-input input:focus {
+        border-color: var(--primary-color);
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(107,142,35,0.1);
+    }
+
+    .url-copy-input button {
+        padding: 14px 30px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        border: none;
+        border-radius: 25px;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(107,142,35,0.3);
+        min-width: 120px;
+    }
+
+    .url-copy-input button:hover:not(:disabled),
+    .url-copy-input button:focus-visible:not(:disabled) { /* تحسين: إضافة حالة التركيز */
+        background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(107,142,35,0.4);
+        outline: none;
+    }
+
+    .url-copy-input button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .url-copy-input button.copied {
+        background: #28a745;
+    }
+
+    /* Image Modal Enhanced */
+    .image-modal .modal-dialog {
+        max-width: 95vw;
+        margin: 1.75rem auto;
+    }
+
+    .image-modal .modal-content {
+        background: rgba(0,0,0,0.95);
+        border: none;
+        border-radius: 20px;
+    }
+
+    .image-modal .modal-header {
+        border: none;
+        padding: 20px 30px;
+    }
+
+    .image-modal .modal-title {
+        color: white;
+        font-weight: 700;
+    }
+
+    .image-modal .modal-body {
+        padding: 20px;
+    }
+
+    .image-modal img {
+        max-height: 85vh;
+        width: auto;
+        max-width: 100%;
+        border-radius: 15px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .breadcrumb-section {
+            margin-top: 15px;
+            padding: 20px 0;
+        }
+
+        .breadcrumb-item {
+            font-size: 0.85rem;
+            padding: 6px 14px;
+        }
+
+        .project-hero {
+            height: 40vh;
+        }
+
+        .project-info-card {
+            padding: 30px;
+        }
+
+        .progress-metrics {
+            padding: 30px 20px;
+        }
+
+        .metrics-grid {
+            grid-template-columns: 1fr;
+        }
+
+        /* ==== 💡 هذا هو الإصلاح الخاص بالهاتف 💡 ==== */
+        .metric-values {
+            flex-direction: column; /* [الإصلاح] إرجاعها إلى التكديس العمودي */
+            justify-content: flex-start;
+        }
+        
+        .metric-value {
+            /* [الإصلاح] إرجاعها إلى تنسيق الشبكة الافتراضي (مثل الديسكتوب) */
+            display: grid; 
+            flex-direction: initial;
+            text-align: initial;
+            flex: initial;
+        }
+        
+        .metric-value-number {
+             /* [الإصلاح] إرجاعها إلى محاذاة اليمين الافتراضية */
+            text-align: right;
+            font-size: 1.15rem;
+        }
+        /* ============================================== */
+
+        .stats-grid {
+            padding: 25px;
+        }
+
+        .action-buttons {
+            position: relative;
+            top: 0;
+        }
+
+        .share-options {
+            grid-template-columns: 1fr;
+        }
+
+        .image-item {
+            height: 300px;
+        }
+
+        .circular-progress-container {
+            gap: 20px;
+        }
+
+        .circular-gauge {
+            width: 100px;
+            height: 100px;
+        }
+
+        .url-copy-input {
+            flex-direction: column;
+        }
+    }
+
+    /* Loading Animation */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in-up {
+        animation: fadeInUp 0.6s ease-out;
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+{% endblock %}
+
+{% block content %}
+
+<!-- Breadcrumb Section -->
+<div class="breadcrumb-section">
+    <div class="container">
+        <nav class="breadcrumb-container" aria-label="{% trans 'مسار التنقل' %}">
+            <a href="{% url 'main:home' %}" class="breadcrumb-item">
+                <i class="fas fa-home"></i>
+                <span>{% trans "الرئيسية" %}</span>
+            </a>
+            <span class="breadcrumb-separator">
+                <i class="fas fa-chevron-left"></i>
+            </span>
+            <a href="{% url 'projects:all_projects' %}" class="breadcrumb-item">
+                <i class="fas fa-project-diagram"></i>
+                <span>{% trans "المشاريع" %}</span>
+            </a>
+            <span class="breadcrumb-separator">
+                <i class="fas fa-chevron-left"></i>
+            </span>
+            <a href="{% url 'projects:category_projects' project.category.slug %}" class="breadcrumb-item">
+                <i class="{{ project.category.icon }}"></i>
+                <span>{{ project.category|translate_field:"name" }}</span>
+            </a>
+            <span class="breadcrumb-separator">
+                <i class="fas fa-chevron-left"></i>
+            </span>
+            <span class="breadcrumb-item active">
+                <i class="fas fa-file-alt"></i>
+                <span>{{ project|translate_field:"title"|truncatewords:5 }}</span>
+            </span>
+        </nav>
+    </div>
+</div>
+
+<!-- Hero Section -->
+<section class="project-hero" style="background-image: url('{% if project.main_image %}{{ project.main_image.url }}{% else %}{% static 'images/project-default.jpg' %}{% endif %}');">
+    <div class="project-overlay">
+        <div class="container">
+            <h1 class="text-white display-4 fw-bold" data-aos="fade-up">
+                {{ project|translate_field:"title" }}
+            </h1>
+        </div>
+    </div>
+</section>
+
+<!-- Main Content -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <!-- Main Content Column -->
+            <div class="col-lg-8">
+                <!-- Project Info Card -->
+                <div class="project-info-card fade-in-up" data-aos="fade-up">
+                    <div class="status-badge status-{{ project.status }}">
+                        {{ project.get_status_display }}
+                    </div>
+                    
+                    <h2 class="mb-4" style="color: var(--primary-color); font-weight: 800; font-size: 2.2rem;">
+                        {{ project|translate_field:"title" }}
+                    </h2>
+                    
+                    <div class="project-summary">
+                        {{ project|translate_field:"summary"|safe }}
+                    </div>
+                    
+                    <!-- Full Description -->
+                    <div class="mt-5" data-aos="fade-up">
+                        <h3 class="mb-4" style="color: var(--primary-color); font-weight: 800;">
+                            <i class="fas fa-info-circle me-2"></i>{% trans "الوصف الكامل" %}
+                        </h3>
+                        <div class="project-description">
+                            {{ project|translate_field:"description"|safe }}
+                        </div>
+                    </div>
+
+                    <!-- Keywords Section -->
+                    {% if project.keywords_ar or project.keywords_en %}
+                    <div class="keywords-section" data-aos="fade-up">
+                        <h4>
+                            <i class="fas fa-tags me-2"></i>{% trans "الكلمات المفتاحية" %}
+                        </h4>
+                        <div class="keywords-tags">
+                            {% if LANGUAGE_CODE == 'en' and project.keywords_en %}
+                                {% for keyword in project.keywords_en|split:"," %}
+                                    <span class="keyword-tag">
+                                        <i class="fas fa-tag"></i>
+                                        {{ keyword|trim }}
+                                    </span>
+                                {% endfor %}
+                            {% elif project.keywords_ar %}
+                                {% for keyword in project.keywords_ar|split:"," %}
+                                    <span class="keyword-tag">
+                                        <i class="fas fa-tag"></i>
+                                        {{ keyword|trim }}
+                                    </span>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Progress Metrics -->
+                    {% if project.target_amount > 0 %}
+                    <div class="progress-metrics" data-aos="fade-up">
+                        <h3>
+                            <i class="fas fa-chart-line me-2"></i>{% trans "إحصائيات التقدم" %}
+                        </h3>
+                        
+                        <!-- Financial Metrics -->
+                        <div class="metrics-grid">
+                            <!-- Raised Amount -->
+                            <div class="metric-card">
+                                <div class="metric-header">
+                                    <div class="metric-icon" style="background: linear-gradient(135deg, #28a745, #20c997);">
+                                        <i class="fas fa-hand-holding-usd"></i>
+                                    </div>
+                                    <div class="metric-percentage">
+                                        {{ project.get_progress_percentage|default:0|floatformat:1 }}%
+                                    </div>
+                                </div>
+                                <div class="metric-label">{% trans "التمويل المالي" %}</div>
+                                <div class="metric-values">
+                                    <div class="metric-value">
+                                        <span class="metric-value-number">${{ project.raised_amount|floatformat:0|format_number }}</span>
+                                        <span class="metric-value-label">{% trans "تم جمعه" %}</span>
+                                    </div>
+                                    <div class="metric-value">
+                                        <span class="metric-value-number">${{ project.remaining_amount|floatformat:0|format_number }}</span>
+                                        <span class="metric-value-label">{% trans "متبقي" %}</span>
+                                    </div>
+                                    <div class="metric-value">
+                                        <span class="metric-value-number">${{ project.target_amount|floatformat:0|format_number }}</span>
+                                        <span class="metric-value-label">{% trans "الهدف" %}</span>
+                                    </div>
+                                </div>
+                                <div class="progress-bar-wrapper">
+                                    <div class="progress-bar-container">
+                                        <div class="progress-fill" style="width: {{ project.get_progress_percentage|default:0 }}%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Beneficiaries Metrics -->
+                            {% if project.target_beneficiaries %}
+                            <div class="metric-card">
+                                <div class="metric-header">
+                                    <div class="metric-icon" style="background: linear-gradient(135deg, #007bff, #0056b3);">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                    <div class="metric-percentage">
+                                        {{ project.get_beneficiaries_percentage|default:0|floatformat:1 }}%
+                                    </div>
+                                </div>
+                                <div class="metric-label">{% trans "المستفيدون" %}</div>
+                                <div class="metric-values">
+                                    <div class="metric-value">
+                                        <span class="metric-value-number">{{ project.beneficiaries_count|format_number }}</span>
+                                        <span class="metric-value-label">{% trans "حالياً" %}</span>
+                                    </div>
+                                    <div class="metric-value">
+                                        <span class="metric-value-number">{{ project.remaining_beneficiaries|format_number }}</span>
+                                        <span class="metric-value-label">{% trans "متبقي" %}</span>
+                                    </div>
+                                    <div class="metric-value">
+                                        <span class="metric-value-number">{{ project.target_beneficiaries|format_number }}</span>
+                                        <span class="metric-value-label">{% trans "الهدف" %}</span>
+                                    </div>
+                                </div>
+                                <div class="progress-bar-wrapper">
+                                    <div class="progress-bar-container">
+                                        <div class="progress-fill" style="width: {{ project.get_beneficiaries_percentage|default:0 }}%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Circular Progress Gauges -->
+                        <div class="circular-progress-container">
+                            <!-- Financial Progress -->
+                            <div class="circular-progress">
+                                <div class="circular-gauge" style="--progress: {{ project.get_progress_percentage|default:0 }};">
+                                    <svg viewBox="0 0 120 120">
+                                        <circle class="circular-gauge-bg" cx="60" cy="60" r="50"></circle>
+                                        <circle class="circular-gauge-progress" cx="60" cy="60" r="50"></circle>
+                                    </svg>
+                                    <div class="circular-gauge-text">{{ project.get_progress_percentage|default:0|floatformat:1 }}%</div>
+                                </div>
+                                <div class="circular-label">{% trans "التمويل" %}</div>
+                            </div>
+
+                            <!-- Beneficiaries Progress -->
+                            {% if project.target_beneficiaries %}
+                            <div class="circular-progress">
+                                <div class="circular-gauge" style="--progress: {{ project.get_beneficiaries_percentage|default:0 }};">
+                                    <svg viewBox="0 0 120 120">
+                                        <circle class="circular-gauge-bg" cx="60" cy="60" r="50"></circle>
+                                        <circle class="circular-gauge-progress" cx="60" cy="60" r="50" style="stroke: #007bff;"></circle>
+                                    </svg>
+                                    <div class="circular-gauge-text">{{ project.get_beneficiaries_percentage|default:0|floatformat:1 }}%</div>
+                                </div>
+                                <div class="circular-label">{% trans "المستفيدون" %}</div>
+                            </div>
+                            {% endif %}
+
+                            <!-- Overall Project Progress -->
+                            <div class="circular-progress">
+                                <div class="circular-gauge" style="--progress: {{ project.get_overall_percentage|default:0 }};">
+                                    <svg viewBox="0 0 120 120">
+                                        <circle class="circular-gauge-bg" cx="60" cy="60" r="50"></circle>
+                                        <circle class="circular-gauge-progress" cx="60" cy="60" r="50" style="stroke: #ffc107;"></circle>
+                                    </svg>
+                                    <div class="circular-gauge-text">{{ project.get_overall_percentage|default:0|floatformat:1 }}%</div>
+                                </div>
+                                <div class="circular-label">{% trans "الإجمالي" %}</div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Media Slider -->
+                    {% if project.images.exists or project.videos.exists %}
+                    <div class="media-slider mt-5" data-aos="fade-up">
+                        <h3 class="mb-4" style="color: var(--primary-color); font-weight: 800;">
+                            <i class="fas fa-photo-video me-2"></i>{% trans "معرض الصور والفيديوهات" %}
+                        </h3>
+                        
+                        <div class="media-nav">
+                            {% if project.images.exists %}
+                            <button class="media-nav-btn active" onclick="showMedia('images')">
+                                <i class="fas fa-images me-2"></i>{% trans "الصور" %} ({{ project.images.count }})
+                            </button>
+                            {% endif %}
+                            {% if project.videos.exists %}
+                            <button class="media-nav-btn {% if not project.images.exists %}active{% endif %}" onclick="showMedia('videos')">
+                                <i class="fas fa-video me-2"></i>{% trans "الفيديوهات" %} ({{ project.videos.count }})
+                            </button>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Images Slider -->
+                        {% if project.images.exists %}
+                        <div id="media-images" class="media-content {% if project.images.exists %}active{% endif %}">
+                            <div class="swiper imageSwiper">
+                                <div class="swiper-wrapper">
+                                    {% for image in project.images.all %}
+                                    <div class="swiper-slide">
+                                        <div class="image-item" onclick="openImageModal('{{ image.image.url }}', '{{ image|translate_field:"caption"|default:project|translate_field:"title" }}')">
+                                            <img src="{{ image.image.url }}" alt="{{ image|translate_field:'caption'|default:project|translate_field:'title' }}" loading="lazy">
+                                            {% if image.caption_ar or image.caption_en %}
+                                            <div class="image-caption">{{ image|translate_field:"caption" }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="swiper-button-next"></div>
+                                <div class="swiper-button-prev"></div>
+                                <div class="swiper-pagination"></div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Videos -->
+                        {% if project.videos.exists %}
+                        <div id="media-videos" class="media-content {% if not project.images.exists %}active{% endif %}">
+                            {% for video in project.videos.all %}
+                            <div class="video-container">
+                            <div class="video-wrapper">
+                                {% if video.youtube_url %}
+                                    {% with video_id=video.youtube_url|extract_youtube_id %}
+                                        {% if video_id %}
+                                            <iframe 
+                                                src="https://www.youtube-nocookie.com/embed/{{ video_id }}?rel=0&modestbranding=1&autohide=1&showinfo=0&controls=1" 
+                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                                allowfullscreen
+                                                loading="lazy">
+                                            </iframe>
+                                        {% else %}
+                                            <div class="p-4 text-center" style="background: #f8d7da; color: #721c24; border-radius: 15px; border: 1px solid #f5c6cb;">
+                                                <strong>{% trans "خطأ في الرابط:" %}</strong> {% trans "الرابط المدخل للفيديو ليس رابط يوتيوب صالح." %}
+                                            </div>
+                                        {% endif %}
+                                    {% endwith %}
+                                {% else %}
+                                    <p class="text-center p-3">{% trans "رابط الفيديو غير متوفر" %}</p>
+                                {% endif %}
+                            </div>
+                                <div class="video-info">
+                                    {% if video.title_ar or video.title_en %}
+                                    <h5>{{ video|translate_field:"title" }}</h5>
+                                    {% endif %}
+                                    {% if video.description_ar or video.description_en %}
+                                    <p>{{ video|translate_field:"description" }}</p>
+                                    {% endif %}
+{% if video.youtube_url %}
+{% with video_id=video.youtube_url|extract_youtube_id %}
+<a href="https://www.youtube.com/watch?v={{ video_id }}" target="_blank" class="youtube-btn">
+    <i class="fab fa-youtube"></i>
+    <span>{% trans "شاهد على يوتيوب" %}</span>
+</a>
+{% endwith %}
+{% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Action Buttons -->
+                <div class="action-buttons fade-in-up" data-aos="fade-up" data-aos-delay="200">
+                    <h5>
+                        <i class="fas fa-hand-holding-heart me-2"></i>{% trans "تفاعل مع المشروع" %}
+                    </h5>
+                    
+                    <button class="like-btn {% if user_has_liked %}liked{% endif %}" onclick="toggleLike({{ project.id }})">
+                        <i class="fas fa-heart me-2"></i>
+                        <span id="likeText">{% if user_has_liked %}{% trans "تم الإعجاب" %}{% else %}{% trans "أعجبني" %}{% endif %}</span>
+                        <span id="likeCount">({{ project.likes_count }})</span>
+                    </button>
+                    
+                    <button class="share-btn" onclick="openShareModal()">
+                        <i class="fas fa-share-alt me-2"></i>{% trans "مشاركة المشروع" %}
+                        <span id="shareCount">({{ project.shares_count }})</span>
+                    </button>
+                    
+                    <a href="{% url 'contact:contact' %}?subject={% trans 'استفسار حول' %} {{ project|translate_field:'title'|urlencode }}" class="contact-btn">
+                        <i class="fas fa-envelope me-2"></i>{% trans "تواصل معنا" %}
+                    </a>
+                </div>
+                
+                <!-- Stats Grid -->
+                <div class="stats-grid fade-in-up" data-aos="fade-up" data-aos-delay="300">
+                    <h5>
+                        <i class="fas fa-chart-bar me-2"></i>{% trans "إحصائيات المشروع" %}
+                    </h5>
+                    
+                    <!-- Priority -->
+                    {% if project.priority %}
+                    <div class="stat-item">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #ff6b6b, #ee5a6f);">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <span class="stat-number" style="font-size: 1.3rem;">{{ project.get_priority_display }}</span>
+                        <div class="stat-label">{% trans "الأولوية" %}</div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Start Date -->
+                    {% if project.start_date %}
+                    <div class="stat-item">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #4ecdc4, #44a08d);">
+                            <i class="fas fa-play-circle"></i>
+                        </div>
+                        <span class="stat-number" style="font-size: 1.2rem;">{{ project.start_date|date:"d M Y" }}</span>
+                        <div class="stat-label">{% trans "تاريخ البداية" %}</div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- End Date -->
+                    {% if project.end_date %}
+                    <div class="stat-item">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb, #f5576c);">
+                            <i class="fas fa-flag-checkered"></i>
+                        </div>
+                        <span class="stat-number" style="font-size: 1.2rem;">{{ project.end_date|date:"d M Y" }}</span>
+                        <div class="stat-label">{% trans "تاريخ النهاية" %}</div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="stat-item">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #3498db, #2980b9);">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <span class="stat-number">{{ project.views_count|format_number }}</span>
+                        <div class="stat-label">{% trans "مشاهدة" %}</div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #e74c3c, #c0392b);">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <span class="stat-number" id="sidebarLikeCount">{{ project.likes_count|format_number }}</span>
+                        <div class="stat-label">{% trans "إعجاب" %}</div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #2ecc71, #27ae60);">
+                            <i class="fas fa-share-alt"></i>
+                        </div>
+                        <span class="stat-number" id="sidebarShareCount">{{ project.shares_count|format_number }}</span>
+                        <div class="stat-label">{% trans "مشاركة" %}</div>
+                    </div>
+                    
+                    {% if project.beneficiaries_count %}
+                    <div class="stat-item">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #f39c12, #e67e22);">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <span class="stat-number">{{ project.beneficiaries_count|format_number }}</span>
+                        <div class="stat-label">{% trans "المستفيدون الحاليون" %}</div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if project.raised_amount %}
+                    <div class="stat-item">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #1abc9c, #16a085);">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <span class="stat-number">${{ project.raised_amount|floatformat:0|format_number }}</span>
+                        <div class="stat-label">{% trans "المبلغ المجموع" %}</div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="stat-item">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #9b59b6, #8e44ad);">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <span class="stat-number" style="font-size: 1.2rem;">{{ project.created_at|date:"d M Y" }}</span>
+                        <div class="stat-label">{% trans "تاريخ النشر" %}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Share Modal -->
+<div class="modal fade share-modal" id="shareModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-share-alt me-2"></i>{% trans "مشاركة المشروع" %}
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="share-options">
+                <div class="share-item share-facebook" onclick="shareOn('facebook')">
+                    <i class="fab fa-facebook-f"></i>
+                    <div>{% trans "فيسبوك" %}</div>
+                </div>
+                <div class="share-item share-twitter" onclick="shareOn('twitter')">
+                    <i class="fab fa-twitter"></i>
+                    <div>{% trans "تويتر" %}</div>
+                </div>
+                <div class="share-item share-whatsapp" onclick="shareOn('whatsapp')">
+                    <i class="fab fa-whatsapp"></i>
+                    <div>{% trans "واتساب" %}</div>
+                </div>
+                <div class="share-item share-telegram" onclick="shareOn('telegram')">
+                    <i class="fab fa-telegram-plane"></i>
+                    <div>{% trans "تيليجرام" %}</div>
+                </div>
+            </div>
+            <div class="url-copy-section">
+                <div class="url-copy-input">
+                    <input type="text" id="projectUrl" value="{{ request.build_absolute_uri }}" readonly>
+                    <button id="copyBtn" onclick="copyLink()">
+                        <i class="fas fa-copy me-2"></i><span id="copyBtnText">{% trans "نسخ" %}</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Image Modal -->
+<div class="modal fade image-modal" id="imageModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalTitle"></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="modalImage" class="img-fluid" alt="">
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<script>
+// Initialize Swiper
+const swiper = new Swiper('.imageSwiper', {
+    slidesPerView: 1,
+    spaceBetween: 30,
+    loop: true,
+    autoplay: {
+        delay: 5000,
+        disableOnInteraction: false,
+    },
+    pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+    },
+    navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+    },
+    breakpoints: {
+        768: {
+            slidesPerView: 1,
+        },
+    },
+});
+
+// Like functionality
+function toggleLike(projectId) {
+    fetch(`/projects/ajax/like/${projectId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const likeBtn = document.querySelector('.like-btn');
+            const likeText = document.getElementById('likeText');
+            const likeCount = document.getElementById('likeCount');
+            const sidebarLikeCount = document.getElementById('sidebarLikeCount');
+            
+            if (data.liked) {
+                likeBtn.classList.add('liked');
+                likeText.textContent = '{% trans "تم الإعجاب" %}';
+            } else {
+                likeBtn.classList.remove('liked');
+                likeText.textContent = '{% trans "أعجبني" %}';
+            }
+            
+            likeCount.textContent = `(${data.likes_count})`;
+            sidebarLikeCount.textContent = data.likes_count;
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+// Media navigation
+function showMedia(type) {
+    document.querySelectorAll('.media-content').forEach(content => {
+        content.classList.remove('active');
+    });
+    
+    document.querySelectorAll('.media-nav-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    document.getElementById(`media-${type}`).classList.add('active');
+    event.target.classList.add('active');
+}
+
+// Share functionality
+function openShareModal() {
+    const modal = new bootstrap.Modal(document.getElementById('shareModal'));
+    modal.show();
+}
+
+function shareOn(platform) {
+    const url = encodeURIComponent(window.location.href);
+    const title = encodeURIComponent('{{ project|translate_field:"title" }}');
+    
+    let shareUrl = '';
+    
+    switch(platform) {
+        case 'facebook':
+            shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+            break;
+        case 'twitter':
+            shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`;
+            break;
+        case 'whatsapp':
+            shareUrl = `https://wa.me/?text=${title} ${url}`;
+            break;
+        case 'telegram':
+            shareUrl = `https://t.me/share/url?url=${url}&text=${title}`;
+            break;
+    }
+    
+    if (shareUrl) {
+        // Increment share count
+        fetch(`/projects/ajax/share/{{ project.id }}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('shareCount').textContent = `(${data.shares_count})`;
+                document.getElementById('sidebarShareCount').textContent = data.shares_count;
+            }
+        });
+        
+        window.open(shareUrl, '_blank', 'width=600,height=400');
+    }
+}
+
+// Copy link with enhanced functionality
+let copyTimeout;
+function copyLink() {
+    const urlInput = document.getElementById('projectUrl');
+    const copyBtn = document.getElementById('copyBtn');
+    const copyBtnText = document.getElementById('copyBtnText');
+    
+    // Clear any existing timeout
+    if (copyTimeout) {
+        clearTimeout(copyTimeout);
+    }
+    
+    urlInput.select();
+    urlInput.setSelectionRange(0, 99999);
+    
+    navigator.clipboard.writeText(urlInput.value).then(() => {
+        // Increment share count
+        fetch(`/projects/ajax/share/{{ project.id }}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('shareCount').textContent = `(${data.shares_count})`;
+                document.getElementById('sidebarShareCount').textContent = data.shares_count;
+            }
+        });
+        
+        // Update button
+        copyBtn.classList.add('copied');
+        copyBtn.disabled = true;
+        copyBtnText.innerHTML = '<i class="fas fa-check me-2"></i>{% trans "تم النسخ!" %}';
+        
+        // Re-enable after 8 seconds
+        copyTimeout = setTimeout(() => {
+            copyBtn.classList.remove('copied');
+            copyBtn.disabled = false;
+            copyBtnText.innerHTML = '<i class="fas fa-copy me-2"></i>{% trans "نسخ" %}';
+        }, 8000);
+    });
+}
+
+// Image modal
+function openImageModal(imageSrc, title) {
+    document.getElementById('modalImage').src = imageSrc;
+    document.getElementById('imageModalTitle').textContent = title;
+    
+    const modal = new bootstrap.Modal(document.getElementById('imageModal'));
+    modal.show();
+}
+
+// Animate progress bars on scroll
+document.addEventListener('DOMContentLoaded', function() {
+    const progressBars = document.querySelectorAll('.progress-fill');
+    const progressObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const progressBar = entry.target;
+                const width = progressBar.style.width;

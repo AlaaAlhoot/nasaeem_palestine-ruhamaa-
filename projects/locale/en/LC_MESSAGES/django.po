@@ -1,0 +1,1704 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-10-21 10:57+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\admin.py:26
+msgid "معاينة"
+msgstr "Preview"
+
+#: .\admin.py:51 .\admin.py:108
+msgid "المعلومات الأساسية"
+msgstr "Basic Information"
+
+#: .\admin.py:54
+msgid "المظهر"
+msgstr "Appearance"
+
+#: .\admin.py:57 .\admin.py:125
+msgid "الإعدادات"
+msgstr "Settings"
+
+#: .\admin.py:65
+msgid "عدد المشاريع"
+msgstr "Number of Projects"
+
+#: .\admin.py:70
+msgid "الأيقونة"
+msgstr "Icon"
+
+#: .\admin.py:78
+msgid "اللون"
+msgstr "Color"
+
+#: .\admin.py:84
+msgid "تم تفعيل الفئات المحددة"
+msgstr "Selected categories have been activated"
+
+#: .\admin.py:86
+msgid "تفعيل الفئات المحددة"
+msgstr "Activate selected categories"
+
+#: .\admin.py:90
+msgid "تم إلغاء تفعيل الفئات المحددة"
+msgstr "Selected categories have been deactivated"
+
+#: .\admin.py:92
+msgid "إلغاء تفعيل الفئات المحددة"
+msgstr "Deactivate selected categories"
+
+
+
+#: .\admin.py:115 .\models.py:90
+msgid "حالة المشروع"
+msgstr "Project Status"
+
+#: .\admin.py:118
+msgid "المعلومات المالية"
+msgstr "Financial Information"
+
+#: .\admin.py:121
+msgid "الموقع والكلمات المفتاحية"
+msgstr "Location and Keywords"
+
+#: .\admin.py:128
+msgid "تحسين محركات البحث"
+msgstr "Search Engine Optimization"
+
+#: .\admin.py:132
+msgid "الإحصائيات"
+msgstr "Statistics"
+
+#: .\admin.py:153
+msgid "الحالة"
+msgstr "Status"
+
+
+
+#: .\admin.py:171
+msgid "تم جعل المشاريع مميزة"
+msgstr "Projects have been marked as featured"
+
+#: .\admin.py:173
+msgid "جعل مميز"
+msgstr "Mark as featured"
+
+#: .\admin.py:177
+msgid "تم إلغاء تمييز المشاريع"
+msgstr "Projects have been unmarked as featured"
+
+#: .\admin.py:179
+msgid "إلغاء التمييز"
+msgstr "Unmark as featured"
+
+#: .\admin.py:183
+msgid "تم تفعيل المشاريع"
+msgstr "Projects have been activated"
+
+#: .\admin.py:185
+msgid "تفعيل"
+msgstr "Activate"
+
+#: .\admin.py:189
+msgid "تم إلغاء تفعيل المشاريع"
+msgstr "Projects have been deactivated"
+
+#: .\admin.py:191
+msgid "إلغاء التفعيل"
+msgstr "Deactivate"
+
+#: .\admin.py:208
+msgid "المعاينة"
+msgstr "Preview"
+
+
+
+#: .\admin.py:245
+msgid "معلومات الملف"
+msgstr "File Information"
+
+
+msgid "المشاريع"
+msgstr "Projects"
+
+#: .\context_processors.py:155
+msgid "الرئيسية"
+msgstr "Home"
+
+#: .\context_processors.py:201
+msgid "نتائج البحث"
+msgstr "Search Results"
+
+#: .\context_processors.py:233 .\views.py:78 .\views.py:323
+msgid "جميع المشاريع"
+msgstr "All Projects"
+
+
+
+#: .\context_processors.py:282
+msgid "مشاريع خيرية"
+msgstr "Charity Projects"
+
+#: .\context_processors.py:283
+msgid "جمعية نسائم فلسطين"
+msgstr "Nasayem Palestine Association"
+
+#: .\context_processors.py:284
+msgid "مساعدات إنسانية"
+msgstr "Humanitarian Aid"
+
+#: .\context_processors.py:285
+msgid "تنمية مجتمعية"
+msgstr "Community Development"
+
+#: .\context_processors.py:286
+msgid "فلسطين"
+msgstr "Palestine"
+
+#: .\context_processors.py:287
+msgid "غزة"
+msgstr "Gaza"
+
+#: .\context_processors.py:289
+msgid "جمعية نسائم فلسطين الخيرية"
+msgstr "Nasayem Palestine Charity Association"
+
+#: .\context_processors.py:308
+msgid "مشاريع تعليمية"
+msgstr "Educational Projects"
+
+#: .\context_processors.py:309
+msgid "مساعدات طبية"
+msgstr "Medical Aid"
+
+#: .\context_processors.py:310
+msgid "كفالة أيتام"
+msgstr "Orphan Sponsorship"
+
+#: .\context_processors.py:311
+msgid "مساعدات غذائية"
+msgstr "Food Aid"
+
+#: .\context_processors.py:312
+msgid "مشاريع إسكان"
+msgstr "Housing Projects"
+
+#: .\context_processors.py:313
+msgid "مساعدات شتوية"
+msgstr "Winter Aid"
+
+#: .\context_processors.py:314
+msgid "مشاريع تنموية"
+msgstr "Development Projects"
+
+#: .\context_processors.py:315
+msgid "حفر آبار"
+msgstr "Well Drilling"
+
+#: .\models.py:13
+msgid "اسم الفئة بالعربية"
+msgstr "Category Name in Arabic"
+
+#: .\models.py:14
+msgid "اسم الفئة بالإنجليزية"
+msgstr "Category Name in English"
+
+#: .\models.py:16 .\models.py:74
+msgid "الرابط"
+msgstr "Slug"
+
+#: .\models.py:17
+msgid "الوصف بالعربية"
+msgstr "Description in Arabic"
+
+#: .\models.py:18
+msgid "الوصف بالإنجليزية"
+msgstr "Description in English"
+
+#: .\models.py:20
+msgid "أيقونة FontAwesome"
+msgstr "FontAwesome Icon"
+
+#: .\models.py:21
+msgid "مثال: fas fa-heart"
+msgstr "Example: fas fa-heart"
+
+#: .\models.py:22
+msgid "لون الفئة"
+msgstr "Category Color"
+
+#: .\models.py:23
+msgid "كود اللون الهكسادسيمال"
+msgstr "Hexadecimal Color Code"
+
+#: .\models.py:25
+msgid "صورة الفئة"
+msgstr "Category Image"
+
+#: .\models.py:27 .\models.py:208 .\models.py:240
+msgid "الترتيب"
+msgstr "Order"
+
+
+
+#: .\models.py:30 .\models.py:130 .\models.py:211 .\models.py:243
+#: .\models.py:298
+msgid "تاريخ الإنشاء"
+msgstr "Creation Date"
+
+#: .\models.py:31 .\models.py:131
+msgid "تاريخ التحديث"
+msgstr "Update Date"
+
+#: .\models.py:34
+msgid "فئة المشاريع"
+msgstr "Project Category"
+
+#: .\models.py:35
+msgid "فئات المشاريع"
+msgstr "Project Categories"
+
+#: .\models.py:56
+msgid "في التخطيط"
+msgstr "In Planning"
+
+
+
+
+
+#: .\models.py:59
+msgid "معلق"
+msgstr "Suspended"
+
+#: .\models.py:60
+msgid "ملغى"
+msgstr "Cancelled"
+
+#: .\models.py:64
+msgid "منخفضة"
+msgstr "Low"
+
+#: .\models.py:65
+msgid "متوسطة"
+msgstr "Medium"
+
+
+
+
+#: .\models.py:67
+msgid "عاجلة"
+msgstr "Urgent"
+
+#: .\models.py:71
+msgid "عنوان المشروع بالعربية"
+msgstr "Project Title in Arabic"
+
+#: .\models.py:72
+msgid "عنوان المشروع بالإنجليزية"
+msgstr "Project Title in English"
+
+#: .\models.py:77
+msgid "الفئة"
+msgstr "Category"
+
+#: .\models.py:80
+msgid "ملخص المشروع بالعربية"
+msgstr "Project Summary in Arabic"
+
+#: .\models.py:81
+msgid "ملخص المشروع بالإنجليزية"
+msgstr "Project Summary in English"
+
+#: .\models.py:83
+msgid "وصف المشروع بالعربية"
+msgstr "Project Description in Arabic"
+
+#: .\models.py:84
+msgid "وصف المشروع بالإنجليزية"
+msgstr "Project Description in English"
+
+#: .\models.py:87
+msgid "الصورة الرئيسية"
+msgstr "Main Image"
+
+#: .\models.py:91
+msgid "الأولوية"
+msgstr "Priority"
+
+#: .\models.py:94
+msgid "تاريخ البداية"
+msgstr "Start Date"
+
+#: .\models.py:95
+msgid "تاريخ النهاية"
+msgstr "End Date"
+
+#: .\models.py:98
+msgid "المبلغ المستهدف"
+msgstr "Target Amount"
+
+#: .\models.py:100
+msgid "المبلغ المجمع"
+msgstr "Collected Amount"
+
+#: .\models.py:104
+msgid "عدد المستفيدين"
+msgstr "Number of Beneficiaries"
+
+#: .\models.py:105
+msgid "المستفيدين المستهدفين"
+msgstr "Target Beneficiaries"
+
+#: .\models.py:108
+msgid "الموقع بالعربية"
+msgstr "Location in Arabic"
+
+#: .\models.py:109
+msgid "الموقع بالإنجليزية"
+msgstr "Location in English"
+
+#: .\models.py:112
+msgid "كلمات مفتاحية"
+msgstr "Keywords"
+
+#: .\models.py:113
+msgid "افصل بين الكلمات بفاصلة"
+msgstr "Separate words with comma"
+
+#: .\models.py:116
+msgid "مشروع مميز"
+msgstr "Featured Project"
+
+#: .\models.py:118
+msgid "السماح بالتعليقات"
+msgstr "Allow Comments"
+
+#: .\models.py:121
+msgid "عدد المشاهدات"
+msgstr "Views Count"
+
+#: .\models.py:122
+msgid "عدد الإعجابات"
+msgstr "Likes Count"
+
+#: .\models.py:123
+msgid "عدد المشاركات"
+msgstr "Shares Count"
+
+#: .\models.py:126
+msgid "وصف SEO بالعربية"
+msgstr "SEO Description in Arabic"
+
+#: .\models.py:127
+msgid "وصف SEO بالإنجليزية"
+msgstr "SEO Description in English"
+
+#: .\models.py:134
+
+
+#: .\models.py:199 .\models.py:224 .\models.py:281 .\models.py:333
+msgid "المشروع"
+msgstr "The Project"
+
+#: .\models.py:201
+msgid "الصورة"
+msgstr "Image"
+
+#: .\models.py:202
+msgid "عنوان الصورة بالعربية"
+msgstr "Image Title in Arabic"
+
+#: .\models.py:203
+msgid "عنوان الصورة بالإنجليزية"
+msgstr "Image Title in English"
+
+#: .\models.py:205
+msgid "نص بديل للصورة"
+msgstr "Image Alternative Text"
+
+
+
+#: .\models.py:214
+
+
+#: .\models.py:225
+msgid "نوع الفيديو"
+msgstr "Video Type"
+
+#: .\models.py:226
+msgid "يوتيوب"
+msgstr "YouTube"
+
+#: .\models.py:227
+msgid "فيميو"
+msgstr "Vimeo"
+
+#: .\models.py:228
+msgid "رابط الفيديو"
+msgstr "Video URL"
+
+#: .\models.py:229
+msgid "رابط يوتيوب أو فيميو"
+msgstr "YouTube or Vimeo URL"
+
+#: .\models.py:231
+msgid "عنوان الفيديو بالعربية"
+msgstr "Video Title in Arabic"
+
+#: .\models.py:232
+msgid "عنوان الفيديو بالإنجليزية"
+msgstr "Video Title in English"
+
+#: .\models.py:234
+msgid "وصف الفيديو بالعربية"
+msgstr "Video Description in Arabic"
+
+#: .\models.py:235
+msgid "وصف الفيديو بالإنجليزية"
+msgstr "Video Description in English"
+
+#: .\models.py:237
+msgid "صورة مصغرة"
+msgstr "Thumbnail Image"
+
+#: .\models.py:245
+msgid "فيديو المشروع"
+msgstr "Project Video"
+
+#: .\models.py:246
+msgid "فيديوهات المشروع"
+msgstr "Project Videos"
+
+#: .\models.py:282
+msgid "نوع الملف"
+msgstr "File Type"
+
+#: .\models.py:283
+msgid "PDF"
+msgstr "PDF"
+
+#: .\models.py:284
+msgid "Word"
+msgstr "Word"
+
+#: .\models.py:285
+msgid "Excel"
+msgstr "Excel"
+
+#: .\models.py:286
+msgid "PowerPoint"
+msgstr "PowerPoint"
+
+#: .\models.py:287
+msgid "صورة"
+msgstr "Image"
+
+#: .\models.py:288
+msgid "آخر"
+msgstr "Other"
+
+#: .\models.py:291
+msgid "الملف"
+msgstr "File"
+
+#: .\models.py:292
+msgid "عنوان الملف بالعربية"
+msgstr "File Title in Arabic"
+
+#: .\models.py:293
+msgid "عنوان الملف بالإنجليزية"
+msgstr "File Title in English"
+
+#: .\models.py:294
+msgid "وصف الملف بالعربية"
+msgstr "File Description in Arabic"
+
+#: .\models.py:295
+msgid "وصف الملف بالإنجليزية"
+msgstr "File Description in English"
+
+#: .\models.py:300
+msgid "حجم الملف"
+msgstr "File Size"
+
+#: .\models.py:303
+msgid "ملف المشروع"
+msgstr "Project File"
+
+#: .\models.py:304
+
+
+#: .\models.py:334
+msgid "العنوان بالعربية"
+msgstr "Title in Arabic"
+
+#: .\models.py:335
+msgid "العنوان بالإنجليزية"
+msgstr "Title in English"
+
+#: .\models.py:337
+msgid "المحتوى بالعربية"
+msgstr "Content in Arabic"
+
+#: .\models.py:338
+msgid "المحتوى بالإنجليزية"
+msgstr "Content in English"
+
+#: .\models.py:341
+msgid "تحديث المشروع"
+msgstr "Project Update"
+
+#: .\models.py:342
+msgid "تحديثات المشروع"
+msgstr "Project Updates"
+
+#: .\views.py:33 .\views.py:68
+msgid "صفحة غير موجودة"
+msgstr "Page Not Found"
+
+#: .\views.py:72
+msgid "الفئة غير موجودة"
+msgstr "Category Not Found"
+
+#: .\views.py:84
+msgid "الصفحة المطلوبة غير موجودة"
+msgstr "The requested page does not exist"
+
+#: .\views.py:148
+msgid "تحديثات"
+msgstr "Updates"
+
+#: .\views.py:201
+msgid "صور"
+msgstr "Images"
+
+#: .\views.py:204
+msgid "فيديوهات"
+msgstr "Videos"
+
+#: .\views.py:207
+msgid "ملفات"
+msgstr "Files"
+
+
+
+#: .\views.py:333
+msgid "جارى البحث..."
+msgstr "Searching..."
+
+#: .\views.py:334
+msgid "الرجاء إدخال كلمة البحث"
+msgstr "Please enter search term"
+
+#: .\views.py:335
+
+
+#: .\views.py:355
+msgid "تم البحث عن"
+msgstr "Searched for"
+
+#: .\views.py:356
+msgid "مشروع واحد"
+msgstr "One Project"
+
+#: .\views.py:357
+msgid "مشروعان"
+msgstr "Two Projects"
+
+#: .\views.py:358
+msgid "مشاريع"
+msgstr "Projects"
+
+msgid "العودة للرئيسية"
+msgstr "Back to Home"
+
+msgid "الوصف"
+msgstr "Description"
+
+
+
+msgid "المبلغ المحصل"
+msgstr "Collected Amount"
+
+msgid "من"
+msgstr "of"
+
+msgid "شيكل"
+msgstr "Shekel"
+
+msgid "المستفيدون"
+msgstr "Beneficiaries"
+
+msgid "مشروع مكتمل"
+msgstr "Completed Project"
+
+msgid "مشروع نشط"
+msgstr "Active Project"
+
+msgid "تبرع الآن"
+msgstr "Donate Now"
+
+msgid "مشاركة المشروع"
+msgstr "Share Project"
+
+msgid "صور المشروع"
+msgstr "Project Images"
+
+
+
+msgid "ملفات المشروع"
+msgstr "Project Files"
+
+
+
+msgid "لا توجد صور"
+msgstr "No images available"
+
+msgid "لا توجد فيديوهات"
+msgstr "No videos available"
+
+msgid "لا توجد ملفات"
+msgstr "No files available"
+
+msgid "لا توجد تحديثات"
+msgstr "No updates available"
+
+msgid "تحميل"
+msgstr "Download"
+
+msgid "شاهد على"
+msgstr "Watch on"
+
+msgid "شاهد الفيديو"
+msgstr "Watch Video"
+
+msgid "مشاريع ذات صلة"
+msgstr "Related Projects"
+
+msgid "مشاريع أخرى"
+msgstr "Other Projects"
+
+msgid "لا توجد مشاريع ذات صلة"
+msgstr "No related projects"
+
+
+
+msgid "صفحة"
+msgstr "Page"
+
+msgid "السابق"
+msgstr "Previous"
+
+msgid "التالي"
+msgstr "Next"
+
+msgid "الصفحة السابقة"
+msgstr "Previous Page"
+
+msgid "الصفحة التالية"
+msgstr "Next Page"
+
+
+
+msgid "عرض"
+msgstr "Show"
+
+msgid "إلى"
+msgstr "to"
+
+msgid "النتائج"
+msgstr "Results"
+
+msgid "اختر الفئة"
+msgstr "Choose Category"
+
+
+
+msgid "فرز حسب"
+msgstr "Sort by"
+
+
+
+msgid "الأقدم"
+msgstr "Oldest"
+
+msgid "الأكثر تقدماً"
+msgstr "Most Progress"
+
+msgid "الأكثر جمعاً"
+msgstr "Most Collected"
+
+msgid "نتيجة"
+msgstr "Result"
+
+msgid "نتيجتان"
+msgstr "Two Results"
+
+
+
+
+msgid "عن المشروع"
+msgstr "About Project"
+
+msgid "التفاصيل"
+msgstr "Details"
+
+msgid "موقع المشروع"
+msgstr "Project Location"
+
+
+msgid "تاريخ البدء"
+msgstr "Start Date"
+
+msgid "تاريخ الانتهاء"
+msgstr "End Date"
+
+msgid "مدة المشروع"
+msgstr "Project Duration"
+
+msgid "يوم"
+msgstr "Day"
+
+msgid "يومان"
+msgstr "Two Days"
+
+msgid "أيام"
+msgstr "Days"
+
+msgid "شهر"
+msgstr "Month"
+
+msgid "شهران"
+msgstr "Two Months"
+
+msgid "أشهر"
+msgstr "Months"
+
+msgid "سنة"
+msgstr "Year"
+
+msgid "سنتان"
+msgstr "Two Years"
+
+msgid "سنوات"
+msgstr "Years"
+
+msgid "مشروع منتهي"
+msgstr "Finished Project"
+
+msgid "جاري التنفيذ"
+msgstr "In Progress"
+
+msgid "قريباً"
+msgstr "Coming Soon"
+
+msgid "المعرض"
+msgstr "Gallery"
+
+msgid "مشاهدة الكل"
+msgstr "View All"
+
+
+
+msgid "تفاصيل المشروع"
+msgstr "Project details"
+
+msgid "إغلاق"
+msgstr "Close"
+
+msgid "صورة من المشروع"
+msgstr "Project Image"
+
+msgid "فيديو من المشروع"
+msgstr "Project Video"
+
+msgid "ملف من المشروع"
+msgstr "Project File"
+
+msgid "تحديث من المشروع"
+msgstr "Project Update"
+
+msgid "كيلوبايت"
+msgstr "Kilobyte"
+
+msgid "ميجابايت"
+msgstr "Megabyte"
+
+msgid "طُوِّر بكل حب بواسطة"
+msgstr "Developed with love by"
+
+msgid "علاء عماد الحوت"
+msgstr "Alaa Emad Al Hout"
+
+msgid "الموقع تحت الصيانة"
+msgstr "Site Under Maintenance"
+
+msgid "وضع الصيانة"
+msgstr "Maintenance Mode"
+
+msgid "للاستفسارات"
+msgstr "For Inquiries"
+
+msgid "تواصل عبر واتساب"
+msgstr "Contact via WhatsApp"
+
+msgid "حساب جيت هاب"
+msgstr "GitHub Profile"
+
+# ============================================
+# Forms.py - Icon Choices (100 Icons)
+# ============================================
+
+msgid "قلب - Heart"
+msgstr "Heart"
+
+msgid "يد تحمل قلب - Hand Heart"
+msgstr "Hand Heart"
+
+msgid "أيادي متعاونة - Helping Hands"
+msgstr "Helping Hands"
+
+msgid "تبرع - Donate"
+msgstr "Donate"
+
+msgid "هدية - Gift"
+msgstr "Gift"
+
+msgid "خيرية - Charity"
+msgstr "Charity"
+
+msgid "يد تحمل مال - Hand Money"
+msgstr "Hand Money"
+
+msgid "أشخاص يحملون - People Carry"
+msgstr "People Carry"
+
+msgid "مستشفى - Hospital"
+msgstr "Hospital"
+
+msgid "حقيبة طبية - Medkit"
+msgstr "Medkit"
+
+msgid "عيادة - Clinic"
+msgstr "Clinic"
+
+msgid "سماعة طبية - Stethoscope"
+msgstr "Stethoscope"
+
+msgid "أدوية - Pills"
+msgstr "Pills"
+
+msgid "حقنة - Syringe"
+msgstr "Syringe"
+
+msgid "نبضات - Heartbeat"
+msgstr "Heartbeat"
+
+msgid "طبيب - Doctor"
+msgstr "Doctor"
+
+msgid "مدرسة - School"
+msgstr "School"
+
+msgid "قبعة تخرج - Graduation"
+msgstr "Graduation"
+
+msgid "كتاب - Book"
+msgstr "Book"
+
+msgid "قارئ - Reader"
+msgstr "Reader"
+
+msgid "قلم رصاص - Pencil"
+msgstr "Pencil"
+
+msgid "معلم - Teacher"
+msgstr "Teacher"
+
+msgid "جامعة - University"
+msgstr "University"
+
+msgid "طفل - Child"
+msgstr "Child"
+
+msgid "رضيع - Baby"
+msgstr "Baby"
+
+msgid "مجموعة - Users"
+msgstr "Users"
+
+msgid "أصدقاء - Friends"
+msgstr "Friends"
+
+msgid "حماية - Protection"
+msgstr "Protection"
+
+msgid "منزل - Home"
+msgstr "Home"
+
+msgid "منزل عائلي - Family Home"
+msgstr "Family Home"
+
+msgid "مسجد - Mosque"
+msgstr "Mosque"
+
+msgid "أيادي داعية - Praying"
+msgstr "Praying"
+
+msgid "أيادي - Hands"
+msgstr "Hands"
+
+msgid "سلام - Peace"
+msgstr "Peace"
+
+msgid "حمامة - Dove"
+msgstr "Dove"
+
+msgid "ماء - Water"
+msgstr "Water"
+
+msgid "قطرة ماء - Water Drop"
+msgstr "Water Drop"
+
+msgid "صنبور - Faucet"
+msgstr "Faucet"
+
+msgid "دش - Shower"
+msgstr "Shower"
+
+msgid "خبز - Bread"
+msgstr "Bread"
+
+msgid "أدوات طعام - Utensils"
+msgstr "Utensils"
+
+msgid "تفاحة - Apple"
+msgstr "Apple"
+
+msgid "جزر - Carrot"
+msgstr "Carrot"
+
+msgid "بذرة - Seedling"
+msgstr "Seedling"
+
+msgid "شجرة - Tree"
+msgstr "Tree"
+
+msgid "ورقة شجر - Leaf"
+msgstr "Leaf"
+
+msgid "طاقة شمسية - Solar"
+msgstr "Solar"
+
+msgid "إعادة تدوير - Recycle"
+msgstr "Recycle"
+
+msgid "كرة أرضية - Globe"
+msgstr "Globe"
+
+msgid "إفريقيا - Africa"
+msgstr "Africa"
+
+msgid "خريطة - Map"
+msgstr "Map"
+
+msgid "مبنى - Building"
+msgstr "Building"
+
+msgid "مدينة - City"
+msgstr "City"
+
+msgid "مستودع - Warehouse"
+msgstr "Warehouse"
+
+msgid "أدوات - Tools"
+msgstr "Tools"
+
+msgid "مطرقة - Hammer"
+msgstr "Hammer"
+
+msgid "مفتاح ربط - Wrench"
+msgstr "Wrench"
+
+msgid "خوذة - Hard Hat"
+msgstr "Hard Hat"
+
+msgid "حقيبة - Briefcase"
+msgstr "Briefcase"
+
+msgid "مصافحة - Handshake"
+msgstr "Handshake"
+
+msgid "قائمة - List"
+msgstr "List"
+
+msgid "مهام - Tasks"
+msgstr "Tasks"
+
+msgid "مخطط - Diagram"
+msgstr "Diagram"
+
+msgid "مصباح - Lightbulb"
+msgstr "Lightbulb"
+
+msgid "عربة - Cart"
+msgstr "Cart"
+
+msgid "شاحنة - Truck"
+msgstr "Truck"
+
+msgid "صندوق - Box"
+msgstr "Box"
+
+msgid "صناديق - Boxes"
+msgstr "Boxes"
+
+msgid "منصة - Pallet"
+msgstr "Pallet"
+
+msgid "كرسي متحرك - Wheelchair"
+msgstr "Wheelchair"
+
+msgid "إمكانية الوصول - Accessible"
+msgstr "Accessible"
+
+msgid "كفيف - Blind"
+msgstr "Blind"
+
+msgid "أصم - Deaf"
+msgstr "Deaf"
+
+msgid "هاتف - Phone"
+msgstr "Phone"
+
+msgid "موبايل - Mobile"
+msgstr "Mobile"
+
+msgid "بريد - Envelope"
+msgstr "Envelope"
+
+msgid "مكبر صوت - Bullhorn"
+msgstr "Bullhorn"
+
+msgid "ميكروفون - Microphone"
+msgstr "Microphone"
+
+msgid "فيديو - Video"
+msgstr "Video"
+
+msgid "كاميرا - Camera"
+msgstr "Camera"
+
+msgid "آلة حاسبة - Calculator"
+msgstr "Calculator"
+
+msgid "نقود - Coins"
+msgstr "Coins"
+
+msgid "دولار - Dollar"
+msgstr "Dollar"
+
+msgid "رسم بياني - Chart"
+msgstr "Chart"
+
+msgid "دائرة بيانية - Pie Chart"
+msgstr "Pie Chart"
+
+msgid "نسبة مئوية - Percentage"
+msgstr "Percentage"
+
+msgid "جائزة - Award"
+msgstr "Award"
+
+msgid "ميدالية - Medal"
+msgstr "Medal"
+
+msgid "كأس - Trophy"
+msgstr "Trophy"
+
+msgid "نجمة - Star"
+msgstr "Star"
+
+msgid "شهادة - Certificate"
+msgstr "Certificate"
+
+msgid "إعجاب - Thumbs Up"
+msgstr "Thumbs Up"
+
+msgid "علم - Flag"
+msgstr "Flag"
+
+msgid "صاروخ - Rocket"
+msgstr "Rocket"
+
+msgid "هدف - Bullseye"
+msgstr "Bullseye"
+
+msgid "تصويب - Crosshairs"
+msgstr "Crosshairs"
+
+msgid "عين - Eye"
+msgstr "Eye"
+
+msgid "نظارات - Glasses"
+msgstr "Glasses"
+
+msgid "شمس - Sun"
+msgstr "Sun"
+
+msgid "قمر - Moon"
+msgstr "Moon"
+
+msgid "سحابة - Cloud"
+msgstr "Cloud"
+
+msgid "مظلة - Umbrella"
+msgstr "Umbrella"
+
+# ============================================
+# Forms.py - Form Labels & Placeholders
+# ============================================
+
+msgid "اختر الأيقونة"
+msgstr "Choose Icon"
+
+msgid "سيتم التعبئة تلقائياً"
+msgstr "Will be filled automatically"
+
+msgid "عنوان المشروع"
+msgstr "Project Title"
+
+msgid "كلمة1, كلمة2, كلمة3"
+msgstr "word1, word2, word3"
+
+msgid "وساهم في دعم المجتمع"
+msgstr "And contribute to supporting the community"
+
+msgid "تصفح جميع مشاريع فئة"
+msgstr "Browse all category projects"
+
+
+msgid "إجمالي المشاريع"
+msgstr "Total projects"
+
+
+msgid "فلترة حسب حالة المشروع:"
+msgstr "Filter by project status:"
+
+
+
+msgid "الكل"
+msgstr "All"
+
+
+
+
+
+
+msgid "لم يتم العثور على مشاريع"
+msgstr "No projects were found."
+
+
+msgid "لا توجد مشاريع"
+msgstr "No projects"
+msgid"لا توجد مشاريع متاحة حالياً في فئة"
+msgstr"There are currently no projects available in this category."
+
+
+
+msgid "ابحث في مشاريع"
+msgstr "Search projects"
+
+msgid "ابحث في المشاريع"
+msgstr "Search The projects"
+
+
+msgid "ابحث في مشاريع الجمعية"
+msgstr "Search the association's projects"
+
+msgid "ابحث في جميع مشاريع جمعية نسائم فلسطين الخيرية"
+msgstr "Search all projects of the Palestine Breeze Charity Association"
+
+msgid "ابحث عن المشاريع..."
+msgstr "Search for projects..."
+msgid "نتيجة واحدة"
+msgstr "One result"
+
+msgid "نتائج"
+msgstr "Results"
+msgid "ترتيب حسب:"
+msgstr "sort by:"
+
+msgid "جميع الفئات"
+msgstr "All categories."
+
+
+
+msgid "مكتمل"
+msgstr "Completed"
+
+
+
+
+
+msgid "الأكثر صلة"
+msgstr "Most relevant"
+
+msgid "تفاعل مع المشروع"
+msgstr "Interact with the project"
+
+
+
+
+
+msgid "مميز"
+msgstr "Featured"
+
+msgid "عرض التفاصيل"
+msgstr "View details"
+
+msgid "التنقل بين الصفحات"
+msgstr "Page navigation"
+
+
+msgid "لم نجد أي مشاريع تطابق البحث"
+msgstr "No projects matched the search "
+
+
+msgid "ابدأ البحث في مشاريعنا"
+msgstr "Start searching our projects"
+
+
+msgid "استخدم نموذج البحث أعلاه للعثور على المشاريع التي تهمك"
+msgstr "Use the search form above to find projects that interest you."
+
+
+
+msgid "عذراً، المشروع المطلوب غير موجود أو تم حذفه"
+msgstr "Sorry, the requested project was not found or has been deleted"
+
+msgid "عذراً، المشروع الذي تبحث عنه غير موجود أو تم حذفه."
+msgstr "Sorry, the project you are looking for was not found or has been deleted."
+
+msgid "ربما تم نقله إلى موقع آخر أو لم يعد متاحاً."
+msgstr "It may have been moved to another location or is no longer available."
+
+msgid "ربما تبحث عن:"
+msgstr "You might be looking for:"
+
+msgid "مشاريع مميزة:"
+msgstr "Featured Projects:"
+
+msgid "مشاريع حديثة:"
+msgstr "Recent Projects:"
+
+msgid "فئات المشاريع:"
+msgstr "Project Categories:"
+
+
+msgid "من أصل"
+msgstr "Of origin"
+
+# Hero Section
+msgid "مشاريعنا"
+msgstr "Our Projects"
+
+msgid "استعرض جميع المشاريع التنموية والإنسانية التي نعمل عليها"
+msgstr "Browse all development and humanitarian projects we are working on"
+
+# Search Section
+msgid "ابحث في المشاريع..."
+msgstr "Search in projects..."
+
+# Filter Sections
+msgid "تصفية حسب الفئة"
+msgstr "Filter by Category"
+
+
+
+
+msgid "تصفية حسب الحالة"
+msgstr "Filter by Status"
+
+
+
+
+
+msgid "قيد التخطيط"
+msgstr "In Planning"
+
+msgid "ترتيب حسب"
+msgstr "Sort by"
+
+
+
+
+
+
+
+
+
+msgid "أبجدياً"
+msgstr "Alphabetically"
+
+msgid "حسب التقدم"
+msgstr "By Progress"
+
+
+
+
+
+msgid "المبلغ المجموع"
+msgstr "Amount Raised"
+msgid "المجموع"
+msgstr "Amount"
+
+msgid "الهدف"
+msgstr "Target"
+
+# Pagination
+msgid "ترقيم المشاريع"
+msgstr "Projects Pagination"
+
+
+
+msgid "لم يتم العثور على مشاريع تطابق البحث"
+msgstr "No projects found matching your search"
+
+msgid "لا توجد مشاريع متاحة حالياً في هذه الفئة"
+msgstr "No projects currently available in this category"
+
+
+
+
+
+
+msgid "عن هذا القسم"
+msgstr "About this section"
+
+
+# Breadcrumb
+msgid "مسار التنقل"
+msgstr "Breadcrumb"
+
+
+
+
+
+# Progress Section
+msgid "تم جمعه"
+msgstr "Raised"
+
+msgid "الهدف المطلوب"
+msgstr "Target Amount"
+
+msgid "المبلغ المتبقي"
+msgstr "Remaining Amount"
+
+# Content Sections
+msgid "الوصف الكامل"
+msgstr "Full Description"
+
+msgid "معرض الصور والفيديوهات"
+msgstr "Media Gallery"
+
+msgid "الصور"
+msgstr "Images"
+
+msgid "الفيديوهات"
+msgstr "Videos"
+
+msgid "متصفحك لا يدعم تشغيل الفيديو"
+msgstr "Your browser does not support video playback"
+
+
+
+
+
+
+
+msgid "تواصل معنا"
+msgstr "Contact Us."
+
+
+
+# Statistics Section
+msgid "إحصائيات المشروع"
+msgstr "Project Statistics"
+
+msgid "مشاهدة"
+msgstr "Views"
+
+msgid "إعجاب"
+msgstr "Likes"
+
+msgid "مشاركة"
+msgstr "Shares"
+
+msgid "مستفيد"
+msgstr "Beneficiaries"
+
+msgid "تاريخ النشر"
+msgstr "Published Date"
+
+# Share Modal
+msgid "فيسبوك"
+msgstr "Facebook"
+
+msgid "تويتر"
+msgstr "Twitter"
+
+msgid "واتساب"
+msgstr "WhatsApp"
+
+msgid "تيليجرام"
+msgstr "Telegram"
+
+msgid "نسخ"
+msgstr "Copy"
+
+msgid "تم النسخ!"
+msgstr "Copied!"
+
+
+
+
+# Search Section
+msgid "البحث عن"
+msgstr "Searching for"
+
+msgid "ابحث في المشاريع، التصنيفات، الكلمات المفتاحية..."
+msgstr "Search in projects, categories, keywords..."
+
+
+msgid "بحث سريع"
+msgstr "Quick Search"
+
+msgid "الكلمات المفتاحية"
+msgstr "keywords"
+
+msgid "المشاريع المكتملة"
+msgstr "Completed Projects"
+
+# Filters Section
+msgid "تصفية النتائج"
+msgstr "Filter Results"
+
+msgid "التصنيف"
+msgstr "Category"
+
+msgid "جميع التصنيفات"
+msgstr "All Categories"
+
+
+
+msgid "جميع الحالات"
+msgstr "All Statuses"
+
+msgid "نشط"
+msgstr "Active"
+
+
+
+
+
+
+
+
+
+msgid "جميع الأولويات"
+msgstr "All Priorities"
+
+
+
+msgid "عالية"
+msgstr "High"
+
+
+
+
+
+msgid "الترتيب حسب"
+msgstr "Sort By"
+
+msgid "الأحدث"
+msgstr "Newest"
+
+
+
+msgid "الأكثر مشاهدة"
+msgstr "Most Viewed"
+
+msgid "الأكثر إعجاباً"
+msgstr "Most Liked"
+
+msgid "الاسم (أ-ي)"
+msgstr "Name (A-Z)"
+
+msgid "مسح الفلاتر"
+msgstr "Clear Filters"
+
+# Results Section
+msgid "تم العثور على"
+msgstr "Found"
+
+msgid "مشروع"
+msgstr "project"
+
+msgid "لا توجد نتائج"
+msgstr "No results found."
+
+msgid "التقدم"
+msgstr "Progress"
+
+msgid "عرض المشروع"
+msgstr "View Project"
+
+# No Results Section
+msgid "لم يتم العثور على نتائج"
+msgstr "No results found"
+
+msgid "حاول استخدام كلمات مفتاحية مختلفة أو مسح الفلاتر"
+msgstr "Try using different keywords or clear filters"
+
+msgid "عرض جميع المشاريع"
+msgstr "View All Projects"
+
+
+# ==================== Page Title ====================
+msgid "المشروع غير موجود"
+msgstr "Project Not Found"
+
+msgid "المشروع الذي تبحث عنه غير موجود أو تم حذفه"
+msgstr "The project you are looking for does not exist or has been deleted"
+
+
+
+
+msgid "غير موجود"
+msgstr "Not Found"
+
+# ==================== Main Content ====================
+msgid "المشروع غير موجود!"
+msgstr "Project Not Found!"
+
+msgid "عذراً، المشروع الذي تبحث عنه غير موجود أو تم حذفه. يمكنك البحث عن مشاريع أخرى أو العودة إلى الصفحة الرئيسية."
+msgstr "Sorry, the project you are looking for does not exist or has been deleted. You can search for other projects or return to the home page."
+
+# ==================== Search Box ====================
+msgid "ابحث عن مشروع آخر..."
+msgstr "Search for another project..."
+
+msgid "بحث"
+msgstr "Search"
+
+# ==================== Action Buttons ====================
+msgid "تصفح جميع المشاريع"
+msgstr "Browse All Projects"
+
+
+msgid "العودة للخلف"
+msgstr "Go Back"
+
+# ==================== Suggestions Section ====================
+msgid "قد تكون مهتماً بـ"
+msgstr "You May Be Interested In"
+
+msgid "المشاريع النشطة"
+msgstr "Active Projects"
+
+msgid "تصفح المشاريع الجارية حالياً"
+msgstr "Browse currently ongoing projects"
+
+msgid "المشاريع المميزة"
+msgstr "Featured Projects"
+
+msgid "شاهد أهم المشاريع المميزة"
+msgstr "View the most important featured projects"
+
+msgid "تصفح حسب التصنيف"
+msgstr "Browse by Category"
+
+msgid "استكشف المشاريع حسب الفئات"
+msgstr "Explore projects by categories"
+
+msgid "أحدث المشاريع"
+msgstr "Recent Projects"
+
+msgid "المشاريع المضافة مؤخراً"
+msgstr "Recently added projects"
+
+# ==================== Help Box ====================
+msgid "هل تحتاج للمساعدة؟"
+msgstr "Need Help?"
+
+msgid "إذا كنت تعتقد أن هذا خطأ، يرجى"
+msgstr "If you think this is an error, please"
+
+msgid "التواصل معنا"
+msgstr "contact us"
+
+msgid "وسنكون سعداء بمساعدتك"
+msgstr "and we will be happy to help you"
+
+
+
+msgid "الإجمالي"
+msgstr "Total"
+
+msgid "إحصائيات التقدم"
+msgstr "Progress statistics"
+msgid "التمويل"
+msgstr "Funding"
+msgid "المستفيدون الحاليون"
+msgstr "Current beneficiaries"
+
+msgid "تصفح جميع مشاريع الجمعية واختر ما يهمك للمساهمة في خدمة المجتمع"
+msgstr "Browse all the association's projects and choose what interests you to contribute to serving the community."
+
+
+
+msgid "التمويل المالي"
+msgstr "Financial Funding"
+
+
+msgid "حالياً"
+msgstr "Currently"
+
+
+msgid "متبقي"
+msgstr "Remaining"
+
+
+msgid "شاهد على يوتيوب"
+msgstr "Watch on YouTube"
+
+
+msgid "أعجبني"
+msgstr "Like."
+
+msgid "تم الإعجاب"
+msgstr "Liked"
+
+
+msgid "استفسار حول"
+msgstr "Inquiry about"
+
+
+msgid "‏تعذّر العثور على عنوان IP لخادم"
+msgstr "Unable to find server IP address"

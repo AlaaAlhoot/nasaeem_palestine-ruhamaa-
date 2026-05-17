@@ -1,0 +1,832 @@
+{% load static %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% load custom_filters %}
+<!-- Newsletter Subscription Form Partial -->
+<div class="newsletter-form-wrapper">
+    <div class="newsletter-header" data-aos="fade-up">
+        <div class="newsletter-icon">
+            <i class="fas fa-envelope-open-text"></i>
+        </div>
+        <h4 class="newsletter-title">{% trans "اشترك في نشرتنا البريدية" %}</h4>
+        <p class="newsletter-subtitle">{% trans "احصل على آخر الأخبار والتحديثات من جمعية نسائم فلسطين الخيرية" %}</p>
+    </div>
+
+
+<!-- Newsletter Form -->
+<form class="newsletter-form" id="newsletterFormPartial" data-aos="fade-up" data-aos-delay="200">
+    {% csrf_token %}
+    <div class="form-group-wrapper">
+        <div class="input-group">
+            <div class="input-icon">
+                <i class="fas fa-envelope"></i>
+            </div>
+            <input type="email" name="email" class="newsletter-input"
+                   placeholder="{% trans 'أدخل بريدك الإلكتروني...' %}"
+                   required autocomplete="email" dir="ltr">
+            <button type="submit" class="newsletter-submit-btn" id="newsletterSubmitBtn">
+                <span class="btn-text">{% trans "اشترك" %}</span>
+                <span class="btn-icon"><i class="fas fa-paper-plane"></i></span>
+                <span class="spinner d-none"><i class="fas fa-spinner fa-spin"></i></span>
+            </button>
+        </div>
+        <div class="form-feedback"></div>
+    </div>
+
+    <!-- Optional Name Field -->
+    <div class="optional-field" style="display:none;" id="nameField">
+        <div class="input-group">
+            <div class="input-icon"><i class="fas fa-user"></i></div>
+            <input type="text" name="name" class="newsletter-input"
+                   placeholder="{% trans 'الاسم (اختياري)' %}" autocomplete="name">
+        </div>
+    </div>
+
+    <!-- Frequency Selection -->
+    <div class="frequency-selection" data-aos="fade-up" data-aos-delay="300">
+        <label class="frequency-label">{% trans "تكرار الإرسال:" %}</label>
+        <div class="frequency-options">
+            <label class="frequency-option">
+                <input type="radio" name="frequency" value="weekly" checked>
+                <span class="option-text">{% trans "أسبوعياً" %}</span>
+                <span class="option-desc">{% trans "كل أحد" %}</span>
+            </label>
+
+            <label class="frequency-option">
+                <input type="radio" name="frequency" value="monthly">
+                <span class="option-text">{% trans "شهرياً" %}</span>
+                <span class="option-desc">{% trans "أول كل شهر" %}</span>
+            </label>
+
+            <label class="frequency-option">
+                <input type="radio" name="frequency" value="important">
+                <span class="option-text">{% trans "المهم فقط" %}</span>
+                <span class="option-desc">{% trans "عند الضرورة" %}</span>
+            </label>
+        </div>
+    </div>
+
+    <!-- Topics Selection -->
+    <div class="topics-selection" data-aos="fade-up" data-aos-delay="400">
+        <label class="topics-label">{% trans "اختر اهتماماتك:" %}</label>
+        <div class="topics-grid">
+            <label class="topic-checkbox">
+                <input type="checkbox" name="topics" value="projects" checked>
+                <span class="checkmark"></span>
+                <div class="topic-content">
+                    <i class="fas fa-project-diagram"></i>
+                    <span>{% trans "المشاريع" %}</span>
+                </div>
+            </label>
+
+            <label class="topic-checkbox">
+                <input type="checkbox" name="topics" value="news">
+                <span class="checkmark"></span>
+                <div class="topic-content">
+                    <i class="fas fa-newspaper"></i>
+                    <span>{% trans "الأخبار" %}</span>
+                </div>
+            </label>
+
+            <label class="topic-checkbox">
+                <input type="checkbox" name="topics" value="volunteer">
+                <span class="checkmark"></span>
+                <div class="topic-content">
+                    <i class="fas fa-hands-helping"></i>
+                    <span>{% trans "التطوع" %}</span>
+                </div>
+            </label>
+
+            <label class="topic-checkbox">
+                <input type="checkbox" name="topics" value="donations">
+                <span class="checkmark"></span>
+                <div class="topic-content">
+                    <i class="fas fa-donate"></i>
+                    <span>{% trans "التبرعات" %}</span>
+                </div>
+            </label>
+        </div>
+    </div>
+
+    <!-- Privacy Notice -->
+    <div class="privacy-notice" data-aos="fade-up" data-aos-delay="500">
+        <div class="privacy-content">
+            <i class="fas fa-shield-alt"></i>
+            <div class="privacy-text">
+                <span class="privacy-title">{% trans "خصوصيتك مهمة لنا" %}</span>
+                <span class="privacy-desc">{% trans "لن نشارك بياناتك مع أي جهة خارجية ويمكنك إلغاء الاشتراك في أي وقت" %}</span>
+            </div>
+        </div>
+    </div>
+
+    <input type="text" name="website" style="display:none;" tabindex="-1">
+
+    <!-- Messages -->
+    <div class="newsletter-messages">
+        <div class="success-message" style="display:none;">
+            <i class="fas fa-check-circle"></i>
+            <span>{% trans "تم الاشتراك بنجاح! تحقق من بريدك الإلكتروني." %}</span>
+        </div>
+        <div class="error-message" style="display:none;">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span class="error-text"></span>
+        </div>
+    </div>
+</form>
+
+<!-- Newsletter Statistics -->
+<div class="newsletter-stats" data-aos="fade-up" data-aos-delay="600">
+    <div class="stats-header"><i class="fas fa-users me-2"></i> {% trans "انضم لأكثر من" %}</div>
+    <div class="stats-number" data-count="1250">1,250</div>
+    <div class="stats-label">{% trans "مشترك في نشرتنا" %}</div>
+    <div class="recent-subscribers">
+        <div class="subscribers-avatars">
+            <div class="avatar">👤</div>
+            <div class="avatar">👥</div>
+            <div class="avatar">👤</div>
+            <div class="avatar">👥</div>
+            <div class="avatar plus">+</div>
+        </div>
+        <span class="subscribers-text">{% trans "انضم إليهم الآن" %}</span>
+    </div>
+</div>
+
+<!-- More Options -->
+<div class="more-options" data-aos="fade-up" data-aos-delay="700">
+    <button type="button" class="more-options-btn" onclick="toggleAdvancedOptions()">
+        <i class="fas fa-cog me-2"></i> {% trans "خيارات متقدمة" %} <i class="fas fa-chevron-down ms-2"></i>
+    </button>
+</div>
+
+
+</div>
+
+<!-- Styles for Newsletter Form -->
+<style>
+.newsletter-form-wrapper {
+    background: linear-gradient(135deg, #17a2b8, #0d6efd);
+    color: white;
+    border-radius: 20px;
+    padding: 35px;
+    position: relative;
+    overflow: hidden;
+    margin: 30px 0;
+}
+
+.newsletter-form-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='50' height='50' viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='25' cy='25' r='2'/%3E%3C/g%3E%3C/svg%3E") repeat;
+    opacity: 0.4;
+}
+
+.newsletter-header {
+    text-align: center;
+    margin-bottom: 25px;
+    position: relative;
+    z-index: 1;
+}
+
+.newsletter-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    font-size: 1.5rem;
+    backdrop-filter: blur(10px);
+}
+
+.newsletter-title {
+    margin: 0 0 10px 0;
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+.newsletter-subtitle {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.newsletter-form {
+    position: relative;
+    z-index: 1;
+}
+
+.form-group-wrapper {
+    margin-bottom: 20px;
+}
+
+.input-group {
+    display: flex;
+    background: rgba(255,255,255,0.15);
+    border-radius: 50px;
+    padding: 3px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255,255,255,0.2);
+    transition: all 0.3s ease;
+}
+
+.input-group:focus-within {
+    border-color: rgba(255,255,255,0.5);
+    box-shadow: 0 0 20px rgba(255,255,255,0.2);
+}
+
+.input-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 45px;
+    color: rgba(255,255,255,0.8);
+    font-size: 1.1rem;
+}
+
+.newsletter-input {
+    flex: 1;
+    border: none;
+    background: none;
+    color: white;
+    padding: 15px 10px;
+    font-size: 1rem;
+    outline: none;
+}
+
+.newsletter-input::placeholder {
+    color: rgba(255,255,255,0.7);
+}
+
+.newsletter-submit-btn {
+    background: white;
+    color: #17a2b8;
+    border: none;
+    border-radius: 50px;
+    padding: 15px 25px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 120px;
+    justify-content: center;
+}
+
+.newsletter-submit-btn:hover {
+    background: #f8f9fa;
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(255,255,255,0.3);
+}
+
+.newsletter-submit-btn:disabled {
+    opacity: 0.7;
+    transform: none;
+    cursor: not-allowed;
+}
+
+.form-feedback {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    min-height: 20px;
+}
+
+.optional-field {
+    margin: 15px 0;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.frequency-selection, .topics-selection {
+    margin: 25px 0;
+    background: rgba(255,255,255,0.1);
+    border-radius: 15px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.frequency-label, .topics-label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 15px;
+    font-size: 1rem;
+}
+
+.frequency-options {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.frequency-option {
+    flex: 1;
+    min-width: 100px;
+    background: rgba(255,255,255,0.1);
+    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 12px;
+    padding: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    position: relative;
+}
+
+.frequency-option input[type="radio"] {
+    display: none;
+}
+
+.frequency-option:hover,
+.frequency-option input[type="radio"]:checked + .option-text + .option-desc {
+    background: rgba(255,255,255,0.2);
+    border-color: rgba(255,255,255,0.5);
+    transform: translateY(-2px);
+}
+
+.option-text {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.option-desc {
+    display: block;
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+.topics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px;
+}
+
+.topic-checkbox {
+    position: relative;
+    display: block;
+    cursor: pointer;
+    background: rgba(255,255,255,0.1);
+    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 12px;
+    padding: 15px 10px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.topic-checkbox input[type="checkbox"] {
+    display: none;
+}
+
+.checkmark {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 20px;
+    height: 20px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.checkmark::after {
+    content: '✓';
+    color: white;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.topic-checkbox input[type="checkbox"]:checked + .checkmark {
+    background: #28a745;
+}
+
+.topic-checkbox input[type="checkbox"]:checked + .checkmark::after {
+    opacity: 1;
+}
+
+.topic-checkbox:hover,
+.topic-checkbox input[type="checkbox"]:checked ~ .topic-content {
+    background: rgba(255,255,255,0.2);
+    border-color: rgba(255,255,255,0.5);
+    transform: translateY(-2px);
+}
+
+.topic-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.topic-content i {
+    font-size: 1.5rem;
+    opacity: 0.9;
+}
+
+.topic-content span {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.privacy-notice {
+    background: rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 15px;
+    margin: 20px 0;
+    backdrop-filter: blur(10px);
+}
+
+.privacy-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.privacy-content i {
+    color: #28a745;
+    font-size: 1.2rem;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.privacy-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.privacy-title {
+    font-weight: bold;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+
+.privacy-desc {
+    font-size: 0.8rem;
+    opacity: 0.9;
+    line-height: 1.4;
+}
+
+.newsletter-messages {
+    margin: 20px 0;
+}
+
+.success-message, .error-message {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 15px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    animation: fadeInUp 0.3s ease;
+}
+
+.success-message {
+    background: rgba(40, 167, 69, 0.2);
+    border: 1px solid rgba(40, 167, 69, 0.3);
+    color: #d4edda;
+}
+
+.error-message {
+    background: rgba(220, 53, 69, 0.2);
+    border: 1px solid rgba(220, 53, 69, 0.3);
+    color: #f8d7da;
+}
+
+.newsletter-stats {
+    text-align: center;
+    margin: 25px 0;
+    background: rgba(255,255,255,0.1);
+    border-radius: 15px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.stats-header {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin-bottom: 10px;
+}
+
+.stats-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #ffd700;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    animation: countUp 2s ease-out;
+}
+
+.stats-label {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    margin-bottom: 15px;
+}
+
+.recent-subscribers {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.subscribers-avatars {
+    display: flex;
+    margin-left: 10px;
+}
+
+.avatar {
+    width: 30px;
+    height: 30px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    margin-left: -8px;
+    border: 2px solid rgba(255,255,255,0.3);
+    backdrop-filter: blur(10px);
+}
+
+.avatar.plus {
+    background: #ffd700;
+    color: #333;
+    font-weight: bold;
+}
+
+.subscribers-text {
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.more-options {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.more-options-btn {
+    background: rgba(255,255,255,0.1);
+    color: white;
+    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 25px;
+    padding: 10px 20px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.more-options-btn:hover {
+    background: rgba(255,255,255,0.2);
+    border-color: rgba(255,255,255,0.4);
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .newsletter-form-wrapper {
+        padding: 25px 20px;
+    }
+    
+    .frequency-options {
+        flex-direction: column;
+    }
+    
+    .frequency-option {
+        min-width: auto;
+    }
+    
+    .topics-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .input-group {
+        flex-direction: column;
+        border-radius: 15px;
+        padding: 0;
+    }
+    
+    .newsletter-input {
+        padding: 15px;
+    }
+    
+    .newsletter-submit-btn {
+        margin: 10px;
+        border-radius: 15px;
+    }
+    
+    .recent-subscribers {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .newsletter-form-wrapper {
+        padding: 20px 15px;
+    }
+    
+    .newsletter-title {
+        font-size: 1.2rem;
+    }
+    
+    .newsletter-subtitle {
+        font-size: 0.8rem;
+    }
+    
+    .topics-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-number {
+        font-size: 2rem;
+    }
+}
+</style>
+
+<!-- JavaScript for Newsletter Form -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const newsletterForm = document.getElementById('newsletterFormPartial');
+    const submitBtn = document.getElementById('newsletterSubmitBtn');
+    const successMessage = document.querySelector('.success-message');
+    const errorMessage = document.querySelector('.error-message');
+    
+    // Handle form submission
+    if (newsletterForm) {
+        newsletterForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validate email
+            const emailInput = this.querySelector('input[type="email"]');
+            if (!isValidEmail(emailInput.value)) {
+                showError('{% trans "البريد الإلكتروني غير صحيح" %}');
+                return;
+            }
+            
+            // Check honeypot
+            const honeypot = this.querySelector('input[name="website"]');
+            if (honeypot.value) {
+                showError('{% trans "تم اكتشاف نشاط مشبوه" %}');
+                return;
+            }
+            
+            setSubmitLoading(true);
+            
+            const formData = new FormData(this);
+            const topics = [];
+            this.querySelectorAll('input[name="topics"]:checked').forEach(input => {
+                topics.push(input.value);
+            });
+            formData.append('topics', JSON.stringify(topics));
+            
+            fetch('{% url "contact:subscribe_ajax" %}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                setSubmitLoading(false);
+                
+                if (data.success) {
+                    showSuccess(data.message);
+                    newsletterForm.reset();
+                    updateStats();
+                } else {
+                    showError(data.error);
+                }
+            })
+            .catch(error => {
+                setSubmitLoading(false);
+                showError('{% trans "حدث خطأ في الاشتراك" %}');
+            });
+        });
+    }
+    
+    // Toggle advanced options
+    window.toggleAdvancedOptions = function() {
+        const nameField = document.getElementById('nameField');
+        const btn = document.querySelector('.more-options-btn');
+        const icon = btn.querySelector('.fa-chevron-down');
+        
+        if (nameField.style.display === 'none' || !nameField.style.display) {
+            nameField.style.display = 'block';
+            btn.innerHTML = btn.innerHTML.replace('خيارات متقدمة', 'خيارات أساسية');
+            icon.style.transform = 'rotate(180deg)';
+        } else {
+            nameField.style.display = 'none';
+            btn.innerHTML = btn.innerHTML.replace('خيارات أساسية', 'خيارات متقدمة');
+            icon.style.transform = 'rotate(0deg)';
+        }
+    };
+    
+    // Helper functions
+    function setSubmitLoading(loading) {
+        const btnText = submitBtn.querySelector('.btn-text');
+        const btnIcon = submitBtn.querySelector('.btn-icon');
+        const spinner = submitBtn.querySelector('.spinner');
+        
+        if (loading) {
+            submitBtn.disabled = true;
+            btnText.style.display = 'none';
+            btnIcon.style.display = 'none';
+            spinner.classList.remove('d-none');
+        } else {
+            submitBtn.disabled = false;
+            btnText.style.display = 'inline';
+            btnIcon.style.display = 'inline';
+            spinner.classList.add('d-none');
+        }
+    }
+    
+    function showSuccess(message) {
+        successMessage.querySelector('span').textContent = message;
+        successMessage.style.display = 'flex';
+        errorMessage.style.display = 'none';
+        
+        setTimeout(() => {
+            successMessage.style.display = 'none';
+        }, 5000);
+    }
+    
+    function showError(message) {
+        errorMessage.querySelector('.error-text').textContent = message;
+        errorMessage.style.display = 'flex';
+        successMessage.style.display = 'none';
+        
+        setTimeout(() => {
+            errorMessage.style.display = 'none';
+        }, 7000);
+    }
+    
+    function updateStats() {
+        const statsNumber = document.querySelector('.stats-number');
+        if (statsNumber) {
+            const currentCount = parseInt(statsNumber.textContent.replace(/,/g, ''));
+            const newCount = currentCount + 1;
+            animateCounter(statsNumber, currentCount, newCount);
+        }
+    }
+    
+    function animateCounter(element, start, end) {
+        const duration = 1000;
+        const increment = (end - start) / (duration / 16);
+        let current = start;
+        
+        const updateCounter = () => {
+            current += increment;
+            if (current < end) {
+                element.textContent = Math.floor(current).toLocaleString();
+                requestAnimationFrame(updateCounter);
+            } else {
+                element.textContent = end.toLocaleString();
+            }
+        };
+        
+        updateCounter();
+    }
+    
+    function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+    
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    // Animate stats counter on page load
+    const statsNumber = document.querySelector('.stats-number');
+    if (statsNumber) {
+        const targetCount = parseInt(statsNumber.dataset.count);
+        animateCounter(statsNumber, 0, targetCount);
+    }
+});
+</script>

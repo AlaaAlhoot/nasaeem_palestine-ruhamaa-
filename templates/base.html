@@ -1,0 +1,1957 @@
+{% load static %}
+{% load i18n %}
+{% load custom_filters %}
+{% get_current_language as LANGUAGE_CODE %}
+
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}" dir="{% if LANGUAGE_CODE == 'ar' %}rtl{% else %}ltr{% endif %}" style="scroll-behavior: smooth;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#6B8E23">
+<meta name="csrf-token" content="{{ csrf_token }}">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="{% trans 'نسائم فلسطين' %}">
+
+<title>{% block title %}{% trans "جمعية نسائم فلسطين الخيرية" %}{% endblock %}</title>
+<meta name="description" content="{% block description %}{% trans 'جمعية نسائم فلسطين الخيرية - مؤسسة خيرية تنموية إنسانية تعمل على خدمة المجتمع الفلسطيني منذ 2013' %}{% endblock %}">
+<meta name="keywords" content="{% block keywords %}{% trans 'جمعية, خيرية, فلسطين, نسائم, تبرعات, مساعدات, أيتام, تنمية' %}{% endblock %}">
+<meta name="author" content="{% trans 'جمعية نسائم فلسطين الخيرية' %}">
+<link rel="icon" type="image/png" href="{% static 'images/logo.png' %}">
+<link rel="apple-touch-icon" href="{% static 'images/logo.png' %}">
+<meta property="og:title" content="{% block og_title %}{% trans 'جمعية نسائم فلسطين الخيرية' %}{% endblock %}">
+<meta property="og:description" content="{% block og_description %}{% trans 'مؤسسة خيرية تنموية إنسانية تعمل على خدمة المجتمع الفلسطيني' %}{% endblock %}">
+<meta property="og:image" content="{% block og_image %}{% static 'images/logo.png' %}{% endblock %}">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="{% if LANGUAGE_CODE == 'ar' %}ar_AR{% else %}en_US{% endif %}">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+
+{% if LANGUAGE_CODE == 'ar' %}
+    <link href="{% static 'bootstrap/bootstrap.rtl.min.css' %}" rel="stylesheet">
+{% else %}
+    <link href="{% static 'bootstrap/bootstrap.min.css' %}" rel="stylesheet">
+{% endif %}
+
+<link rel="stylesheet" href="{% static 'bootstrap/all.min.css' %}">
+<link rel="stylesheet" href="{% static 'fonts/cairo/cairo.css' %}">
+<link rel="stylesheet" href="{% static 'vendor/aos/aos.css' %}">
+
+    
+    {% block extra_css %}{% endblock %}
+
+<style>
+.section-header p,
+.container h2 ,
+.container p,
+.about-hero h1{
+    text-align: center !important;
+}
+.vision-hero .lead,
+.goals-hero .lead ,
+.partners-hero .lead{
+    text-align: center !important;
+}
+.vision-hero h1,
+.goals-hero h1,
+.partners-hero h1{
+    text-align: center !important;
+}
+
+.stat-number,
+.stat-label {
+    text-align: center !important;
+    color: white;
+}
+.contact-hero .hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;   /* يضع العناصر في المنتصف أفقياً */
+    justify-content: center; /* يضع العناصر في المنتصف عمودياً */
+    text-align: center;
+}
+
+/* Footer Mobile Responsive Fix */
+@media (max-width: 767px) {
+    /* Footer Sections Spacing */
+    .footer {
+        padding: 40px 0 0;
+    }
+
+    .footer .container {
+        padding: 0 15px;
+    }
+
+    .footer .row > div {
+        margin-bottom: 40px;
+    }
+
+    /* Footer Titles */
+    .footer h5 {
+        font-size: 1.1rem;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .footer h5::after {
+        right: 50%;
+        transform: translateX(50%);
+    }
+
+    /* Footer Links - Better Spacing */
+    .footer-links {
+        padding: 0;
+        text-align: center;
+    }
+
+    .footer-links li {
+        margin-bottom: 15px;
+        padding: 5px 0;
+    }
+
+    .footer-links li a {
+        display: block;
+        padding: 8px 10px;
+        background: rgba(255,255,255,0.05);
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .footer-links li a:hover {
+        background: rgba(255,255,255,0.15);
+        transform: none;
+    }
+
+    /* Footer Contact Info - Better Layout */
+    .footer-contact {
+        padding: 0;
+        list-style: none;
+    }
+
+    .footer-contact li {
+        margin-bottom: 20px;
+        padding: 12px;
+        background: rgba(255,255,255,0.08);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        transition: all 0.3s ease;
+    }
+
+    .footer-contact li i {
+        flex-shrink: 0;
+        margin-right: 12px;
+        margin-bottom: 0;
+        font-size: 1.2rem;
+    }
+
+    .footer-contact li a,
+    .footer-contact li span {
+        word-break: break-word;
+        flex: 1;
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+
+    .footer-contact li:hover {
+        background: rgba(255,255,255,0.12);
+        transform: none;
+    }
+
+    /* About Section Text */
+    .footer p {
+        font-size: 0.9rem;
+        line-height: 1.7;
+        text-align: justify;
+        margin-bottom: 20px;
+    }
+
+    /* Social Media Icons in Footer */
+    .footer-social {
+        justify-content: center;
+        margin-top: 25px;
+    }
+
+    .footer-social a {
+        width: 45px;
+        height: 45px;
+        font-size: 1.1rem;
+    }
+
+    /* Newsletter Form */
+    .newsletter-form {
+        margin-top: 15px;
+    }
+
+    .newsletter-form .input-group {
+        flex-direction: column;
+    }
+
+    .newsletter-form .form-control {
+        border-radius: 25px !important;
+        margin-bottom: 10px;
+        width: 100%;
+    }
+
+    .newsletter-form .btn {
+        border-radius: 25px !important;
+        width: 100%;
+        padding: 12px;
+    }
+
+    /* Footer Bottom Mobile */
+    .footer-bottom {
+        padding: 25px 0;
+        margin-top: 30px;
+    }
+
+    .copyright-section {
+        font-size: 0.85rem;
+        line-height: 1.6;
+        margin-bottom: 15px;
+    }
+
+    .developer-credit {
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+    }
+
+    /* RTL Adjustments for Mobile */
+    [dir="rtl"] .footer-contact li i {
+        margin-right: 0;
+        margin-left: 12px;
+    }
+
+    [dir="rtl"] .footer h5::after {
+        right: auto;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
+/* Extra Small Devices */
+@media (max-width: 480px) {
+    .footer h5 {
+        font-size: 1rem;
+    }
+
+    .footer-contact li {
+        padding: 10px;
+    }
+
+    .footer-contact li a,
+    .footer-contact li span {
+        font-size: 0.85rem;
+    }
+
+    .footer-social a {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+
+    .footer p {
+        font-size: 0.85rem;
+    }
+}
+/* Fix Developer Social Icons - High Priority */
+.footer-bottom .social-icons {
+    display: flex !important;
+    gap: 12px !important;
+    align-items: center !important;
+}
+
+.footer-bottom .social-icon-btn {
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.3s ease !important;
+    text-decoration: none !important;
+    font-size: 1.2rem !important;
+    border: 2px solid transparent !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.footer-bottom .social-icon-btn i {
+    font-size: 1.2rem !important;
+    line-height: 1 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.footer-bottom .whatsapp-btn {
+    background: #25D366 !important;
+    color: white !important;
+    border-color: #25D366 !important;
+}
+
+.footer-bottom .whatsapp-btn:hover {
+    background: white !important;
+    color: #25D366 !important;
+    transform: scale(1.15) rotate(10deg) !important;
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5) !important;
+    border-color: #25D366 !important;
+}
+
+.footer-bottom .github-btn {
+    background: #333 !important;
+    color: white !important;
+    border-color: #333 !important;
+}
+
+.footer-bottom .github-btn:hover {
+    background: white !important;
+    color: #333 !important;
+    transform: scale(1.15) rotate(-10deg) !important;
+    box-shadow: 0 6px 20px rgba(51, 51, 51, 0.5) !important;
+    border-color: #333 !important;
+}
+    :root {
+        --primary-color: #6B8E23;
+        --secondary-color: #FFD700;
+        --accent-color: #5C4033;
+        --light-color: #FFFFFF;
+        --dark-color: #000000;
+        --text-color: #333;
+        --bg-light: #f8f9fa;
+        --shadow: 0 2px 15px rgba(0,0,0,0.1);
+        --menu-bg: #4A6C1A;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: {% if LANGUAGE_CODE == 'ar' %}'Cairo'{% else %}'Inter'{% endif %}, sans-serif;
+        background-color: var(--light-color);
+        color: var(--text-color);
+        overflow-x: hidden;
+        padding-top: 80px;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes slideInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+
+    @keyframes heartbeat {
+        0%, 100% { transform: scale(1); }
+        25% { transform: scale(1.1); }
+        50% { transform: scale(1); }
+        75% { transform: scale(1.1); }
+    }
+
+    @keyframes gradientMove {
+        0% { background-position: 0% 0%; }
+        100% { background-position: 200% 0%; }
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Progress Bar */
+    .progress-bar-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: rgba(255, 215, 0, 0.2);
+        z-index: 1002;
+    }
+
+    .progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+        width: 0%;
+        transition: width 0.3s ease;
+        box-shadow: 0 0 10px var(--secondary-color);
+    }
+
+    /* Header */
+    .header-section {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1001;
+        background: var(--light-color);
+        padding-top: 4px;
+        box-shadow: var(--shadow);
+        animation: slideInDown 0.5s ease;
+    }
+
+    /* Navbar Desktop */
+    .navbar {
+        background: var(--light-color) !important;
+        box-shadow: none;
+        padding: 15px 0;
+        transition: all 0.3s ease;
+    }
+
+    .navbar-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .navbar-brand img {
+        height: 60px;
+        transition: all 0.4s ease;
+        filter: drop-shadow(0 2px 5px rgba(0,0,0,0.1));
+    }
+
+    .navbar-brand:hover img {
+        transform: scale(1.08) rotate(2deg);
+        filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+    }
+
+    .navbar-nav {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin: 0;
+    }
+
+    .navbar-nav .nav-link {
+        color: var(--text-color) !important;
+        font-weight: 600;
+        font-size: 0.95rem;
+        margin: 0 3px;
+        position: relative;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 10px 12px !important;
+        border-radius: 8px;
+        white-space: nowrap;
+    }
+
+    .navbar-nav .nav-link i {
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+
+    .navbar-nav .nav-link:hover {
+        color: var(--primary-color) !important;
+        background: rgba(107, 142, 35, 0.08);
+        transform: translateY(-2px);
+    }
+
+    .navbar-nav .nav-link:hover i {
+        transform: scale(1.2) rotate(5deg);
+    }
+
+    .navbar-nav .nav-link.active {
+        color: var(--primary-color) !important;
+        font-weight: 700;
+        background: rgba(107, 142, 35, 0.12);
+    }
+
+    .navbar-nav .nav-link::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 3px;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--secondary-color);
+        transition: all 0.4s ease;
+        border-radius: 3px;
+    }
+
+    .navbar-nav .nav-link:hover::after,
+    .navbar-nav .nav-link.active::after {
+        width: 80%;
+    }
+
+    /* Desktop Dropdown Keep Open */
+    .navbar-nav .dropdown:hover > .dropdown-menu {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+    .navbar-nav .dropdown > .dropdown-menu {
+        display: none;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .navbar-nav .dropdown.show > .dropdown-menu {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+    /* Language Switch */
+    .lang-switch {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 700;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        position: relative;
+        overflow: hidden;
+        z-index: 10;
+    }
+
+    .navbar-container .lang-switch {
+        margin-right: 20px;
+    }
+
+    .lang-switch::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: var(--secondary-color);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: all 0.5s ease;
+        z-index: 0;
+    }
+
+    .lang-switch:hover::before {
+        width: 120%;
+        height: 120%;
+    }
+
+    .lang-switch span {
+        position: relative;
+        z-index: 1;
+        transition: all 0.3s ease;
+    }
+
+    .lang-switch:hover {
+        transform: scale(1.15) rotate(360deg);
+        box-shadow: 0 6px 20px rgba(107, 142, 35, 0.4);
+    }
+
+    .lang-switch:hover span {
+        color: var(--dark-color);
+    }
+
+    /* Dropdown Menu */
+    .dropdown-menu {
+        border: none;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        border-radius: 12px;
+        animation: fadeIn 0.3s ease;
+        padding: 10px;
+        margin-top: 10px;
+    }
+
+    .dropdown-item {
+        transition: all 0.3s ease;
+        color: var(--text-color);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 15px;
+        border-radius: 8px;
+        margin-bottom: 3px;
+    }
+
+    .dropdown-item i {
+        font-size: 0.9rem;
+        width: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .dropdown-item:hover {
+        background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        color: white;
+        transform: translateX({% if LANGUAGE_CODE == 'ar' %}-8px{% else %}8px{% endif %});
+    }
+
+    .dropdown-item:hover i {
+        transform: scale(1.2);
+    }
+
+    /* Footer */
+    .footer {
+        background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+        color: white;
+        padding: 60px 0 0;
+        margin-top: 80px;
+        position: relative;
+        animation: fadeIn 1s ease;
+    }
+
+    .footer::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, var(--secondary-color) 0%, var(--primary-color) 50%, var(--secondary-color) 100%);
+        background-size: 200% 100%;
+        animation: gradientMove 3s linear infinite;
+    }
+
+    .footer h5 {
+        color: var(--secondary-color);
+        margin-bottom: 25px;
+        font-weight: 700;
+        font-size: 1.25rem;
+        position: relative;
+        padding-bottom: 15px;
+    }
+
+    .footer h5 i {
+        animation: pulse 2s infinite;
+    }
+
+    .footer h5::after {
+        content: '';
+        position: absolute;
+        bottom: 5px;
+        {% if LANGUAGE_CODE == 'ar' %}
+            right: 0;
+        {% else %}
+            left: 0;
+        {% endif %}
+        width: 60px;
+        height: 3px;
+        background: var(--secondary-color);
+        border-radius: 3px;
+    }
+
+    .footer a {
+        color: rgba(255,255,255,0.85);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+
+    .footer a:hover {
+        color: var(--secondary-color);
+        transform: translateX({% if LANGUAGE_CODE == 'ar' %}-3px{% else %}3px{% endif %});
+    }
+
+    /* Footer Social Icons - Fixed */
+    .footer-social {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 20px;
+    }
+
+    .footer-social a {
+        width: 48px;
+        height: 48px;
+        background: rgba(255,255,255,0.12);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        font-size: 1.15rem;
+        color: white !important;
+        border: 2px solid transparent;
+    }
+
+    .footer-social a:hover {
+        background: var(--secondary-color);
+        color: var(--dark-color) !important;
+        transform: translateY(-8px) rotate(360deg) !important;
+        box-shadow: 0 8px 25px rgba(255, 215, 0, 0.5);
+        border-color: rgba(255,255,255,0.3);
+    }
+
+    /* Optional: Individual social media colors */
+    .footer-social a.facebook:hover {
+        background: #1877f2;
+        color: white !important;
+        box-shadow: 0 8px 25px rgba(24, 119, 242, 0.5);
+    }
+
+    .footer-social a.twitter:hover {
+        background: #1da1f2;
+        color: white !important;
+        box-shadow: 0 8px 25px rgba(29, 161, 242, 0.5);
+    }
+
+    .footer-social a.instagram:hover {
+        background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+        color: white !important;
+        box-shadow: 0 8px 25px rgba(225, 48, 108, 0.5);
+    }
+
+    .footer-social a.youtube:hover {
+        background: #ff0000;
+        color: white !important;
+        box-shadow: 0 8px 25px rgba(255, 0, 0, 0.5);
+    }
+
+    /* Footer Bottom Developer Section - Fixed */
+    .footer-bottom {
+        border-top: 1px solid rgba(255,255,255,0.2);
+        margin-top: 50px;
+        padding: 30px 0;
+    }
+
+    .footer-bottom-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .developer-section {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .developer-credit {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.95rem;
+    }
+
+    .developer-credit .heart-icon {
+        color: #ff6b6b;
+        animation: heartbeat 2s infinite;
+    }
+
+    .developer-credit .developer-name {
+        font-weight: bold;
+        color: var(--secondary-color);
+        font-size: 1.05rem;
+    }
+
+    /* Developer Social Icons - Fixed */
+    .social-icons {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .social-icon-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        font-size: 1.1rem;
+        border: 2px solid transparent;
+    }
+
+    .whatsapp-btn {
+        background: #25D366;
+        color: white !important;
+        border-color: #25D366;
+    }
+
+    .whatsapp-btn:hover {
+        background: white;
+        color: #25D366 !important;
+        transform: scale(1.15) rotate(10deg);
+        box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5);
+        border-color: #25D366;
+    }
+
+    .github-btn {
+        background: #333;
+        color: white !important;
+        border-color: #333;
+    }
+
+    .github-btn:hover {
+        background: white;
+        color: #333 !important;
+        transform: scale(1.15) rotate(-10deg);
+        box-shadow: 0 6px 20px rgba(51, 51, 51, 0.5);
+        border-color: #333;
+    }
+
+    /* Mobile Styles */
+    .mobile-header {
+        display: none;
+    }
+
+    /* Back to Top */
+    .back-to-top {
+        position: fixed;
+        bottom: 30px;
+        {% if LANGUAGE_CODE == 'ar' %}
+            left: 30px;
+        {% else %}
+            right: 30px;
+        {% endif %}
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        color: white;
+        border: none;
+        border-radius: 50%;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        cursor: pointer;
+        z-index: 999;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        transition: all 0.3s ease;
+        opacity: 0;
+    }
+
+    .back-to-top.show {
+        display: flex;
+        opacity: 1;
+        animation: slideInUp 0.3s ease;
+    }
+
+    .back-to-top:hover {
+        transform: translateY(-5px) scale(1.1);
+        box-shadow: 0 8px 25px rgba(107, 142, 35, 0.4);
+    }
+
+    /* Mobile Menu */
+    @media (max-width: 991px) {
+        body {
+            padding-top: 85px;
+        }
+
+        .navbar-container {
+            display: none;
+        }
+
+        .mobile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 10px 15px;
+        }
+
+        .mobile-logo {
+            order: 2;
+            flex-grow: 1;
+            text-align: center;
+            margin: 0 5px;
+        }
+
+        .mobile-logo img {
+            height: 65px;
+            transition: transform 0.3s ease;
+        }
+
+        .navbar-toggler {
+            order: 1;
+            flex-shrink: 0;
+            border: 2px solid var(--primary-color);
+            width: 48px;
+            height: 48px;
+            padding: 6px 10px;
+            border-radius: 8px;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            z-index: 10;
+        }
+
+        .navbar-toggler:hover {
+            background: rgba(107, 142, 35, 0.1);
+            transform: scale(1.05);
+        }
+
+        .navbar-toggler-icon {
+            display: block;
+            width: 25px;
+            height: 2.5px;
+            background: var(--primary-color);
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .mobile-header .lang-switch {
+            order: 3;
+            flex-shrink: 0;
+            margin: 0;
+        }
+
+        /* Mobile Menu Container */
+        .navbar-collapse {
+            position: absolute;
+            top: 85px;
+            width: 100%;
+            left: 0;
+            background: var(--menu-bg);
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            z-index: 1000;
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: max-height 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                        opacity 0.4s ease-in-out,
+                        transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .navbar-collapse.show {
+            max-height: 90vh;
+            opacity: 1;
+            transform: scaleY(1);
+            overflow-y: auto;
+        }
+
+        .navbar-collapse .navbar-nav {
+            flex-direction: column;
+            width: 100%;
+            padding: 20px 15px;
+            gap: 12px;
+            align-items: stretch;
+        }
+
+        .navbar-nav .nav-item {
+            opacity: 0;
+            transform: translateX({% if LANGUAGE_CODE == 'ar' %}50px{% else %}-50px{% endif %});
+            transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+        }
+
+        .navbar-collapse.show .navbar-nav .nav-item {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .navbar-nav .nav-link {
+            width: 100%;
+            min-height: 56px;
+            padding: 14px 20px !important;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 14px;
+            color: white !important;
+            background: rgba(255,255,255,0.1);
+            margin: 0;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.15);
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            font-size: 1.05rem;
+            font-weight: 600;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .navbar-nav .nav-link i {
+            font-size: 1.2rem;
+            width: 28px;
+            text-align: center;
+            transition: all 0.3s ease;
+            color: var(--secondary-color);
+        }
+
+        .navbar-nav .nav-link:hover {
+            background: linear-gradient(135deg, rgba(255,215,0,0.25), rgba(107,142,35,0.25));
+            border-color: var(--secondary-color);
+            transform: translateX({% if LANGUAGE_CODE == 'ar' %}-5px{% else %}5px{% endif %});
+            box-shadow: 0 6px 20px rgba(255,215,0,0.3);
+        }
+
+        .navbar-nav .nav-link.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white !important;
+            font-weight: 700;
+            border-color: var(--secondary-color);
+            box-shadow: 0 6px 20px rgba(107,142,35,0.5);
+        }
+
+        /* Mobile Dropdown */
+        .navbar-nav .nav-link.dropdown-toggle::after {
+            content: '\f054';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 50%;
+            {% if LANGUAGE_CODE == 'ar' %}
+                left: 18px;
+                right: auto;
+            {% else %}
+                right: 18px;
+                left: auto;
+            {% endif %}
+            transform: translateY(-50%);
+            transition: transform 0.4s ease;
+            font-size: 0.85rem;
+            color: var(--secondary-color);
+            display: block !important;
+        }
+
+        .navbar-nav .nav-link.dropdown-toggle {
+            position: relative;
+            padding-right: {% if LANGUAGE_CODE == 'ar' %}20px{% else %}45px{% endif %} !important;
+            padding-left: {% if LANGUAGE_CODE == 'ar' %}45px{% else %}20px{% endif %} !important;
+        }
+
+        .navbar-nav .nav-item.dropdown.show > .nav-link.dropdown-toggle::after {
+            transform: translateY(-50%) rotate(90deg);
+        }
+
+        /* Mobile Dropdown Menu */
+        .navbar-nav .dropdown-menu {
+            position: static !important;
+            width: 100% !important;
+            margin: 10px 0 !important;
+            padding: 10px !important;
+            background: rgba(0,0,0,0.2);
+            box-shadow: none;
+            border: none;
+            border-radius: 12px;
+            display: none;
+        }
+
+        .navbar-nav .dropdown.show > .dropdown-menu {
+            display: block !important;
+            animation: slideInDown 0.3s ease;
+        }
+
+        .navbar-nav .dropdown-item {
+            color: white !important;
+            background: rgba(255,255,255,0.08);
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+        }
+
+        .navbar-nav .dropdown-item i {
+            font-size: 1rem;
+            color: var(--secondary-color);
+            width: 20px;
+            text-align: center;
+        }
+
+        .navbar-nav .dropdown-item:hover {
+            background: linear-gradient(135deg, rgba(255,215,0,0.3), rgba(107,142,35,0.3));
+            border-color: var(--secondary-color);
+            transform: translateX({% if LANGUAGE_CODE == 'ar' %}-8px{% else %}8px{% endif %});
+            color: white !important;
+        }
+
+        /* Footer Mobile */
+        .footer-bottom-content {
+            flex-direction: column;
+            text-align: center;
+            gap: 20px;
+        }
+
+        .copyright-section,
+        .developer-section {
+            justify-content: center;
+            width: 100%;
+        }
+
+        .developer-section {
+            flex-direction: column;
+            gap: 12px;
+        }
+    }
+
+    /* Page Loader */
+    .page-loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--light-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        transition: opacity 0.5s ease;
+    }
+
+    .loader {
+        width: 60px;
+        height: 60px;
+        border: 4px solid var(--bg-light);
+        border-top: 4px solid var(--primary-color);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    /* RTL Support */
+    [dir="rtl"] .newsletter-form .form-control {
+        border-radius: 0 25px 25px 0;
+    }
+
+    [dir="rtl"] .newsletter-form .btn {
+        border-radius: 25px 0 0 25px;
+    }
+
+    [dir="rtl"] .navbar-container .lang-switch {
+        margin-right: 0;
+        margin-left: 20px;
+    }
+</style>
+</head>
+<body>
+    <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <div id="pageLoader" class="page-loader">
+        <div class="loader"></div>
+    </div>
+
+    <div class="header-section">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <div class="navbar-container">
+                    <a class="navbar-brand" href="{% url 'main:home' %}" data-aos="fade-right">
+                        {% if site_settings.logo %}
+                            <img loading="lazy" src="{{ site_settings.logo.url }}" alt="{% trans 'جمعية نسائم فلسطين الخيرية' %}">
+                        {% else %}
+                            <img loading="lazy" src="{% static 'images/logo.png' %}" alt="{% trans 'جمعية نسائم فلسطين الخيرية' %}">
+                        {% endif %}
+                    </a>
+
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item" data-aos="fade-down" data-aos-delay="100">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'main:home' %}">
+                                <i class="fas fa-home"></i>
+                                <span>{% trans "الرئيسية" %}</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item dropdown" data-aos="fade-down" data-aos-delay="200">
+                            <a class="nav-link dropdown-toggle {% if 'projects' in request.resolver_match.app_names or request.resolver_match.url_name == 'all_projects' %}active{% endif %}" href="#" id="projectsDropdown" role="button">
+                                <i class="fas fa-project-diagram"></i>
+                                <span>{% trans "مشاريعنا" %}</span>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="projectsDropdown">
+                                <li><a class="dropdown-item" href="{% url 'projects:all_projects' %}">
+                                    <i class="fas fa-list"></i>
+                                    {% trans "جميع المشاريع" %}
+                                </a></li>
+                                {% for category in project_categories %}
+                                <li><a class="dropdown-item" href="{% url 'projects:category_projects' category.slug %}">
+                                    <i class="{{ category.icon }}"></i>
+                                    {{ category|translate_field:"name" }}
+                                </a></li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+
+                        <li class="nav-item" data-aos="fade-down" data-aos-delay="300">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'main:about' %}">
+                                <i class="fas fa-info-circle"></i>
+                                <span>{% trans "من نحن" %}</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item" data-aos="fade-down" data-aos-delay="400">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'vision' %}active{% endif %}" href="{% url 'main:vision' %}">
+                                <i class="fas fa-eye"></i>
+                                <span>{% trans "رؤيتنا" %}</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item" data-aos="fade-down" data-aos-delay="500">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'goals' %}active{% endif %}" href="{% url 'main:goals' %}">
+                                <i class="fas fa-bullseye"></i>
+                                <span>{% trans "الأهداف" %}</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item" data-aos="fade-down" data-aos-delay="600">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'partners' %}active{% endif %}" href="{% url 'main:partners' %}">
+                                <i class="fas fa-handshake"></i>
+                                <span>{% trans "شركاؤنا" %}</span>
+                            </a>
+                        </li>
+
+<li class="nav-item" data-aos="fade-down" data-aos-delay="700">
+    <a class="nav-link {% if request.resolver_match.url_name == 'ruhamaa_home' %}active{% endif %}" href="{% url 'main:ruhamaa_home' %}">
+        <i class="fas fa-heart"></i>
+        <span>{% trans "رُحَمَاء" %}</span>
+    </a>
+</li>
+
+                   <li class="nav-item" data-aos="fade-down" data-aos-delay="800">
+    <a class="nav-link {% if request.resolver_match.url_name == 'contact_page' %}active{% endif %}" href="{% url 'contact:contact_page' %}">
+        <i class="fas fa-envelope"></i>
+        <span>{% trans "اتصل بنا" %}</span>
+    </a>
+</li>
+
+{#                        <li class="nav-item" data-aos="fade-down" data-aos-delay="900">#}
+{#                            <a class="nav-link {% if request.resolver_match.url_name == 'location' %}active{% endif %}" href="{% url 'main:location' %}">#}
+{#                                <i class="fas fa-map-marker-alt"></i>#}
+{#                                <span>{% trans "الموقع" %}</span>#}
+{#                            </a>#}
+{#                        </li>#}
+                    </ul>
+<div class="d-flex align-items-center gap-1 me-2">
+    {% if user.is_authenticated %}
+        {% if user.is_staff or user.is_superuser %}
+            <a href="/admin-panel/dashboard/" class="btn btn-sm rounded-circle p-2"
+               style="background:rgba(37,99,235,0.1);color:#2563eb;border:1px solid rgba(37,99,235,0.2);width:36px;height:36px;display:flex;align-items:center;justify-content:center"
+               title="{% trans 'لوحة التحكم' %}">
+                <i class="fas fa-shield-alt"></i>
+            </a>
+        {% elif user.user_type == 'sponsor' %}
+            <a href="/sponsor/dashboard/" class="btn btn-sm rounded-circle p-2"
+               style="background:rgba(26,122,74,0.08);color:#1a7a4a;border:1px solid rgba(26,122,74,0.2);width:36px;height:36px;display:flex;align-items:center;justify-content:center"
+               title="{% trans 'لوحتي' %}">
+                <i class="fas fa-home"></i>
+            </a>
+        {% else %}
+            <a href="/beneficiary/dashboard/" class="btn btn-sm rounded-circle p-2"
+               style="background:rgba(26,122,74,0.08);color:#1a7a4a;border:1px solid rgba(26,122,74,0.2);width:36px;height:36px;display:flex;align-items:center;justify-content:center"
+               title="{% trans 'لوحتي' %}">
+                <i class="fas fa-home"></i>
+            </a>
+        {% endif %}
+        <a href="{% url 'main:logout' %}" class="btn btn-sm rounded-circle p-2"
+           style="background:rgba(229,62,62,0.08);color:#c53030;border:1px solid rgba(229,62,62,0.2);width:36px;height:36px;display:flex;align-items:center;justify-content:center"
+           title="{% trans 'خروج' %}">
+            <i class="fas fa-sign-out-alt"></i>
+        </a>
+    {% else %}
+        <a href="{% url 'main:login' %}" class="btn btn-sm rounded-circle p-2"
+           style="background:transparent;color:#1a7a4a;border:1px solid rgba(26,122,74,0.3);width:36px;height:36px;display:flex;align-items:center;justify-content:center"
+           title="{% trans 'دخول' %}">
+            <i class="fas fa-key"></i>
+        </a>
+        <a href="{% url 'main:register' %}" class="btn btn-sm rounded-circle p-2"
+           style="background:linear-gradient(135deg,#0f5232,#2ecc71);color:#fff;border:none;width:36px;height:36px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(26,122,74,0.25)"
+           title="{% trans 'تسجيل' %}">
+            <i class="fas fa-user-plus"></i>
+        </a>
+    {% endif %}
+</div>
+                    <button class="lang-switch" onclick="toggleLanguage()" title="{% trans 'تغيير اللغة' %}" data-aos="fade-left">
+                        <span>{% if LANGUAGE_CODE == 'ar' %}EN{% else %}AR{% endif %}</span>
+                    </button>
+                </div>
+
+                <div class="mobile-header">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mobileNav" aria-controls="mobileNav" aria-expanded="false" aria-label="{% trans 'فتح القائمة' %}">
+                        <span class="navbar-toggler-icon"></span>
+                        <span class="navbar-toggler-icon"></span>
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <a class="mobile-logo" href="{% url 'main:home' %}">
+                        {% if site_settings.logo %}
+                            <img loading="lazy" src="{{ site_settings.logo.url }}" alt="{% trans 'جمعية نسائم فلسطين الخيرية' %}">
+                        {% else %}
+                            <img loading="lazy" src="{% static 'images/logo.png' %}" alt="{% trans 'جمعية نسائم فلسطين الخيرية' %}">
+                        {% endif %}
+                    </a>
+
+                    <button class="lang-switch" onclick="toggleLanguage()" title="{% trans 'تغيير اللغة' %}">
+                        <span>{% if LANGUAGE_CODE == 'ar' %}EN{% else %}AR{% endif %}</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+<div class="navbar-collapse collapse" id="mobileNav">
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'main:home' %}">
+                <i class="fas fa-home"></i>
+                <span>{% trans "الرئيسية" %}</span>
+            </a>
+        </li>
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle {% if 'projects' in request.resolver_match.app_names or request.resolver_match.url_name == 'all_projects' %}active{% endif %}" href="javascript:void(0)" role="button">
+                <i class="fas fa-project-diagram"></i>
+                <span>{% trans "مشاريعنا" %}</span>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'projects:all_projects' %}">
+                    <i class="fas fa-list"></i>
+                    {% trans "جميع المشاريع" %}
+                </a></li>
+                {% for category in project_categories %}
+                <li><a class="dropdown-item" href="{% url 'projects:category_projects' category.slug %}">
+                    <i class="{{ category.icon }}"></i>
+                    {{ category|translate_field:"name" }}
+                </a></li>
+                {% endfor %}
+            </ul>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'main:about' %}">
+                <i class="fas fa-info-circle"></i>
+                <span>{% trans "من نحن" %}</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link {% if request.resolver_match.url_name == 'vision' %}active{% endif %}" href="{% url 'main:vision' %}">
+                <i class="fas fa-eye"></i>
+                <span>{% trans "رؤيتنا" %}</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link {% if request.resolver_match.url_name == 'goals' %}active{% endif %}" href="{% url 'main:goals' %}">
+                <i class="fas fa-bullseye"></i>
+                <span>{% trans "الأهداف" %}</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link {% if request.resolver_match.url_name == 'partners' %}active{% endif %}" href="{% url 'main:partners' %}">
+                <i class="fas fa-handshake"></i>
+                <span>{% trans "شركاؤنا" %}</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link {% if request.resolver_match.url_name == 'ruhamaa_home' %}active{% endif %}" href="{% url 'main:ruhamaa_home' %}">
+                <i class="fas fa-users"></i>
+                <span>{% trans "رُحَمَاء" %}</span>
+            </a>
+        </li>
+
+<li class="nav-item">
+    <a class="nav-link {% if request.resolver_match.url_name == 'contact_page' %}active{% endif %}" href="{% url 'contact:contact_page' %}">
+        <i class="fas fa-envelope"></i>
+        <span>{% trans "اتصل بنا" %}</span>
+    </a>
+</li>
+
+{#        <li class="nav-item">#}
+{#            <a class="nav-link {% if request.resolver_match.url_name == 'location' %}active{% endif %}" href="{% url 'main:location' %}">#}
+{#                <i class="fas fa-map-marker-alt"></i>#}
+{#                <span>{% trans "الموقع" %}</span>#}
+{#            </a>#}
+{#        </li>#}
+
+        {% if user.is_authenticated %}
+            <li class="nav-item">
+                {% if user.is_staff or user.is_superuser %}
+                    <a href="/admin-panel/dashboard/" class="nav-link">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>{% trans "لوحة التحكم" %}</span>
+                    </a>
+                {% elif user.user_type == 'sponsor' %}
+                    <a href="/sponsor/dashboard/" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        <span>{% trans "لوحتي" %}</span>
+                    </a>
+                {% else %}
+                    <a href="/beneficiary/dashboard/" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        <span>{% trans "لوحتي" %}</span>
+                    </a>
+                {% endif %}
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'main:logout' %}" class="nav-link" style="color:#e53e3e">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>{% trans "خروج" %}</span>
+                </a>
+            </li>
+        {% else %}
+            <li class="nav-item">
+                <a href="{% url 'main:login' %}" class="nav-link">
+                    <i class="fas fa-key"></i>
+                    <span>{% trans "دخول" %}</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'main:register' %}" class="nav-link">
+                    <i class="fas fa-user-plus"></i>
+                    <span>{% trans "تسجيل" %}</span>
+                </a>
+            </li>
+        {% endif %}
+
+    </ul>
+</div>
+    </div>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6" data-aos="fade-up">
+                    <h5>
+                        <i class="fas fa-heart me-2"></i>
+                        {% trans "عن الجمعية" %}
+                    </h5>
+
+                    <p style="text-align: justify;">
+                        {% trans "جمعية نسائم فلسطين الخيرية هي مؤسسة خيرية تنموية إنسانية تأسست عام 2013 في قطاع غزة – فلسطين، وتُعنى بتنفيذ البرامج والمشاريع التي تساهم في تحقيق التنمية المتكاملة في المجتمع الفلسطيني." %}
+                    </p>
+                    {% if social_media_links %}
+                    <div class="footer-social">
+                        {% for social in social_media_links %}
+                            {% if social.is_active %}
+                            <a href="{{ social.url }}"
+                               target="_blank"
+                               title="{{ social.get_platform_display }}"
+                               class="{{ social.platform }}">
+                                <i class="{{ social.get_icon_class }}"></i>
+                            </a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="col-lg-2 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <h5>
+                        <i class="fas fa-link me-2"></i>
+                        {% trans "روابط سريعة" %}
+                    </h5>
+                    <ul class="list-unstyled footer-links">
+                        <li><a href="{% url 'main:home' %}">{% trans "الرئيسية" %}</a></li>
+                        <li><a href="{% url 'main:about' %}">{% trans "من نحن" %}</a></li>
+                        <li><a href="{% url 'projects:all_projects' %}">{% trans "مشاريعنا" %}</a></li>
+                        <li><a href="{% url 'main:vision' %}">{% trans "رؤيتنا" %}</a></li>
+                        <li><a href="{% url 'main:goals' %}">{% trans "الأهداف" %}</a></li>
+                        <li><a href="{% url 'main:partners' %}">{% trans "شركاؤنا" %}</a></li>
+                        <li><a href="{% url 'main:ruhamaa_home' %}">{% trans "رُحَمَاء" %}</a></li>
+                       <li><a href="{% url 'contact:contact_page' %}">{% trans "اتصل بنا" %}</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <h5>
+                        <i class="fas fa-address-book me-2"></i>
+                        {% trans "معلومات الاتصال" %}
+                    </h5>
+                    <ul class="list-unstyled footer-contact">
+                        {% if contact_info %}
+                            {% for info in contact_info %}
+                                {% if info.is_active and info.show_in_footer %}
+                                <li>
+                                    <i class="{{ info.get_icon_class }} me-2" style="color: var(--secondary-color); width: 22px;"></i>
+                                    {% if info.type == 'phone' %}
+                                        <a href="tel:{{ info|get_trans:'value' }}">{{ info|get_trans:'value' }}</a>
+                                    {% elif info.type == 'email' %}
+                                        <a href="mailto:{{ info|get_trans:'value' }}">{{ info|get_trans:'value' }}</a>
+                                    {% elif info.type == 'website' %}
+                                        <a href="{{ info|get_trans:'value' }}" target="_blank">{{ info|get_trans:'value' }}</a>
+                                    {% else %}
+                                        <span>{{ info|get_trans:'value' }}</span>
+                                    {% endif %}
+                                </li>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+
+                            <li>
+                                <i class="fas fa-phone me-2" style="color: var(--secondary-color); width: 22px;"></i>
+                                <a href="tel:056751504">056751504</a>
+                            </li>
+                            <li>
+                                <i class="fas fa-envelope me-2" style="color: var(--secondary-color); width: 22px;"></i>
+                                <a href="mailto:nasaempalstin2013@gmail.com">nasaempalstin2013@gmail.com</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+    <h5>
+        <i class="fas fa-envelope-open-text me-2"></i>
+        {% trans "اشترك في نشرتنا" %}
+    </h5>
+    <p class="small mb-3">{% trans "احصل على آخر الأخبار والتحديثات" %}</p>
+    <form id="newsletterForm" data-url="{% url 'contact:newsletter_subscribe' %}">
+        {% csrf_token %}
+        <div class="input-group mb-2">
+            <input type="email" id="newsletterEmail" name="email"
+                   class="form-control"
+                   placeholder="{% trans 'بريدك الإلكتروني' %}"
+                   required>
+            <button class="btn btn-secondary no-loading" type="submit" id="newsletterBtn">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+        <div id="newsletterMsg" class="small mt-1" style="display:none;"></div>
+    </form>
+</div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <div class="copyright-section">
+                        <span>&copy; {% now "Y" %} {% trans "جمعية نسائم فلسطين الخيرية. جميع الحقوق محفوظة." %}</span>
+                    </div>
+
+                    <div class="developer-section">
+                        <div class="developer-credit">
+                            <i class="fas fa-heart heart-icon"></i>
+                            <span style="opacity: 0.9;">{% trans "طُوِّر بكل حب بواسطة" %}</span>
+                            <span class="developer-name">{% trans "علاء عماد الحوت" %}</span>
+                        </div>
+
+                        <div class="social-icons">
+                            <a href="https://wa.me/972598964850" target="_blank" class="social-icon-btn whatsapp-btn" title="WhatsApp">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+                            <a href="https://github.com/AlaaAlhoot" target="_blank" class="social-icon-btn github-btn" title="GitHub">
+                                <i class="fab fa-github"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+    <script src="{% static 'bootstrap/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'vendor/aos/aos.js' %}"></script>
+
+    <script>
+        // Initialize AOS with enhanced settings
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100,
+            easing: 'ease-out-cubic'
+        });
+
+        // Page Loader
+        window.addEventListener('load', function() {
+            const loader = document.getElementById('pageLoader');
+            if (loader) {
+                setTimeout(() => {
+                    loader.style.opacity = '0';
+                    setTimeout(() => loader.style.display = 'none', 500);
+                }, 500);
+            }
+        });
+
+        // Progress Bar
+        function updateProgressBar() {
+            const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            const progressBar = document.getElementById('progressBar');
+            if (progressBar) progressBar.style.width = scrolled + '%';
+        }
+
+        {#        // Language Toggle Fixed#}
+        {#// Helper function to get CSRF token from cookies#}
+        {#function getCookie(name) {#}
+        {#    let cookieValue = null;#}
+        {#    if (document.cookie && document.cookie !== '') {#}
+        {#        const cookies = document.cookie.split(';');#}
+        {#        for (let i = 0; i < cookies.length; i++) {#}
+        {#            const cookie = cookies[i].trim();#}
+        {#            if (cookie.substring(0, name.length + 1) === (name + '=')) {#}
+        {#                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));#}
+        {#                break;#}
+        {#            }#}
+        {#        }#}
+        {#    }#}
+        {#    return cookieValue;#}
+        {#}#}
+
+
+        function toggleLanguage() {
+            const currentLang = '{{ LANGUAGE_CODE }}';
+            const newLang = currentLang === 'ar' ? 'en' : 'ar';
+
+            // ... (كود تحديد المسار يبقى كما هو)
+            let newPath = window.location.pathname;
+
+            if (currentLang === 'ar' && !newPath.includes('/en/')) {
+                newPath = '/en' + newPath;
+            } else if (currentLang === 'en' && newPath.includes('/en/')) {
+                newPath = newPath.replace('/en/', '/');
+                newPath = newPath.replace('/en', '/');
+            }
+
+            const form = document.createElement('form');
+            form.method = 'post';
+            form.action = '{% url "set_language" %}';
+
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = 'csrfmiddlewaretoken';
+
+            // ✅ الكود الجديد والأكثر موثوقية:
+            // 1. نبحث عن الحاوية التي تولد التوكن
+            const csrfContainer = document.getElementById('csrf-token-generator');
+            // 2. نستخرج حقل الإدخال المخفي الذي تم توليده داخلها
+            const existingCsrfInput = csrfContainer ? csrfContainer.querySelector('input[name="csrfmiddlewaretoken"]') : null;
+
+            if (existingCsrfInput && existingCsrfInput.value) {
+                // 3. نستخدم القيمة التي تم توليدها
+                csrfInput.value = existingCsrfInput.value;
+            } else {
+                console.error('❌ فشل العثور على CSRF Token في الحاوية المخصصة. تحقق من استخدام {% csrf_token %}');
+            }
+            // ------------------------------------
+
+            const langInput = document.createElement('input');
+            langInput.type = 'hidden';
+            langInput.name = 'language';
+            langInput.value = newLang;
+
+            const nextInput = document.createElement('input');
+            nextInput.type = 'hidden';
+            nextInput.name = 'next';
+            nextInput.value = newPath;
+
+            form.appendChild(csrfInput);
+            form.appendChild(langInput);
+            form.appendChild(nextInput);
+            document.body.appendChild(form);
+            form.submit();
+        }
+
+
+
+
+
+        // Scroll Events with Performance Optimization
+        let scrolling = false;
+        window.addEventListener('scroll', function() {
+            if (!scrolling) {
+                window.requestAnimationFrame(function() {
+                    updateProgressBar();
+
+                    const backToTop = document.getElementById('backToTop');
+                    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+                    if (backToTop) {
+                        if (scrollTop > 300) {
+                            backToTop.classList.add('show');
+                        } else {
+                            backToTop.classList.remove('show');
+                        }
+                    }
+
+                    scrolling = false;
+                });
+                scrolling = true;
+            }
+        });
+
+        // Scroll to Top
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Desktop Dropdown - Keep Open on Click
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.innerWidth > 991) {
+                const projectsDropdown = document.querySelector('#projectsDropdown');
+                if (projectsDropdown) {
+                    projectsDropdown.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const dropdown = this.closest('.dropdown');
+                        const dropdownMenu = dropdown.querySelector('.dropdown-menu');
+
+                        if (dropdown.classList.contains('show')) {
+                            dropdown.classList.remove('show');
+                            dropdownMenu.classList.remove('show');
+                        } else {
+                            dropdown.classList.add('show');
+                            dropdownMenu.classList.add('show');
+                        }
+                    });
+                }
+            }
+        });
+
+        // Mobile Menu Enhanced
+        const mobileNav = document.getElementById('mobileNav');
+        if (mobileNav) {
+            // Staggered animation for mobile menu items
+            mobileNav.addEventListener('shown.bs.collapse', function () {
+                const navItems = this.querySelectorAll('.navbar-nav > .nav-item');
+                navItems.forEach((item, index) => {
+                    item.style.transitionDelay = `${index * 0.08}s`;
+                });
+            });
+
+            mobileNav.addEventListener('hidden.bs.collapse', function () {
+                const navItems = this.querySelectorAll('.navbar-nav > .nav-item');
+                navItems.forEach(item => {
+                    item.style.transitionDelay = '0s';
+                });
+            });
+
+            // Mobile Dropdown Toggle
+            const mobileDropdownToggle = document.querySelector('#mobileNav .dropdown-toggle');
+            if (mobileDropdownToggle) {
+                mobileDropdownToggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const dropdown = this.closest('.dropdown');
+                    const dropdownMenu = dropdown.querySelector('.dropdown-menu');
+
+                    if (dropdown.classList.contains('show')) {
+                        dropdown.classList.remove('show');
+                        dropdownMenu.style.display = 'none';
+                    } else {
+                        // Close other dropdowns
+                        document.querySelectorAll('#mobileNav .dropdown.show').forEach(d => {
+                            d.classList.remove('show');
+                            const menu = d.querySelector('.dropdown-menu');
+                            if (menu) menu.style.display = 'none';
+                        });
+
+                        dropdown.classList.add('show');
+                        dropdownMenu.style.display = 'block';
+                    }
+                });
+            }
+
+            // Close mobile menu when clicking on links
+            document.querySelectorAll('#mobileNav .nav-link:not(.dropdown-toggle)').forEach(link => {
+                link.addEventListener('click', function() {
+                    const bsCollapse = bootstrap.Collapse.getInstance(mobileNav);
+                    if (bsCollapse) {
+                        bsCollapse.hide();
+                    }
+                });
+            });
+
+            // Close mobile menu when clicking dropdown items
+            document.querySelectorAll('#mobileNav .dropdown-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const bsCollapse = bootstrap.Collapse.getInstance(mobileNav);
+                    if (bsCollapse) {
+                        bsCollapse.hide();
+                    }
+                });
+            });
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(e) {
+            if (window.innerWidth > 991) {
+                if (!e.target.closest('.dropdown')) {
+                    document.querySelectorAll('.dropdown.show').forEach(dropdown => {
+                        dropdown.classList.remove('show');
+                        const menu = dropdown.querySelector('.dropdown-menu');
+                        if (menu) menu.classList.remove('show');
+                    });
+                }
+            }
+        });
+
+        // Form Submissions with Loading State
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                const submitBtn = form.querySelector('button[type="submit"]');
+                if (submitBtn && !submitBtn.classList.contains('no-loading')) {
+                    const originalHTML = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                    submitBtn.disabled = true;
+
+                    setTimeout(() => {
+                        if (submitBtn.disabled) {
+                            submitBtn.innerHTML = originalHTML;
+                            submitBtn.disabled = false;
+                        }
+                    }, 5000);
+                }
+            });
+        });
+
+        // Enhanced Toast Notifications
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            const toastType = type === 'error' ? 'danger' : type;
+
+            toast.className = `toast align-items-center text-white bg-${toastType} border-0`;
+            toast.setAttribute('role', 'alert');
+            toast.setAttribute('aria-live', 'assertive');
+            toast.setAttribute('aria-atomic', 'true');
+            toast.style.animation = 'slideInDown 0.3s ease';
+
+            toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body">
+                        ${message}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            `;
+
+            let toastContainer = document.getElementById('toastContainer');
+            if (!toastContainer) {
+                toastContainer = document.createElement('div');
+                toastContainer.id = 'toastContainer';
+                toastContainer.className = 'toast-container position-fixed top-0 end-0 p-3';
+                toastContainer.style.zIndex = '9999';
+                document.body.appendChild(toastContainer);
+            }
+
+            toastContainer.appendChild(toast);
+            const bsToast = new bootstrap.Toast(toast, {
+                autohide: true,
+                delay: 5000
+            });
+            bsToast.show();
+
+            toast.addEventListener('hidden.bs.toast', function() {
+                toast.remove();
+            });
+        }
+
+        // Django Messages
+        {% if messages %}
+        document.addEventListener('DOMContentLoaded', function() {
+            {% for message in messages %}
+            const tags = '{{ message.tags }}'.replace('error', 'danger');
+            showToast('{{ message|escapejs }}', tags);
+            {% endfor %}
+        });
+        {% endif %}
+// Newsletter Subscribe
+document.addEventListener('DOMContentLoaded', function() {
+    const newsletterForm = document.getElementById('newsletterForm');
+    if (!newsletterForm) return;
+
+    newsletterForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const email = document.getElementById('newsletterEmail').value.trim();
+        const msg   = document.getElementById('newsletterMsg');
+        const btn   = document.getElementById('newsletterBtn');
+        const csrf  = this.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+        try {
+            const res  = await fetch(this.dataset.url, {
+                method:  'POST',
+                headers: {
+                    'Content-Type':     'application/json',
+                    'X-CSRFToken':      csrf,
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                body: JSON.stringify({ email }),
+            });
+            const data = await res.json();
+
+            msg.style.display = 'block';
+            if (data.success) {
+                msg.style.color = '#4ade80';
+                msg.textContent = data.message;
+                document.getElementById('newsletterEmail').value = '';
+            } else {
+                msg.style.color = '#f87171';
+                msg.textContent = data.error || 'حدث خطأ، يرجى المحاولة مجدداً';
+            }
+        } catch {
+            msg.style.display = 'block';
+            msg.style.color   = '#f87171';
+            msg.textContent   = 'حدث خطأ في الاتصال';
+        } finally {
+            btn.disabled      = false;
+            btn.innerHTML     = '<i class="fas fa-paper-plane"></i>';
+        }
+    });
+});
+        // Console Branding
+        console.log('%c🌟 جمعية نسائم فلسطين الخيرية 🌟', 'color: #6B8E23; font-size: 20px; font-weight: bold;');
+        console.log('%cتم التطوير بواسطة: علاء عماد الحوت', 'color: #FFD700; font-size: 14px;');
+        console.log('%cWhatsApp: +972 59 896 4850', 'color: #25D366; font-size: 14px;');
+        console.log('%cGitHub: https://github.com/AlaaAlhoot', 'color: #333; font-size: 14px;');
+    </script>
+
+    {% block extra_js %}{% endblock %}
+
+  <div id="csrf-token-generator" style="display: none;">
+        {% csrf_token %}
+    </div>
+</body>
+</html>

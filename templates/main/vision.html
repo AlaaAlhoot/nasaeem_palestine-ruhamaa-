@@ -1,0 +1,897 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load i18n %}
+{% load custom_filters %}
+
+{% block title %}{{ vision_page|translate_field:"vision_title" }} - {{ site_settings|translate_field:"site_name" }}{% endblock %}
+
+{% block description %}{{ vision_page|translate_field:"meta_description"|default:vision_page.vision_content_ar|striptags|truncatechars:160 }}{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ==================== Value Points Styling ==================== */
+    .value-points-list {
+        list-style: none;
+        padding: 0;
+        margin: 20px 0 0 0;
+    }
+
+    .value-point-item {
+        padding: 15px 20px;
+        padding-right: 50px;
+        position: relative;
+        font-size: 1.05rem;
+        line-height: 1.8;
+        color: #444;
+        border-bottom: 1px solid rgba(0,0,0,0.06);
+        transition: all 0.35s ease;
+        border-radius: 8px;
+        margin-bottom: 8px;
+    }
+
+    .value-point-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+    }
+
+    .value-point-item i {
+        position: absolute;
+        right: 15px;
+        top: 18px;
+        color: var(--primary-color);
+        font-size: 1.4rem;
+        transition: all 0.35s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    .value-point-item:hover {
+        padding-right: 55px;
+        color: var(--primary-color);
+        background: linear-gradient(to right, rgba(102, 126, 234, 0.03), transparent);
+        border-color: rgba(102, 126, 234, 0.15);
+        transform: translateX(-5px);
+    }
+
+    .value-point-item:hover i {
+        transform: scale(1.3) rotate(360deg);
+        color: var(--secondary-color);
+        text-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+    }
+
+    /* للغة الإنجليزية */
+    [dir="ltr"] .value-point-item {
+        padding-right: 20px;
+        padding-left: 50px;
+    }
+
+    [dir="ltr"] .value-point-item i {
+        right: auto;
+        left: 15px;
+    }
+
+    [dir="ltr"] .value-point-item:hover {
+        padding-right: 20px;
+        padding-left: 55px;
+        transform: translateX(5px);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .value-point-item {
+            font-size: 0.95rem;
+            padding: 12px 15px;
+            padding-right: 45px;
+        }
+
+        .value-point-item i {
+            font-size: 1.2rem;
+            top: 15px;
+        }
+
+        [dir="ltr"] .value-point-item {
+            padding-left: 45px;
+            padding-right: 15px;
+        }
+    }
+    /* Hero Section */
+    .vision-hero {
+        background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        color: white;
+        padding: 100px 0 50px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .vision-hero::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        opacity: 0.3;
+    }
+    
+    .vision-hero .container {
+        position: relative;
+        z-index: 2;
+    }
+    
+    .vision-hero h1 {
+        font-size: 3rem;
+        text-shadow: 2px 4px 8px rgba(0,0,0,0.2);
+        animation: fadeInDown 1s ease;
+    }
+    
+    .vision-hero p {
+        font-size: 1.2rem;
+        opacity: 0.95;
+        animation: fadeInUp 1s ease 0.3s backwards;
+    }
+    
+    /* Floating Elements */
+    .floating-element {
+        position: absolute;
+        opacity: 0.15;
+        z-index: 1;
+        animation: float 6s ease-in-out infinite;
+        filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+    }
+    
+    .floating-element:nth-child(2) { 
+        animation-delay: 2s; 
+        animation-duration: 8s; 
+    }
+    
+    .floating-element:nth-child(3) { 
+        animation-delay: 4s; 
+        animation-duration: 7s; 
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        33% { transform: translateY(-15px) rotate(5deg); }
+        66% { transform: translateY(-30px) rotate(-5deg); }
+    }
+    
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Vision Section */
+    .vision-section {
+        padding: 80px 0;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .vision-section:nth-child(even) {
+        background: linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%);
+    }
+    
+    /* Vision Cards */
+    .vision-card {
+        background: white;
+        border-radius: 20px;
+        padding: 45px 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+    
+    /* خط علوي متحرك */
+    .vision-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 5px;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 2;
+    }
+    
+    .vision-card:hover::before {
+        width: 100%;
+    }
+    
+    /* تأثير موجة خلفية عند Hover */
+    .vision-card::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(102, 126, 234, 0.05) 0%, transparent 70%);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s ease, height 0.6s ease;
+        z-index: 0;
+    }
+    
+    .vision-card:hover::after {
+        width: 500px;
+        height: 500px;
+    }
+    
+    .vision-card:hover {
+        transform: translateY(-12px) scale(1.01);
+        box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        border-color: rgba(102, 126, 234, 0.2);
+    }
+    
+    /* Vision Icon */
+    .vision-icon {
+        width: 85px;
+        height: 85px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 25px;
+        color: white;
+        font-size: 2.2rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        position: relative;
+        z-index: 2;
+        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    
+    /* تأثير نبض للأيقونة */
+    .vision-icon::before {
+        content: '';
+        position: absolute;
+        inset: -5px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        opacity: 0;
+        transition: all 0.4s ease;
+    }
+    
+    .vision-card:hover .vision-icon {
+        transform: scale(1.15) rotate(360deg);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+    }
+    
+    .vision-card:hover .vision-icon::before {
+        opacity: 0.3;
+        animation: pulse-ring 1.5s infinite;
+    }
+    
+    @keyframes pulse-ring {
+        0% {
+            transform: scale(0.95);
+            opacity: 0.3;
+        }
+        50% {
+            transform: scale(1.1);
+            opacity: 0;
+        }
+        100% {
+            transform: scale(0.95);
+            opacity: 0;
+        }
+    }
+    
+    /* Vision Content */
+    .vision-content {
+        position: relative;
+        z-index: 2;
+    }
+    
+    .vision-content h3 {
+        color: var(--primary-color);
+        margin-bottom: 25px;
+        font-weight: 700;
+        font-size: 1.9rem;
+        position: relative;
+        display: inline-block;
+        transition: color 0.3s ease;
+    }
+    
+    /* خط تحت العنوان يتحرك عند Hover */
+    .vision-content h3::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        border-radius: 2px;
+        transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .vision-card:hover .vision-content h3::after {
+        width: 100%;
+    }
+    
+    .vision-card:hover .vision-content h3 {
+        color: var(--secondary-color);
+    }
+    
+    .vision-content p,
+    .vision-content div,
+    .vision-content div > * {
+        text-align: justify;
+        text-justify: inter-word;
+        line-height: 1.9;
+        font-size: 1.08rem;
+        color: #555;
+        direction: rtl;
+        transition: color 0.3s ease;
+    }
+    
+    .vision-card:hover .vision-content p,
+    .vision-card:hover .vision-content div {
+        color: #333;
+    }
+    
+    /* Image Column - مصغرة */
+    .image-column {
+        flex: 0 0 35%;
+        max-width: 35%;
+    }
+    
+    /* Text Column - أكبر */
+    .text-column {
+        flex: 0 0 65%;
+        max-width: 65%;
+    }
+    
+    /* Image Styling - بدون خلفية */
+    .vision-image-wrapper {
+        position: relative;
+        overflow: hidden;
+        border-radius: 20px;
+        transition: all 0.4s ease;
+        background: transparent;
+    }
+    
+    .vision-image-wrapper:hover {
+        transform: translateY(-8px) scale(1.03);
+    }
+    
+    .vision-section img.img-fluid {
+        width: 100%;
+        border-radius: 20px;
+        transition: all 0.4s ease;
+        background: transparent;
+        object-fit: contain;
+        filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));
+    }
+    
+    .vision-image-wrapper:hover img {
+        transform: scale(1.08) rotate(2deg);
+        filter: drop-shadow(0 15px 30px rgba(0,0,0,0.15));
+    }
+    
+    /* Default Icon Display */
+    .default-icon {
+        width: 180px;
+        height: 180px;
+        margin: 0 auto;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4.5rem;
+        color: white;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        animation: float 6s ease-in-out infinite;
+        position: relative;
+    }
+    
+    .default-icon::before {
+        content: '';
+        position: absolute;
+        inset: -8px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        opacity: 0.3;
+        animation: pulse-ring 3s infinite;
+    }
+    
+    /* Scroll Progress Bar */
+    .scroll-progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 0%;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        z-index: 9999;
+        transition: width 0.1s ease;
+        box-shadow: 0 2px 10px rgba(102, 126, 234, 0.5);
+    }
+    
+    /* تأثير الكتابة المتحركة */
+    @keyframes typing {
+        from { width: 0; }
+        to { width: 100%; }
+    }
+    
+    @keyframes blink {
+        50% { border-color: transparent; }
+    }
+    
+    /* تأثير تلاشي للمحتوى */
+    .fade-in-content {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.6s ease;
+    }
+    
+    .fade-in-content.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* تأثيرات إضافية للأزرار في CTA */
+    .cta-section .btn {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .cta-section .btn::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.2);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+    
+    .cta-section .btn:hover::before {
+        width: 300px;
+        height: 300px;
+    }
+    
+    .cta-section .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+    
+    /* Responsive */
+    @media (max-width: 991px) {
+        .image-column,
+        .text-column {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+        
+        .image-column {
+            margin-bottom: 30px;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .vision-hero { 
+            padding: 80px 0 40px; 
+        }
+        
+        .vision-hero h1 {
+            font-size: 2.2rem;
+        }
+        
+        .vision-hero p {
+            font-size: 1rem;
+        }
+        
+        .vision-section { 
+            padding: 60px 0; 
+        }
+        
+        .vision-card { 
+            padding: 35px 25px; 
+            margin-bottom: 30px; 
+        }
+        
+        .vision-content h3 { 
+            font-size: 1.5rem; 
+        }
+        
+        .vision-content p, 
+        .vision-content div { 
+            font-size: 1rem; 
+        }
+        
+        .default-icon { 
+            width: 150px; 
+            height: 150px; 
+            font-size: 4rem; 
+        }
+        
+        .vision-icon {
+            width: 70px;
+            height: 70px;
+            font-size: 1.8rem;
+        }
+        
+        .floating-element {
+            display: none;
+        }
+    }
+    
+    /* تحسين الأداء */
+    .vision-card,
+    .vision-image-wrapper,
+    .vision-icon {
+        will-change: transform;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Scroll Progress Bar -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- Hero Section -->
+<section class="vision-hero text-center">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-4">{% trans "رؤيتنا ورسالتنا" %}</h1>
+        <p class="lead">
+            {% trans "نحن نؤمن برؤية واضحة ورسالة سامية تقودنا نحو خدمة مجتمعنا" %}
+        </p>
+        <div class="floating-element" style="top: 20%; left: 10%;">
+            <i class="fas fa-star" style="font-size: 4rem;"></i>
+        </div>
+        <div class="floating-element" style="top: 60%; right: 15%;">
+            <i class="fas fa-heart" style="font-size: 3rem;"></i>
+        </div>
+        <div class="floating-element" style="bottom: 15%; left: 20%;">
+            <i class="fas fa-lightbulb" style="font-size: 3.5rem;"></i>
+        </div>
+    </div>
+</section>
+
+<!-- Vision Section -->
+<section class="vision-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-4 image-column" data-aos="fade-right" data-aos-duration="800">
+                {% if vision_page.vision_image %}
+                <div class="vision-image-wrapper">
+                    <img loading="lazy" src="{{ vision_page.vision_image.url }}" class="img-fluid" alt="{{ vision_page|translate_field:"vision_title" }}">
+                </div>
+                {% else %}
+                <div class="text-center">
+                    <div class="default-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            <div class="col-lg-8 text-column" data-aos="fade-left" data-aos-duration="800">
+                <div class="vision-card fade-in-content">
+                    <div class="vision-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <div class="vision-content">
+                        <h3>{{ vision_page|translate_field:"vision_title" }}</h3>
+                        <div>
+                            {% get_current_language as LANGUAGE_CODE %}
+                            {% if LANGUAGE_CODE == 'en' and vision_page.vision_content_en %}
+                                {{ vision_page.vision_content_en|safe }}
+                            {% else %}
+                                {{ vision_page.vision_content_ar|safe }}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Mission Section -->
+<section class="vision-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-4 image-column order-lg-2" data-aos="fade-left" data-aos-duration="800">
+                {% if vision_page.mission_image %}
+                <div class="vision-image-wrapper">
+                    <img loading="lazy" src="{{ vision_page.mission_image.url }}" class="img-fluid" alt="{{ vision_page|translate_field:"mission_title" }}">
+                </div>
+                {% else %}
+                <div class="text-center">
+                    <div class="default-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            <div class="col-lg-8 text-column order-lg-1" data-aos="fade-right" data-aos-duration="800">
+                <div class="vision-card fade-in-content">
+                    <div class="vision-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <div class="vision-content">
+                        <h3>{{ vision_page|translate_field:"mission_title" }}</h3>
+                        <div>
+                            {% get_current_language as LANGUAGE_CODE %}
+                            {% if LANGUAGE_CODE == 'en' and vision_page.mission_content_en %}
+                                {{ vision_page.mission_content_en|safe }}
+                            {% else %}
+                                {{ vision_page.mission_content_ar|safe }}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Values Section - القيم -->
+<section class="vision-section values-section" id="values">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-4 image-column" data-aos="fade-right" data-aos-duration="800">
+                {% if vision_page.values_image %}
+                <div class="vision-image-wrapper">
+                    <img loading="lazy" src="{{ vision_page.values_image.url }}" class="img-fluid" alt="{{ vision_page|translate_field:"values_title" }}">
+                </div>
+                {% else %}
+                <div class="text-center">
+                    <div class="default-icon">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            <div class="col-lg-8 text-column" data-aos="fade-left" data-aos-duration="800">
+                <div class="vision-card fade-in-content">
+                    <div class="vision-icon">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <div class="vision-content">
+                        <h3>{{ vision_page|translate_field:"values_title" }}</h3>
+                        
+                        <!-- ✅ عرض نقاط القيم فقط من جدول ValuePoint -->
+                        {% if value_points %}
+                        <ul class="value-points-list">
+                            {% for point in value_points %}
+                            <li class="value-point-item" data-aos="fade-up" data-aos-delay="{{ forloop.counter|mul:100 }}">
+                                <i class="fas fa-check-circle"></i>
+                                <span>{{ point|translate_field:"content" }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p class="text-muted">{% trans "لا توجد قيم متاحة حاليا" %}</p>
+                        {% endif %}
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 cta-section" style="background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); color: white;">
+    <div class="container text-center" data-aos="fade-up">
+        <h2 class="display-5 fw-bold mb-3">{% trans "شاركنا تحقيق الرؤية" %}</h2>
+        <p class="lead mb-4">{% trans "كن جزءاً من رحلتنا نحو تحقيق رؤيتنا ورسالتنا السامية" %}</p>
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a href="{% url 'main:goals' %}" class="btn btn-warning btn-lg">
+                <i class="fas fa-bullseye me-2"></i>{% trans "تعرف على أهدافنا" %}
+            </a>
+            <a href="{% url 'contact:contact' %}" class="btn btn-outline-light btn-lg">
+                <i class="fas fa-phone me-2"></i>{% trans "تواصل معنا" %}
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // Scroll Progress Bar
+    const scrollProgress = document.getElementById('scrollProgress');
+    function updateScrollProgress() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrollPercentage = (scrollTop / scrollHeight) * 100;
+        scrollProgress.style.width = scrollPercentage + '%';
+    }
+    window.addEventListener('scroll', updateScrollProgress);
+    
+    // Parallax Effect for Floating Elements
+    function parallaxFloat() {
+        const scrolled = window.pageYOffset;
+        document.querySelectorAll('.floating-element').forEach((element, index) => {
+            const speed = 0.3 + (index * 0.1);
+            const rotation = scrolled * 0.05;
+            element.style.transform = `translateY(${-(scrolled * speed)}px) rotate(${rotation}deg)`;
+        });
+    }
+    window.addEventListener('scroll', parallaxFloat);
+    
+    // Intersection Observer for Cards Animation
+    const observerOptions = {
+        threshold: 0.15,
+        rootMargin: '0px 0px -80px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    entry.target.classList.add('visible');
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }, index * 150);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+    
+    // Observe all vision cards
+    document.querySelectorAll('.vision-card').forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(50px)';
+        card.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+        observer.observe(card);
+    });
+    
+    // 3D Tilt Effect on Cards
+    document.querySelectorAll('.vision-card').forEach(card => {
+        card.addEventListener('mousemove', function(e) {
+            if (window.innerWidth > 768) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = (y - centerY) / 25;
+                const rotateY = (centerX - x) / 25;
+                
+                this.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-12px) scale(1.01)`;
+            }
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0) scale(1)';
+        });
+    });
+    
+    // Mouse parallax effect on images
+    document.querySelectorAll('.vision-image-wrapper').forEach(wrapper => {
+        wrapper.addEventListener('mousemove', function(e) {
+            if (window.innerWidth > 768) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const moveX = (x - centerX) / 15;
+                const moveY = (y - centerY) / 15;
+                
+                const img = this.querySelector('img');
+                if (img) {
+                    img.style.transform = `translate(${moveX}px, ${moveY}px) scale(1.08) rotate(2deg)`;
+                }
+            }
+        });
+        
+        wrapper.addEventListener('mouseleave', function() {
+            const img = this.querySelector('img');
+            if (img) {
+                img.style.transform = 'translate(0, 0) scale(1) rotate(0deg)';
+            }
+        });
+    });
+    
+    // Smooth Scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                const offsetTop = target.offsetTop - 80;
+                window.scrollTo({
+                    top: offsetTop,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+    
+    // Observe fade-in content
+    const contentObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    document.querySelectorAll('.fade-in-content').forEach(el => {
+        contentObserver.observe(el);
+    });
+    
+    // Add stagger animation to content
+    document.querySelectorAll('.vision-content p, .vision-content div > p').forEach((p, index) => {
+        p.style.opacity = '0';
+        p.style.transform = 'translateY(20px)';
+        p.style.transition = `all 0.6s ease ${index * 0.1}s`;
+        
+        const card = p.closest('.vision-card');
+        if (card) {
+            const cardObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        p.style.opacity = '1';
+                        p.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.3 });
+            
+            cardObserver.observe(card);
+        }
+    });
+    
+    // Performance optimization
+    let ticking = false;
+    function requestTick(callback) {
+        if (!ticking) {
+            requestAnimationFrame(callback);
+            ticking = true;
+        }
+    }
+    
+    window.addEventListener('scroll', function() {
+        requestTick(function() {
+            updateScrollProgress();
+            parallaxFloat();
+            ticking = false;
+        });
+    });
+    
+    // Disable hover effects on touch devices
+    if ('ontouchstart' in window) {
+        document.querySelectorAll('.vision-card').forEach(card => {
+            card.addEventListener('touchstart', function() {
+                this.classList.add('touch-active');
+            });
+            card.addEventListener('touchend', function() {
+                this.classList.remove('touch-active');
+            });
+        });
+    }
+    
+});
+</script>
+{% endblock %}

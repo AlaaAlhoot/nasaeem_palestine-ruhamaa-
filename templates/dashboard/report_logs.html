@@ -1,0 +1,718 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'vendor/sweetalert2/sweetalert2.min.css' %}">
+<style>
+    .page-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    .page-header h2 {
+        margin: 0;
+        font-weight: 700;
+    }
+
+    .page-header p {
+        margin: 0.5rem 0 0 0;
+        opacity: 0.9;
+    }
+
+    .log-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        border-right: 5px solid #667eea;
+    }
+
+    .log-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 20px rgba(0,0,0,0.12);
+    }
+
+    .log-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .log-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin: 0;
+    }
+
+    .log-badge {
+        display: inline-block;
+        padding: 0.4rem 0.9rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .badge-monthly { background: #e3f2fd; color: #1976d2; }
+    .badge-yearly { background: #f3e5f5; color: #7b1fa2; }
+    .badge-custom { background: #fff3e0; color: #f57c00; }
+    .badge-all { background: #e0e0e0; color: #424242; }
+
+    .log-body {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .log-info-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .log-info-icon {
+        width: 35px;
+        height: 35px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+    }
+
+    .icon-file { background: #e8f5e9; color: #4caf50; }
+    .icon-size { background: #e3f2fd; color: #2196f3; }
+    .icon-records { background: #fff3e0; color: #ff9800; }
+    .icon-user { background: #f3e5f5; color: #9c27b0; }
+    .icon-date { background: #fce4ec; color: #e91e63; }
+
+    .log-info-content {
+        flex: 1;
+    }
+
+    .log-info-label {
+        font-size: 0.75rem;
+        color: #9e9e9e;
+        margin: 0;
+    }
+
+    .log-info-value {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #424242;
+        margin: 0;
+        word-wrap: break-word;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        white-space: normal;
+        line-height: 1.4;
+    }
+
+    .log-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        padding-top: 1rem;
+        border-top: 1px solid #f0f0f0;
+    }
+
+    .action-btn {
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .btn-view {
+        background: #17a2b8;
+        color: white;
+    }
+
+    .btn-download {
+        background: #28a745;
+        color: white;
+    }
+
+    .btn-delete {
+        background: #dc3545;
+        color: white;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .empty-state i {
+        font-size: 5rem;
+        color: #dee2e6;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state h4 {
+        color: #6c757d;
+        margin-bottom: 1rem;
+    }
+
+    .pagination {
+        margin-top: 2rem;
+        justify-content: center;
+    }
+
+    .pagination .page-link {
+        color: #667eea;
+        border: 1px solid #dee2e6;
+        padding: 0.5rem 1rem;
+        margin: 0 0.2rem;
+        border-radius: 8px;
+    }
+
+    .pagination .page-link:hover {
+        background: #667eea;
+        color: white;
+        border-color: #667eea;
+    }
+
+    .pagination .page-item.active .page-link {
+        background: #667eea;
+        border-color: #667eea;
+    }
+
+    .stats-row {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .stat-card {
+        flex: 1;
+        min-width: 200px;
+        background: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        border-right: 4px solid #667eea;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #667eea;
+    }
+
+    .stat-label {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+    }
+
+    .modal-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .detail-row {
+        display: flex;
+        padding: 0.8rem 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .detail-row:last-child {
+        border-bottom: none;
+    }
+
+    .detail-label {
+        font-weight: 600;
+        color: #495057;
+        width: 150px;
+    }
+
+    .detail-value {
+        color: #6c757d;
+        flex: 1;
+    }
+
+    .loading-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .loading-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    }
+
+    .loading-spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #667eea;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 768px) {
+        .log-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .log-body {
+            grid-template-columns: 1fr;
+        }
+
+        .log-actions {
+            flex-direction: column;
+        }
+
+        .action-btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .stats-row {
+            flex-direction: column;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h2><i class="fas fa-history me-2"></i>سجل التقارير</h2>
+                <p>جميع التقارير التي تم توليدها مع إمكانية إعادة التحميل والحذف</p>
+            </div>
+            <a href="{% url 'dashboard:reports' %}" class="btn btn-light btn-lg">
+                <i class="fas fa-arrow-right me-2"></i>العودة للتقارير
+            </a>
+        </div>
+    </div>
+
+    <!-- إحصائيات سريعة -->
+    {% if logs_page.paginator.count > 0 %}
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-number">{{ logs_page.paginator.count }}</div>
+            <div class="stat-label"><i class="fas fa-file-alt me-2"></i>إجمالي التقارير</div>
+        </div>
+        <div class="stat-card" style="border-right-color: #28a745;">
+            <div class="stat-number" style="color: #28a745;">
+                {{ logs_page.object_list|length }}
+            </div>
+            <div class="stat-label"><i class="fas fa-file me-2"></i>التقارير الحالية</div>
+        </div>
+        <div class="stat-card" style="border-right-color: #17a2b8;">
+            <div class="stat-number" style="color: #17a2b8;">{{ logs_page.paginator.num_pages }}</div>
+            <div class="stat-label"><i class="fas fa-layer-group me-2"></i>عدد الصفحات</div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- عرض السجلات كبطاقات -->
+    {% if logs_page.object_list %}
+        {% for log in logs_page %}
+        <div class="log-card">
+            <!-- Header -->
+            <div class="log-header">
+                <h5 class="log-title">
+                    <i class="fas fa-file-excel me-2" style="color: #28a745;"></i>
+                    {{ log.get_report_type_display }}
+                </h5>
+                <span class="log-badge badge-{{ log.period_type }}">
+                    {{ log.get_period_type_display }}
+                </span>
+            </div>
+
+            <!-- Body -->
+            <div class="log-body">
+                <div class="log-info-item">
+                    <div class="log-info-icon icon-file">
+                        <i class="fas fa-file"></i>
+                    </div>
+                    <div class="log-info-content">
+                        <p class="log-info-label">اسم الملف</p>
+                        <p class="log-info-value">{{ log.file_name|truncatechars:25 }}</p>
+                    </div>
+                </div>
+
+                <div class="log-info-item">
+                    <div class="log-info-icon icon-size">
+                        <i class="fas fa-hdd"></i>
+                    </div>
+                    <div class="log-info-content">
+                        <p class="log-info-label">حجم الملف</p>
+                        <p class="log-info-value">{{ log.get_file_size_display }}</p>
+                    </div>
+                </div>
+
+                <div class="log-info-item">
+                    <div class="log-info-icon icon-records">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="log-info-content">
+                        <p class="log-info-label">عدد السجلات</p>
+                        <p class="log-info-value">{{ log.records_count }}</p>
+                    </div>
+                </div>
+
+                <div class="log-info-item">
+                    <div class="log-info-icon icon-user">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="log-info-content">
+                        <p class="log-info-label">تم بواسطة</p>
+                        <p class="log-info-value">{{ log.generated_by.username }}</p>
+                    </div>
+                </div>
+
+                <div class="log-info-item">
+                    <div class="log-info-icon icon-date">
+                        <i class="far fa-calendar-alt"></i>
+                    </div>
+                    <div class="log-info-content">
+                        <p class="log-info-label">التاريخ</p>
+                        <p class="log-info-value">{{ log.created_at|date:"Y/m/d H:i" }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="log-actions">
+                <button class="action-btn btn-view" onclick="viewDetails({{ log.id }})">
+                    <i class="fas fa-eye"></i>
+                    <span>التفاصيل</span>
+                </button>
+                <button class="action-btn btn-download" onclick="regenerateReport({{ log.id }})">
+                    <i class="fas fa-download"></i>
+                    <span>إعادة التحميل</span>
+                </button>
+                <button class="action-btn btn-delete" onclick="deleteLog({{ log.id }})">
+                    <i class="fas fa-trash"></i>
+                    <span>حذف</span>
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+
+        <!-- Pagination -->
+        {% if logs_page.has_other_pages %}
+        <nav>
+            <ul class="pagination">
+                {% if logs_page.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ logs_page.previous_page_number }}">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+                {% endif %}
+
+                {% for num in logs_page.paginator.page_range %}
+                    {% if logs_page.number == num %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                    {% elif num > logs_page.number|add:'-3' and num < logs_page.number|add:'3' %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if logs_page.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ logs_page.next_page_number }}">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+
+    {% else %}
+        <!-- Empty State -->
+        <div class="empty-state">
+            <i class="fas fa-folder-open"></i>
+            <h4>لا توجد تقارير محفوظة</h4>
+            <p class="text-muted">لم يتم توليد أي تقارير بعد. ابدأ بتوليد تقرير من صفحة التقارير.</p>
+            <a href="{% url 'dashboard:reports' %}" class="btn btn-primary mt-3">
+                <i class="fas fa-plus me-2"></i>توليد تقرير جديد
+            </a>
+        </div>
+    {% endif %}
+
+</div>
+
+<!-- Modal تفاصيل التقرير -->
+<div class="modal fade" id="detailsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-info-circle me-2"></i>تفاصيل التقرير</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="detailsContent">
+                <div class="text-center p-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">جاري التحميل...</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-content">
+        <div class="loading-spinner"></div>
+        <h5 class="mt-3">جاري تحميل التقرير...</h5>
+        <p class="text-muted">يرجى الانتظار، سيتم تحميل الملف تلقائياً</p>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'vendor/sweetalert2/sweetalert2.min.js' %}"></script>
+<script>
+    // عرض تفاصيل التقرير
+    function viewDetails(logId) {
+        const modal = new bootstrap.Modal(document.getElementById('detailsModal'));
+        modal.show();
+
+        fetch(`/dashboard/reports/logs/${logId}/details/`, {
+            method: 'GET',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                const data = result.data;
+                const content = `
+                    <div class="detail-row">
+                        <div class="detail-label"><i class="fas fa-file-alt me-2"></i>نوع التقرير:</div>
+                        <div class="detail-value">${data.report_type}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label"><i class="fas fa-calendar-alt me-2"></i>الفترة:</div>
+                        <div class="detail-value">${data.period_type}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label"><i class="fas fa-file me-2"></i>اسم الملف:</div>
+                        <div class="detail-value">${data.file_name}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label"><i class="fas fa-hdd me-2"></i>حجم الملف:</div>
+                        <div class="detail-value">${data.file_size}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label"><i class="fas fa-database me-2"></i>عدد السجلات:</div>
+                        <div class="detail-value"><strong>${data.records_count}</strong></div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label"><i class="fas fa-user me-2"></i>تم التوليد بواسطة:</div>
+                        <div class="detail-value">${data.generated_by}</div>
+                    </div>
+                    ${data.user_filter ? `
+                    <div class="detail-row">
+                        <div class="detail-label"><i class="fas fa-filter me-2"></i>تصفية المستخدم:</div>
+                        <div class="detail-value">${data.user_filter}</div>
+                    </div>
+                    ` : ''}
+                    ${data.date_from ? `
+                    <div class="detail-row">
+                        <div class="detail-label"><i class="fas fa-calendar-check me-2"></i>من تاريخ:</div>
+                        <div class="detail-value">${data.date_from}</div>
+                    </div>
+                    ` : ''}
+                    ${data.date_to ? `
+                    <div class="detail-row">
+                        <div class="detail-label"><i class="fas fa-calendar-times me-2"></i>إلى تاريخ:</div>
+                        <div class="detail-value">${data.date_to}</div>
+                    </div>
+                    ` : ''}
+                    <div class="detail-row">
+                        <div class="detail-label"><i class="fas fa-clock me-2"></i>تاريخ التوليد:</div>
+                        <div class="detail-value">${data.created_at}</div>
+                    </div>
+                `;
+                document.getElementById('detailsContent').innerHTML = content;
+            } else {
+                document.getElementById('detailsContent').innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle me-2"></i>حدث خطأ في تحميل التفاصيل
+                    </div>
+                `;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('detailsContent').innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle me-2"></i>حدث خطأ في الاتصال
+                </div>
+            `;
+        });
+    }
+
+    // إعادة توليد وتحميل التقرير
+    function regenerateReport(logId) {
+        // إظهار شاشة التحميل
+        document.getElementById('loadingOverlay').style.display = 'flex';
+
+        fetch(`/dashboard/reports/logs/${logId}/regenerate/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('فشل تحميل التقرير');
+            }
+            return response.blob();
+        })
+        .then(blob => {
+            // إخفاء شاشة التحميل
+            document.getElementById('loadingOverlay').style.display = 'none';
+
+            // تحميل الملف
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `report_${Date.now()}.xlsx`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            a.remove();
+
+            // رسالة نجاح
+            Swal.fire({
+                icon: 'success',
+                title: 'تم بنجاح',
+                text: 'تم تحميل التقرير بنجاح',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        })
+        .catch(error => {
+            // إخفاء شاشة التحميل
+            document.getElementById('loadingOverlay').style.display = 'none';
+
+            Swal.fire({
+                icon: 'error',
+                title: 'خطأ',
+                text: 'حدث خطأ أثناء تحميل التقرير'
+            });
+            console.error('Error:', error);
+        });
+    }
+
+    // حذف سجل التقرير
+    function deleteLog(logId) {
+        Swal.fire({
+            title: 'هل أنت متأكد؟',
+            text: "لن تتمكن من استرجاع هذا التقرير بعد الحذف!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'نعم، احذف',
+            cancelButtonText: 'إلغاء'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`/dashboard/reports/logs/${logId}/delete/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    }
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'تم الحذف',
+                            text: result.message,
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'خطأ',
+                            text: result.error || 'حدث خطأ أثناء الحذف'
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'خطأ',
+                        text: 'حدث خطأ في الاتصال'
+                    });
+                });
+            }
+        });
+    }
+</script>
+{% endblock %}

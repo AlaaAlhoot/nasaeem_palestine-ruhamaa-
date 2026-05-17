@@ -1,0 +1,904 @@
+{% extends 'admin_panel/base.html' %}
+{% load static %}
+
+
+{% block title %}النشرة البريدية{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ══ Newsletter Variables ══ */
+:root {
+  --nl-green:#1a7a4a; --nl-green-l:rgba(26,122,74,.12);
+  --nl-gold:#d97706;  --nl-gold-l:rgba(217,119,6,.10);
+  --nl-red:#dc2626;   --nl-red-l:rgba(220,38,38,.10);
+  --nl-blue:#2563eb;  --nl-blue-l:rgba(37,99,235,.10);
+}
+
+/* ══ Layout ══ */
+.nl-wrap { padding:20px; max-width:1200px; margin:0 auto; }
+.nl-header {
+  display:flex; justify-content:space-between; align-items:flex-start;
+  gap:12px; margin-bottom:20px; flex-wrap:wrap;
+}
+.nl-title {
+  font-size:1.25rem; font-weight:800; color:var(--text);
+  display:flex; align-items:center; gap:10px;
+}
+.nl-title-icon {
+  width:42px; height:42px;
+  background:linear-gradient(135deg,var(--adm),var(--adm-l));
+  border-radius:12px; display:flex; align-items:center; justify-content:center;
+  font-size:1.1rem; box-shadow:0 4px 14px rgba(124,58,237,.3);
+}
+.nl-subtitle { font-size:.72rem; font-weight:500; color:var(--muted); margin-top:2px; }
+.nl-actions  { display:flex; gap:8px; flex-wrap:wrap; }
+
+/* ══ Cards ══ */
+.nl-card {
+  background:var(--bg-c); border:1px solid var(--border);
+  border-radius:14px; padding:18px; margin-bottom:16px;
+}
+.nl-card-title {
+  font-size:.85rem; font-weight:700; color:var(--text);
+  display:flex; align-items:center; gap:7px;
+  margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--border);
+}
+
+/* ══ System Banner ══ */
+.system-banner {
+  padding:10px 16px; border-radius:10px;
+  font-size:.82rem; font-weight:600;
+  display:flex; align-items:center; gap:8px; margin-bottom:16px;
+}
+.system-banner.on  { background:var(--nl-green-l); color:var(--nl-green); border:1px solid rgba(26,122,74,.2); }
+.system-banner.off { background:var(--nl-red-l);   color:var(--nl-red);   border:1px solid rgba(220,38,38,.2); }
+
+/* ══ Stats Grid ══ */
+.stats-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
+  gap:10px; margin-bottom:16px;
+}
+.stat-card {
+  background:var(--bg-c); border:1px solid var(--border);
+  border-radius:12px; padding:14px;
+  display:flex; flex-direction:column; gap:6px;
+  transition:transform .2s,box-shadow .2s;
+}
+.stat-card:hover { transform:translateY(-2px); box-shadow:var(--sh-sm); }
+.stat-icon { width:36px; height:36px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:.95rem; }
+.stat-num  { font-size:1.6rem; font-weight:800; line-height:1; color:var(--text); }
+.stat-lbl  { font-size:.7rem; color:var(--muted); font-weight:600; }
+
+/* ══ Schedule ══ */
+.schedule-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:10px; }
+.sch-item {
+  border:1px solid var(--border); border-radius:10px; padding:12px 14px;
+  display:flex; justify-content:space-between; align-items:center; gap:10px;
+  transition:border-color .2s;
+}
+.sch-item:hover { border-color:var(--adm); }
+.sch-lbl  { font-size:.82rem; font-weight:600; color:var(--text); }
+.sch-desc { font-size:.7rem; color:var(--muted); margin-top:2px; }
+
+/* ══ Toggle Switch ══ */
+.nl-sw { position:relative; width:44px; height:24px; flex-shrink:0; }
+.nl-sw input { opacity:0; width:0; height:0; }
+.nl-sl {
+  position:absolute; inset:0; background:var(--border);
+  border-radius:24px; cursor:pointer; transition:.25s;
+}
+.nl-sl::before {
+  content:''; position:absolute;
+  width:18px; height:18px; left:3px; top:3px;
+  background:#fff; border-radius:50%; transition:.25s;
+  box-shadow:0 2px 5px rgba(0,0,0,.2);
+}
+.nl-sw input:checked + .nl-sl { background:var(--nl-green); }
+.nl-sw input:checked + .nl-sl::before { transform:translateX(20px); }
+
+/* ══ Filter Bar ══ */
+.filter-bar {
+  background:var(--bg-c); border:1px solid var(--border);
+  border-radius:12px; padding:12px; margin-bottom:14px;
+  display:flex; gap:8px; flex-wrap:wrap;
+}
+.filter-bar input, .filter-bar select {
+  background:var(--bg); border:1px solid var(--border);
+  border-radius:8px; padding:7px 11px; font-size:.8rem;
+  color:var(--text); outline:none; transition:border-color .2s;
+  font-family:'Cairo',sans-serif;
+}
+.filter-bar input:focus, .filter-bar select:focus { border-color:var(--adm); }
+.filter-bar input { flex:1; min-width:160px; }
+body.dark-mode .filter-bar input,
+body.dark-mode .filter-bar select { background:#0e0b1c; }
+
+/* ══ Subscriber Cards ══ */
+.subs-grid {
+  display:grid;
+   grid-template-columns: 1fr;
+  gap:12px; margin-bottom:14px;
+}
+.sub-card {
+  background:var(--bg-c); border:1px solid var(--border);
+  border-radius:13px; padding:15px;
+  transition:transform .2s,box-shadow .2s,border-color .2s;
+}
+.sub-card:hover { transform:translateY(-2px); box-shadow:var(--sh-sm); border-color:rgba(124,58,237,.14); }
+.sub-email { font-size:.86rem; font-weight:700; color:var(--text); word-break:break-all; margin-bottom:2px; }
+.sub-name  { font-size:.72rem; color:var(--muted); margin-bottom:8px; }
+.sub-badge {
+  display:inline-flex; align-items:center; gap:4px;
+  font-size:.66rem; font-weight:700;
+  padding:3px 8px; border-radius:20px; margin-bottom:10px;
+}
+.b-conf   { background:var(--nl-green-l); color:var(--nl-green); }
+.b-unconf { background:rgba(100,100,100,.1); color:var(--muted); }
+.sub-stats {
+  display:grid; grid-template-columns:1fr 1fr 1fr;
+  gap:5px; margin-bottom:10px;
+}
+.ss-item { background:var(--bg); border-radius:7px; padding:7px 4px; text-align:center; }
+.ss-num  { font-size:.9rem; font-weight:800; color:var(--text); }
+.ss-lbl  { font-size:.62rem; color:var(--muted); }
+.sub-meta {
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:10px; font-size:.7rem; color:var(--muted);
+}
+.freq-pill {
+  background:var(--adm-dim); color:var(--adm);
+  padding:2px 8px; border-radius:20px; font-size:.66rem; font-weight:700;
+}
+body.dark-mode .freq-pill { color:#a78bfa; }
+.sub-acts { display:flex; gap:7px; }
+
+/* ══ Buttons ══ */
+.btn-nl {
+  flex:1; padding:7px 10px; border:none; border-radius:8px;
+  font-size:.74rem; font-weight:700; cursor:pointer;
+  transition:all .2s; font-family:'Cairo',sans-serif;
+  display:flex; align-items:center; justify-content:center; gap:5px;
+}
+.btn-on   { background:var(--nl-green-l); color:var(--nl-green); }
+.btn-off  { background:var(--nl-red-l);   color:var(--nl-red); }
+.btn-on:hover  { background:var(--nl-green); color:#fff; }
+.btn-off:hover { background:var(--nl-red);   color:#fff; }
+.btn-del {
+  width:33px; height:33px; flex:none;
+  background:rgba(220,38,38,.08); color:var(--nl-red);
+  border:none; border-radius:8px; cursor:pointer; font-size:.78rem;
+  transition:all .2s; display:flex; align-items:center; justify-content:center;
+}
+.btn-del:hover { background:var(--nl-red); color:#fff; }
+
+/* ══ Adm Buttons ══ */
+.btn-adm {
+  padding:8px 15px; border-radius:9px; border:none;
+  font-size:.8rem; font-weight:700; cursor:pointer;
+  transition:all .2s; display:inline-flex; align-items:center; gap:6px;
+  font-family:'Cairo',sans-serif;
+}
+.btn-adm-p { background:var(--adm); color:#fff; box-shadow:0 3px 12px rgba(124,58,237,.3); }
+.btn-adm-p:hover { box-shadow:0 5px 18px rgba(124,58,237,.45); transform:translateY(-1px); }
+.btn-adm-g { background:var(--nl-green); color:#fff; }
+.btn-adm-g:hover { opacity:.88; }
+.btn-adm-r { background:var(--nl-red); color:#fff; }
+.btn-adm-r:hover { opacity:.88; }
+.btn-adm-o { background:transparent; border:1.5px solid var(--border); color:var(--text); }
+.btn-adm-o:hover { border-color:var(--adm); color:var(--adm); }
+
+/* ══ Pagination ══ */
+.nl-pages { display:flex; justify-content:center; gap:5px; margin-bottom:16px; flex-wrap:wrap; }
+.pg-btn {
+  width:32px; height:32px; border:1px solid var(--border); border-radius:7px;
+  background:var(--bg-c); color:var(--text); font-size:.78rem; font-weight:600;
+  cursor:pointer; transition:all .2s; font-family:'Cairo',sans-serif;
+  display:flex; align-items:center; justify-content:center;
+}
+.pg-btn:hover  { border-color:var(--adm); color:var(--adm); }
+.pg-btn.active { background:var(--adm); color:#fff; border-color:var(--adm); }
+
+/* ══ Log Items ══ */
+.log-list { display:flex; flex-direction:column; gap:7px; }
+.log-item {
+  background:var(--bg); border-radius:9px; padding:11px 13px;
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+}
+.lt-badge, .ls-badge {
+  font-size:.68rem; font-weight:700;
+  padding:3px 8px; border-radius:20px; white-space:nowrap; flex-shrink:0;
+}
+.lt-daily   { background:var(--nl-blue-l);  color:var(--nl-blue); }
+.lt-weekly  { background:var(--adm-dim);    color:var(--adm); }
+.lt-monthly { background:var(--nl-gold-l);  color:var(--nl-gold); }
+.lt-manual  { background:rgba(100,100,100,.1); color:var(--muted); }
+.lt-project { background:var(--nl-green-l); color:var(--nl-green); }
+.ls-success { background:var(--nl-green-l); color:var(--nl-green); }
+.ls-failed  { background:var(--nl-red-l);   color:var(--nl-red); }
+.ls-partial { background:var(--nl-gold-l);  color:var(--nl-gold); }
+.log-info   { flex:1; font-size:.76rem; color:var(--muted); }
+.log-time   { font-size:.7rem; color:var(--muted); white-space:nowrap; }
+
+/* ══ Empty / Loading ══ */
+.nl-empty {
+  text-align:center; padding:40px 20px;
+  color:var(--muted); grid-column:1/-1;
+}
+.nl-empty .ei { font-size:2.2rem; margin-bottom:8px; }
+.nl-spinner {
+  width:28px; height:28px;
+  border:3px solid var(--border); border-top-color:var(--adm);
+  border-radius:50%; animation:spin .7s linear infinite; margin:0 auto 8px;
+}
+.nl-loading { text-align:center; padding:28px; color:var(--muted); grid-column:1/-1; }
+@keyframes spin { to { transform:rotate(360deg); } }
+
+/* ══ Modal ══ */
+.nl-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:1000;
+  display:flex; align-items:center; justify-content:center; padding:16px;
+  opacity:0; pointer-events:none; transition:opacity .25s;
+}
+.nl-overlay.open { opacity:1; pointer-events:all; }
+.nl-modal {
+  background:var(--bg-c); border-radius:16px;
+  width:100%; max-width:520px; max-height:90vh; overflow-y:auto;
+  box-shadow:var(--sh-lg); transform:translateY(20px); transition:transform .25s;
+}
+.nl-overlay.open .nl-modal { transform:translateY(0); }
+.nl-modal-head {
+  padding:16px 18px; border-bottom:1px solid var(--border);
+  display:flex; justify-content:space-between; align-items:center;
+}
+.nl-modal-title { font-size:.95rem; font-weight:700; color:var(--text); }
+.nl-modal-body  { padding:18px; }
+.nl-modal-foot  {
+  padding:12px 18px; border-top:1px solid var(--border);
+  display:flex; gap:8px; justify-content:flex-end;
+}
+.btn-close-modal {
+  background:none; border:none; font-size:1.1rem;
+  cursor:pointer; color:var(--muted); transition:color .2s; line-height:1;
+}
+.btn-close-modal:hover { color:var(--text); }
+
+/* ══ Step Dots ══ */
+.steps { display:flex; align-items:center; gap:5px; margin-bottom:18px; }
+.s-dot {
+  width:26px; height:26px; border-radius:50%;
+  border:2px solid var(--border); color:var(--muted);
+  font-size:.72rem; font-weight:700;
+  display:flex; align-items:center; justify-content:center; transition:all .2s;
+}
+.s-dot.active { border-color:var(--adm); background:var(--adm); color:#fff; }
+.s-dot.done   { border-color:var(--nl-green); background:var(--nl-green); color:#fff; }
+.s-line { flex:1; height:2px; background:var(--border); border-radius:2px; }
+.s-line.done { background:var(--nl-green); }
+
+/* ══ Type Cards ══ */
+.type-grid { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+.type-card {
+  border:2px solid var(--border); border-radius:11px; padding:13px;
+  cursor:pointer; transition:all .2s; text-align:center;
+}
+.type-card:hover    { border-color:rgba(124,58,237,.4); }
+.type-card.selected { border-color:var(--adm); background:var(--adm-dim); }
+.tc-ico  { font-size:1.5rem; margin-bottom:5px; }
+.tc-name { font-size:.8rem; font-weight:700; color:var(--text); }
+.tc-desc { font-size:.67rem; color:var(--muted); margin-top:1px; }
+
+/* ══ Custom List ══ */
+.c-sub-list {
+  max-height:200px; overflow-y:auto;
+  border:1px solid var(--border); border-radius:8px; padding:5px;
+}
+.c-sub-item {
+  display:flex; align-items:center; gap:7px;
+  padding:6px 8px; border-radius:6px; cursor:pointer; transition:background .15s;
+}
+.c-sub-item:hover { background:var(--adm-dim2); }
+.c-sub-item label { font-size:.78rem; color:var(--text); cursor:pointer; flex:1; }
+.c-sub-item input { accent-color:var(--adm); }
+
+/* ══ Confirm Box ══ */
+.confirm-box {
+  background:var(--nl-gold-l); border:1px solid rgba(217,119,6,.2);
+  border-radius:9px; padding:13px; margin-bottom:13px;
+  font-size:.8rem; color:var(--nl-gold);
+}
+.test-box {
+  background:var(--bg); border:1px solid var(--border);
+  border-radius:8px; padding:11px;
+  display:flex; align-items:flex-start; gap:8px; cursor:pointer;
+}
+.test-box label { cursor:pointer; }
+.test-box .tb-title { font-size:.8rem; font-weight:700; color:var(--text); }
+.test-box .tb-desc  { font-size:.7rem; color:var(--muted); margin-top:1px; }
+
+/* ══ Responsive ══ */
+@media(max-width:576px) {
+  .nl-header  { flex-direction:column; }
+  .nl-actions { width:100%; }
+  .nl-actions .btn-adm { flex:1; justify-content:center; }
+  .stats-grid { grid-template-columns:1fr 1fr; }
+  .type-grid  { grid-template-columns:1fr 1fr; }
+  .subs-grid  { grid-template-columns:1fr; }
+  .log-item   { flex-direction:column; align-items:flex-start; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+{% csrf_token %}
+<div class="nl-wrap" dir="rtl">
+
+  {# ── Header ── #}
+  <div class="nl-header">
+    <div class="nl-title">
+      <div class="nl-title-icon">📧</div>
+      <div>
+        <div>النشرة البريدية</div>
+        <div class="nl-subtitle">إدارة المشتركين والإرسال التلقائي</div>
+      </div>
+    </div>
+    <div class="nl-actions">
+      <button class="btn-adm btn-adm-p" onclick="openSendModal()">✈️ إرسال يدوي</button>
+      <button class="btn-adm {% if nl_settings.is_enabled %}btn-adm-r{% else %}btn-adm-g{% endif %}"
+              id="masterBtn" onclick="toggleMaster()">
+        {% if nl_settings.is_enabled %}⏸ إيقاف الإرسال{% else %}▶️ تفعيل الإرسال{% endif %}
+      </button>
+    </div>
+  </div>
+
+  {# ── System Banner ── #}
+  <div class="system-banner {% if nl_settings.is_enabled %}on{% else %}off{% endif %}" id="sysBanner">
+    {% if nl_settings.is_enabled %}
+      ✅ نظام الإرسال التلقائي مفعّل — ستُرسل النشرات في أوقاتها المحددة
+    {% else %}
+      ⛔ نظام الإرسال التلقائي موقوف — لن تُرسل أي نشرات تلقائياً
+    {% endif %}
+  </div>
+
+  {# ── Stats ── #}
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon" style="background:var(--adm-dim)">📊</div>
+      <div class="stat-num">{{ stats.total|default:0 }}</div>
+      <div class="stat-lbl">إجمالي المشتركين</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background:var(--nl-green-l)">✅</div>
+      <div class="stat-num" style="color:var(--nl-green)">{{ stats.active|default:0 }}</div>
+      <div class="stat-lbl">نشط</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background:var(--nl-red-l)">🚫</div>
+      <div class="stat-num" style="color:var(--nl-red)">{{ stats.inactive|default:0 }}</div>
+      <div class="stat-lbl">موقوف</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background:var(--nl-blue-l)">📅</div>
+      <div class="stat-num" style="color:var(--nl-blue)">{{ stats.daily|default:0 }}</div>
+      <div class="stat-lbl">يومي</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background:var(--adm-dim)">📆</div>
+      <div class="stat-num" style="color:var(--adm)">{{ stats.weekly|default:0 }}</div>
+      <div class="stat-lbl">أسبوعي</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background:var(--nl-gold-l)">🗓️</div>
+      <div class="stat-num" style="color:var(--nl-gold)">{{ stats.monthly|default:0 }}</div>
+      <div class="stat-lbl">شهري</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background:var(--nl-green-l)">📤</div>
+      <div class="stat-num" style="color:var(--nl-green)">{{ stats.total_sent|default:0 }}</div>
+      <div class="stat-lbl">إجمالي المُرسَل</div>
+    </div>
+    {% if last_log %}
+    <div class="stat-card">
+      <div class="stat-icon" style="background:rgba(100,100,100,.08)">🕐</div>
+      <div class="stat-num" style="font-size:1rem">{{ last_log.created_at|date:"m/d" }}</div>
+      <div class="stat-lbl">آخر إرسال</div>
+    </div>
+    {% endif %}
+  </div>
+
+  {# ── الجدولة ── #}
+  <div class="nl-card">
+    <div class="nl-card-title">⏰ إعدادات الإرسال التلقائي</div>
+    <div class="schedule-grid">
+      <div class="sch-item">
+        <div>
+          <div class="sch-lbl">📅 يومي</div>
+          <div class="sch-desc">كل يوم 4:00 عصراً</div>
+        </div>
+        <label class="nl-sw">
+          <input type="checkbox" {% if nl_settings.daily_enabled %}checked{% endif %}
+                 onchange="toggleSetting('daily_enabled',this)">
+          <span class="nl-sl"></span>
+        </label>
+      </div>
+      <div class="sch-item">
+        <div>
+          <div class="sch-lbl">📆 أسبوعي</div>
+          <div class="sch-desc">كل سبت 12:00 ليلاً</div>
+        </div>
+        <label class="nl-sw">
+          <input type="checkbox" {% if nl_settings.weekly_enabled %}checked{% endif %}
+                 onchange="toggleSetting('weekly_enabled',this)">
+          <span class="nl-sl"></span>
+        </label>
+      </div>
+      <div class="sch-item">
+        <div>
+          <div class="sch-lbl">🗓️ شهري</div>
+          <div class="sch-desc">أول كل شهر 12:00 ليلاً</div>
+        </div>
+        <label class="nl-sw">
+          <input type="checkbox" {% if nl_settings.monthly_enabled %}checked{% endif %}
+                 onchange="toggleSetting('monthly_enabled',this)">
+          <span class="nl-sl"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  {# ── بحث وفلتر ── #}
+  <div class="filter-bar">
+    <input type="text" id="searchInput" placeholder="🔍 بحث بالإيميل أو الاسم..."
+           oninput="debouncedLoad()">
+    <select id="statusFilter" onchange="loadSubs()">
+      <option value="">كل الحالات</option>
+      <option value="active">✅ نشط</option>
+      <option value="inactive">🚫 موقوف</option>
+    </select>
+    <select id="freqFilter" onchange="loadSubs()">
+      <option value="">كل الأنواع</option>
+      <option value="daily">يومي</option>
+      <option value="weekly">أسبوعي</option>
+      <option value="monthly">شهري</option>
+    </select>
+  </div>
+
+  {# ── شبكة المشتركين ── #}
+  <div class="subs-grid" id="subsGrid">
+    <div class="nl-loading"><div class="nl-spinner"></div>جار التحميل...</div>
+  </div>
+  <div class="nl-pages" id="nlPages"></div>
+
+  {# ── سجل العمليات ── #}
+<div class="nl-card">
+  <div class="nl-card-title">📋 سجل عمليات الإرسال</div>
+  <div id="logsList" class="log-list">
+    <div class="nl-loading"><div class="nl-spinner"></div>جار التحميل...</div>
+  </div>
+  <div class="nl-pages" id="logsPages" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)"></div>
+</div>
+
+
+{# ══ Modal الإرسال اليدوي ══ #}
+<div class="nl-overlay" id="nlOverlay" onclick="closeOutside(event)">
+  <div class="nl-modal">
+    <div class="nl-modal-head">
+      <div class="nl-modal-title">✈️ إرسال يدوي للنشرة</div>
+      <button class="btn-close-modal" onclick="closeModal()">✕</button>
+    </div>
+    <div class="nl-modal-body">
+
+      {# Steps #}
+      <div class="steps">
+        <div class="s-dot active" id="d1">1</div>
+        <div class="s-line" id="l1"></div>
+        <div class="s-dot" id="d2">2</div>
+        <div class="s-line" id="l2"></div>
+        <div class="s-dot" id="d3">3</div>
+      </div>
+
+      {# Step 1 #}
+      <div id="step1">
+        <div style="font-size:.8rem;font-weight:700;color:var(--muted);margin-bottom:11px">اختر نوع النشرة</div>
+        <div class="type-grid">
+          <div class="type-card" onclick="pickType('daily',this)">
+            <div class="tc-ico">📅</div>
+            <div class="tc-name">يومي</div>
+            <div class="tc-desc">آخر 24 ساعة</div>
+          </div>
+          <div class="type-card" onclick="pickType('weekly',this)">
+            <div class="tc-ico">📆</div>
+            <div class="tc-name">أسبوعي</div>
+            <div class="tc-desc">آخر 7 أيام</div>
+          </div>
+          <div class="type-card" onclick="pickType('monthly',this)">
+            <div class="tc-ico">🗓️</div>
+            <div class="tc-name">شهري</div>
+            <div class="tc-desc">الشهر الحالي</div>
+          </div>
+          <div class="type-card" onclick="pickType('manual',this)">
+            <div class="tc-ico">📢</div>
+            <div class="tc-name">كامل</div>
+            <div class="tc-desc">كل المحتوى</div>
+          </div>
+        </div>
+      </div>
+
+      {# Step 2 #}
+      <div id="step2" style="display:none">
+        <div style="font-size:.8rem;font-weight:700;color:var(--muted);margin-bottom:11px">حدد المستلمين</div>
+        <div style="display:flex;gap:14px;margin-bottom:12px">
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:.82rem;font-weight:600;color:var(--text)">
+            <input type="radio" name="targets" value="all" checked onchange="showCustom()" style="accent-color:var(--adm)">
+            الكل
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:.82rem;font-weight:600;color:var(--text)">
+            <input type="radio" name="targets" value="custom" onchange="showCustom()" style="accent-color:var(--adm)">
+            مخصص
+          </label>
+        </div>
+        <div id="customWrap" style="display:none">
+          <input type="text" id="cSearch" placeholder="🔍 بحث..."
+                 oninput="filterCustom()"
+                 style="width:100%;padding:7px 11px;border:1px solid var(--border);border-radius:8px;
+                        background:var(--bg);color:var(--text);font-size:.78rem;
+                        font-family:'Cairo',sans-serif;outline:none;margin-bottom:7px">
+          <div class="c-sub-list" id="cSubList">
+            <div style="text-align:center;padding:14px;color:var(--muted);font-size:.78rem">
+              <div class="nl-spinner" style="width:22px;height:22px;margin:0 auto 5px"></div>
+              جار التحميل...
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {# Step 3 #}
+      <div id="step3" style="display:none">
+        <div class="confirm-box">
+          ⚠️ سيتم إرسال النشرة إلى <strong id="confCount">—</strong> مشترك
+        </div>
+        <div class="test-box" onclick="document.getElementById('testOnly').click()">
+          <input type="checkbox" id="testOnly" style="accent-color:var(--adm);margin-top:2px;flex-shrink:0"
+                 onclick="event.stopPropagation()">
+          <label onclick="event.preventDefault()">
+            <div class="tb-title">إرسال تجريبي لي فقط أولاً</div>
+            <div class="tb-desc">ستصلك الرسالة على إيميلك قبل الإرسال للجميع</div>
+          </label>
+        </div>
+      </div>
+
+    </div>
+    <div class="nl-modal-foot">
+      <button class="btn-adm btn-adm-o" id="prevBtn" onclick="prevStep()" style="display:none">السابق</button>
+      <button class="btn-adm btn-adm-p" id="nextBtn" onclick="nextStep()">التالي ←</button>
+    </div>
+  </div>
+</div>
+<div class="nl-overlay" id="recpOverlay" onclick="closeRecpOutside(event)">
+  <div class="nl-modal">
+    <div class="nl-modal-head">
+      <div class="nl-modal-title">👥 المرسل إليهم</div>
+      <button class="btn-close-modal" onclick="closeRecp()">✕</button>
+    </div>
+    <div class="nl-modal-body">
+      <input type="text" id="recpSearch" placeholder="🔍 بحث بالإيميل..."
+             oninput="searchRecipients()"
+             style="width:100%;padding:7px 11px;border:1px solid var(--border);
+                    border-radius:8px;background:var(--bg);color:var(--text);
+                    font-size:.8rem;font-family:'Cairo',sans-serif;
+                    outline:none;margin-bottom:12px">
+      <div id="recpList" style="max-height:400px;overflow-y:auto">
+        <div class="nl-loading"><div class="nl-spinner"></div>جار التحميل...</div>
+      </div>
+      <div id="recpTotal" style="font-size:.75rem;color:var(--muted);margin-top:8px;text-align:center"></div>
+    </div>
+  </div>
+</div>
+ {# ══ Result Modal ══ #}
+<div class="nl-overlay" id="resultOverlay" onclick="closeResult(event)">
+  <div class="nl-modal" style="max-width:380px;text-align:center">
+    <div class="nl-modal-body" style="padding:32px 24px">
+      <div id="resultIcon" style="font-size:3rem;margin-bottom:12px"></div>
+      <div id="resultTitle" style="font-size:1.1rem;font-weight:800;color:var(--text);margin-bottom:8px"></div>
+      <div id="resultMsg" style="font-size:.85rem;color:var(--muted);line-height:1.6"></div>
+      <button class="btn-adm btn-adm-p" onclick="closeResultModal()"
+              style="margin-top:20px;width:100%;justify-content:center">
+        حسناً
+      </button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+'use strict';
+const CSRF = document.querySelector('[name=csrfmiddlewaretoken]')?.value || '';
+let step = 1, selType = '', allSubs = [], srTimer;
+
+// ── Load Subscribers ──
+function loadSubs(page = 1) {
+  const grid = document.getElementById('subsGrid');
+  grid.innerHTML = '<div class="nl-loading"><div class="nl-spinner"></div>جار التحميل...</div>';
+  const q = document.getElementById('searchInput').value.trim();
+  const s = document.getElementById('statusFilter').value;
+  const f = document.getElementById('freqFilter').value;
+  fetch(`{% url 'admin_panel:newsletter_data' %}?q=${encodeURIComponent(q)}&status=${s}&frequency=${f}&page=${page}`)
+    .then(r=>r.json())
+    .then(d=>{ renderCards(d.subscribers||[]); renderPages(d.pages||1,d.current||1); })
+    .catch(()=>{ grid.innerHTML='<div class="nl-empty"><div class="ei">⚠️</div>تعذّر التحميل</div>'; });
+}
+function debouncedLoad(){ clearTimeout(srTimer); srTimer=setTimeout(loadSubs,320); }
+
+function renderCards(subs){
+  const g = document.getElementById('subsGrid');
+  if(!subs.length){ g.innerHTML='<div class="nl-empty"><div class="ei">📭</div>لا توجد نتائج</div>'; return; }
+  g.innerHTML = subs.map(s=>`
+    <div class="sub-card" id="sc-${s.id}">
+      <div class="sub-email">${esc(s.email)}</div>
+      <div class="sub-name">${esc(s.name||'—')}</div>
+
+      <div class="sub-stats">
+        <div class="ss-item"><div class="ss-num" style="color:var(--nl-blue)">${s.daily_sent}</div><div class="ss-lbl">يومي</div></div>
+        <div class="ss-item"><div class="ss-num" style="color:var(--adm)">${s.weekly_sent}</div><div class="ss-lbl">أسبوعي</div></div>
+        <div class="ss-item"><div class="ss-num" style="color:var(--nl-gold)">${s.monthly_sent}</div><div class="ss-lbl">شهري</div></div>
+      </div>
+      <div class="sub-meta">
+        <span>📅 ${s.subscribed_at}</span>
+        <span class="freq-pill">${s.frequency}</span>
+      </div>
+      <div class="sub-acts">
+        <button class="btn-nl ${s.is_active?'btn-on':'btn-off'}" onclick="toggleSub(${s.id},this)">
+          ${s.is_active?'✅ نشط':'🚫 موقوف'}
+        </button>
+        <button class="btn-del" onclick="delSub(${s.id},'${esc(s.email)}')" title="حذف">🗑️</button>
+      </div>
+    </div>`).join('');
+}
+
+function renderPages(pages,cur){
+  const d=document.getElementById('nlPages');
+  if(pages<=1){d.innerHTML='';return;}
+  d.innerHTML=[...Array(pages)].map((_,i)=>
+    `<button class="pg-btn ${i+1===cur?'active':''}" onclick="loadSubs(${i+1})">${i+1}</button>`
+  ).join('');
+}
+
+// ── Toggle Subscriber ──
+async function toggleSub(id,btn){
+  const fd=new FormData(); fd.append('id',id);
+  const r=await fetch('{% url "admin_panel:newsletter_toggle" %}',{method:'POST',headers:{'X-CSRFToken':CSRF},body:fd});
+  const d=await r.json();
+  if(d.success){
+    btn.className=`btn-nl ${d.is_active?'btn-on':'btn-off'}`;
+    btn.textContent=d.is_active?'✅ نشط':'🚫 موقوف';
+  }
+}
+
+// ── Delete Subscriber ──
+async function delSub(id,email){
+  if(!confirm(`هل تريد حذف ${email}؟`))return;
+  const fd=new FormData(); fd.append('id',id);
+  const r=await fetch('{% url "admin_panel:newsletter_delete" %}',{method:'POST',headers:{'X-CSRFToken':CSRF},body:fd});
+  const d=await r.json();
+  if(d.success){
+    const c=document.getElementById(`sc-${id}`);
+    if(c){c.style.cssText='opacity:0;transform:scale(.94);transition:.3s';setTimeout(()=>c.remove(),320);}
+    showResult('success', 'تم الحذف', 'تم حذف المشترك بنجاح');
+  }
+}
+
+// ── Toggle Setting ──
+async function toggleSetting(field,el){
+  const r=await fetch('{% url "admin_panel:newsletter_settings" %}',{
+    method:'POST',headers:{'X-CSRFToken':CSRF,'Content-Type':'application/json'},
+    body:JSON.stringify({field})
+  });
+    const d=await r.json();
+    if(!d.success){el.checked=!el.checked;showResult('error','حدث خطأ','تعذّر تغيير الإعداد');}
+    else showResult('success','تم الحفظ','تم تحديث الإعداد بنجاح');
+}
+
+// ── Master Toggle ──
+async function toggleMaster(){
+  const fd=new FormData();
+  const r=await fetch('{% url "admin_panel:newsletter_settings" %}',{
+    method:'POST',headers:{'X-CSRFToken':CSRF,'Content-Type':'application/json'},
+    body:JSON.stringify({field:'is_enabled'})
+  });
+  const d=await r.json();
+  if(d.success) location.reload();
+}
+
+// ══ Modal ══
+function openSendModal(){ step=1;selType='';showStep(1);document.getElementById('nlOverlay').classList.add('open'); }
+function closeModal()   { document.getElementById('nlOverlay').classList.remove('open'); }
+function closeOutside(e){ if(e.target===document.getElementById('nlOverlay'))closeModal(); }
+function pickType(t,el){
+  selType=t;
+  document.querySelectorAll('.type-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function showCustom(){
+  document.getElementById('customWrap').style.display=
+    document.querySelector('[name=targets]:checked').value==='custom'?'':'none';
+}
+function filterCustom(){
+  const q=document.getElementById('cSearch').value.toLowerCase();
+  renderCustom(allSubs.filter(s=>s.email.toLowerCase().includes(q)));
+}
+function renderCustom(subs){
+  document.getElementById('cSubList').innerHTML=subs.map(s=>`
+    <div class="c-sub-item">
+      <input type="checkbox" value="${s.id}" id="c-${s.id}" style="accent-color:var(--adm)">
+      <label for="c-${s.id}">${esc(s.email)} <span style="color:var(--muted);font-size:.68rem">${s.frequency}</span></label>
+    </div>`).join('')||'<div style="text-align:center;padding:10px;color:var(--muted);font-size:.78rem">لا نتائج</div>';
+}
+
+async function nextStep(){
+  if(step===1){
+    if(!selType){showResult('warning','تنبيه','اختر نوع النشرة أولاً');return;}
+    const r=await fetch('{% url "admin_panel:newsletter_data" %}?status=active&page=1');
+    const d=await r.json(); allSubs=d.subscribers||[];
+    renderCustom(allSubs); showStep(2);
+  } else if(step===2){
+    const t=document.querySelector('[name=targets]:checked').value;
+    const cnt=t==='all'?allSubs.length:document.querySelectorAll('#cSubList input:checked').length;
+    document.getElementById('confCount').textContent=cnt; showStep(3);
+  } else { await doSend(); }
+}
+function prevStep(){ showStep(step-1); }
+function showStep(n){
+  step=n;
+  [1,2,3].forEach(i=>{
+    document.getElementById(`step${i}`).style.display=i===n?'':'none';
+    const dot=document.getElementById(`d${i}`);
+    dot.classList.toggle('active',i===n); dot.classList.toggle('done',i<n);
+    if(i<3) document.getElementById(`l${i}`)?.classList.toggle('done',i<n);
+  });
+  document.getElementById('prevBtn').style.display=n>1?'':'none';
+  document.getElementById('nextBtn').textContent=n===3?'🚀 إرسال الآن':'التالي ←';
+}
+
+async function doSend(){
+  const btn=document.getElementById('nextBtn');
+  btn.disabled=true; btn.innerHTML='⏳ جار الإرسال...';
+  const targets=document.querySelector('[name=targets]:checked').value;
+  const testOnly=document.getElementById('testOnly').checked;
+  const ids=targets==='custom'?[...document.querySelectorAll('#cSubList input:checked')].map(i=>i.value):[];
+  try{
+    const r=await fetch('{% url "admin_panel:newsletter_send" %}',{
+      method:'POST',headers:{'X-CSRFToken':CSRF,'Content-Type':'application/json'},
+      body:JSON.stringify({type:selType,targets,subscriber_ids:ids,test_only:testOnly})
+    });
+    const d=await r.json();
+    closeModal();
+    showResult(d.success?'success':'error', d.success?'تم الإرسال':'حدث خطأ', d.message||'');
+    if(d.success&&!testOnly)setTimeout(()=>location.reload(),1500);
+  }catch(e){ showResult('error','خطأ في الاتصال','تعذّر الاتصال بالسيرفر، يرجى المحاولة مجدداً'); }
+  finally{ btn.disabled=false; btn.innerHTML='🚀 إرسال الآن'; }
+}
+// ── Recipients Modal ──
+let recpLogId = null, recpTimer;
+
+function openRecipients(logId) {
+  recpLogId = logId;
+  document.getElementById('recpSearch').value = '';
+  document.getElementById('recpOverlay').classList.add('open');
+  fetchRecipients();
+}
+function closeRecp() { document.getElementById('recpOverlay').classList.remove('open'); }
+function closeRecpOutside(e) { if(e.target===document.getElementById('recpOverlay'))closeRecp(); }
+
+function searchRecipients() {
+  clearTimeout(recpTimer);
+  recpTimer = setTimeout(fetchRecipients, 300);
+}
+
+async function fetchRecipients() {
+  const q    = document.getElementById('recpSearch').value.trim();
+  const list = document.getElementById('recpList');
+  list.innerHTML = '<div class="nl-loading"><div class="nl-spinner"></div>جار التحميل...</div>';
+  try {
+    const res  = await fetch(`/admin-panel/newsletter/recipients/${recpLogId}/?q=${encodeURIComponent(q)}`);
+    const data = await res.json();
+    document.getElementById('recpTotal').textContent = `إجمالي: ${data.total} مستلم`;
+    if (!data.recipients.length) {
+      list.innerHTML = '<div class="nl-empty"><div class="ei">📭</div>لا توجد نتائج</div>';
+      return;
+    }
+    list.innerHTML = data.recipients.map(r => `
+      <div style="display:flex;align-items:center;justify-content:space-between;
+                  padding:8px 10px;border-radius:8px;border-bottom:1px solid var(--border)">
+        <div>
+          <div style="font-size:.82rem;font-weight:600;color:var(--text)">${esc(r.email)}</div>
+          <div style="font-size:.7rem;color:var(--muted)">${esc(r.name||'—')} · ${r.sent_at}</div>
+        </div>
+        <span style="font-size:.7rem;font-weight:700;padding:2px 7px;border-radius:20px;
+                     ${r.success?'background:var(--nl-green-l);color:var(--nl-green)':'background:var(--nl-red-l);color:var(--nl-red)'}">
+          ${r.success?'✅ نجح':'❌ فشل'}
+        </span>
+      </div>`).join('');
+  } catch(e) {
+    list.innerHTML = '<div class="nl-empty"><div class="ei">⚠️</div>تعذّر التحميل</div>';
+  }
+}
+// ── Logs Pagination ──
+function loadLogs(page = 1) {
+  const list = document.getElementById('logsList');
+  list.innerHTML = '<div class="nl-loading"><div class="nl-spinner"></div>جار التحميل...</div>';
+
+  fetch(`{% url 'admin_panel:newsletter_logs_pages' %}?page=${page}`)
+    .then(r => r.json())
+    .then(data => {
+      if (!data.logs.length) {
+        list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:.8rem">لا توجد سجلات</div>';
+        document.getElementById('logsPages').innerHTML = '';
+        return;
+      }
+
+      const typeClass = { daily:'lt-daily', weekly:'lt-weekly', monthly:'lt-monthly', manual:'lt-manual', project:'lt-project' };
+      const statClass = { success:'ls-success', failed:'ls-failed', partial:'ls-partial' };
+
+      list.innerHTML = data.logs.map(log => `
+        <div class="log-item">
+          <span class="lt-badge ${typeClass[log.send_type]||'lt-manual'}">${log.type_label}</span>
+          <span class="ls-badge ${statClass[log.status]||'ls-failed'}">${log.status_label}</span>
+          <div class="log-info">
+            أُرسل لـ <strong>${log.total_sent}</strong> |
+            فشل <strong>${log.total_failed}</strong> |
+            ألغى <strong>${log.unsubscribed}</strong>
+            — ${log.is_auto ? '🤖 تلقائي' : '👤 ' + esc(log.sent_by)}
+          </div>
+          <div class="log-time">${log.created_at}</div>
+          <button class="btn-adm btn-adm-o" style="padding:4px 10px;font-size:.72rem"
+                  onclick="openRecipients(${log.id})">
+            👥 المستلمون
+          </button>
+        </div>
+      `).join('');
+
+      // Pagination
+      const pages = document.getElementById('logsPages');
+      if (data.pages <= 1) { pages.innerHTML = ''; return; }
+
+      let html = '';
+      if (data.current > 1)
+        html += `<button class="pg-btn" onclick="loadLogs(${data.current - 1})">‹</button>`;
+      for (let i = 1; i <= data.pages; i++) {
+        if (i >= data.current - 2 && i <= data.current + 2)
+          html += `<button class="pg-btn ${i === data.current ? 'active' : ''}"
+                           onclick="loadLogs(${i})">${i}</button>`;
+      }
+      if (data.current < data.pages)
+        html += `<button class="pg-btn" onclick="loadLogs(${data.current + 1})">›</button>`;
+      pages.innerHTML = html;
+    })
+    .catch(() => {
+      list.innerHTML = '<div class="nl-empty"><div class="ei">⚠️</div>تعذّر التحميل</div>';
+    });
+}
+// ── Result Modal ──
+function showResult(type, title, msg) {
+  const icons = { success:'✅', error:'❌', warning:'⚠️', info:'📌' };
+  document.getElementById('resultIcon').textContent  = icons[type] || '📌';
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultMsg').textContent   = msg || '';
+  document.getElementById('resultOverlay').classList.add('open');
+}
+function closeResultModal() {
+  document.getElementById('resultOverlay').classList.remove('open');
+}
+function closeResult(e) {
+  if (e.target === document.getElementById('resultOverlay')) closeResultModal();
+}
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+// ── تحميل عند فتح الصفحة ──
+document.addEventListener('DOMContentLoaded', () => {
+  loadSubs();
+  loadLogs();
+});
+
+</script>
+{% endblock %}

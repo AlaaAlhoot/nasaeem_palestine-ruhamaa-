@@ -1,0 +1,1553 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-10-21 10:57+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#: .\admin.py:34
+msgid "معلومات المرسل"
+msgstr "Sender Information"
+
+#: .\admin.py:37
+msgid "محتوى الرسالة"
+msgstr "Message Content"
+
+#: .\admin.py:40
+msgid "الإدارة"
+msgstr "Management"
+
+#: .\admin.py:44 .\admin.py:181
+msgid "معلومات تقنية"
+msgstr "Technical Information"
+
+#: .\admin.py:72 .\admin.py:211 .\admin.py:312 .\admin.py:386 .\admin.py:442
+#: .\forms.py:346 .\models.py:37
+msgid "الحالة"
+msgstr "Status"
+
+#: .\admin.py:88 .\forms.py:353 .\models.py:38
+msgid "الأولوية"
+msgstr "Priority"
+
+#: .\admin.py:95
+msgid "معاينة الرسالة"
+msgstr "Message Preview"
+
+#: .\admin.py:103
+msgid "إجراءات"
+msgstr "Actions"
+
+#: .\admin.py:109
+msgid "تحديد كمقروءة"
+msgstr "Mark as Read"
+
+#: .\admin.py:118
+msgid "تحديد كتم الرد عليها"
+msgstr "Mark as No Reply"
+
+#: .\admin.py:123
+msgid "إغلاق الرسائل"
+msgstr "Close Messages"
+
+#: .\admin.py:128
+msgid "أولوية عالية"
+msgstr "High Priority"
+
+#: .\admin.py:148
+msgid "تصدير كـ CSV"
+msgstr "Export as CSV"
+
+#: .\admin.py:171
+msgid "معلومات المشترك"
+msgstr "Subscriber Information"
+
+#: .\admin.py:174
+msgid "تفضيلات الاشتراك"
+msgstr "Subscription Preferences"
+
+#: .\admin.py:177 .\admin.py:269 .\admin.py:413
+msgid "إحصائيات"
+msgstr "Statistics"
+
+#: .\admin.py:201
+msgid "التكرار"
+msgstr "Frequency"
+
+#: .\admin.py:221
+msgid "التأكيد"
+msgstr "Confirmation"
+
+#: .\admin.py:231 .\admin.py:452
+msgid "الإحصائيات"
+msgstr "Statistics"
+
+#: .\admin.py:236
+msgid "تفعيل الاشتراكات"
+msgstr "Activate Subscriptions"
+
+#: .\admin.py:241
+msgid "إلغاء تفعيل الاشتراكات"
+msgstr "Deactivate Subscriptions"
+
+#: .\admin.py:248
+msgid "تصدير البريد الإلكتروني"
+msgstr "Export Emails"
+
+#: .\admin.py:263
+msgid "معلومات المنصة"
+msgstr "Platform Information"
+
+#: .\admin.py:266 .\admin.py:340
+msgid "إعدادات العرض"
+msgstr "Display Settings"
+
+#: .\admin.py:295 .\models.py:170
+msgid "المنصة"
+msgstr "Platform"
+
+#: .\admin.py:302
+msgid "الرابط"
+msgstr "Link"
+
+#: .\admin.py:322
+msgid "النقرات"
+msgstr "Clicks"
+
+#: .\admin.py:337
+msgid "المعلومات الأساسية"
+msgstr "Basic Information"
+
+#: .\admin.py:360 .\models.py:216
+msgid "النوع"
+msgstr "Type"
+
+#: .\admin.py:365 .\models.py:218
+msgid "القيمة"
+msgstr "Value"
+
+#: .\admin.py:376
+msgid "مواقع العرض"
+msgstr "Display Locations"
+
+#: .\admin.py:401
+msgid "الأسئلة"
+msgstr "Questions"
+
+#: .\admin.py:404
+msgid "الإجابات"
+msgstr "Answers"
+
+#: .\admin.py:407 .\models.py:263
+msgid "التصنيف"
+msgstr "Category"
+
+#: .\admin.py:410
+msgid "إعدادات"
+msgstr "Settings"
+
+#: .\admin.py:422
+msgid "السؤال"
+msgstr "Question"
+
+#: .\admin.py:432 .\forms.py:620
+msgid "الفئة"
+msgstr "Category"
+
+#: .\apps.py:11
+msgid "التواصل والاتصال"
+msgstr "Communication and Contact"
+
+#: .\context_processors.py:30
+msgid "الرئيسية"
+msgstr "Home"
+
+#: .\context_processors.py:34 .\views.py:212 .\views.py:224
+msgid "تواصل معنا"
+msgstr "Contact Us"
+
+#: .\context_processors.py:37 .\models.py:280 .\views.py:472 .\views.py:487
+msgid "الأسئلة الشائعة"
+msgstr "Frequently Asked Questions"
+
+#: .\context_processors.py:39
+msgid "النشرة البريدية"
+msgstr "Newsletter"
+
+#: .\context_processors.py:192 .\forms.py:451
+msgid "المشاريع والبرامج"
+msgstr "Projects and Programs"
+
+#: .\context_processors.py:193 .\forms.py:452
+msgid "الأخبار والفعاليات"
+msgstr "News and Events"
+
+#: .\context_processors.py:194 .\forms.py:453
+msgid "فرص التطوع"
+msgstr "Volunteer Opportunities"
+
+#: .\context_processors.py:195 .\forms.py:454
+msgid "حملات التبرع"
+msgstr "Donation Campaigns"
+
+#: .\forms.py:20
+msgid "اكتب اسمك الكامل"
+msgstr "Write your full name"
+
+#: .\forms.py:26 .\forms.py:259
+msgid "Enter your email"
+msgstr "Enter your email"
+
+#: .\forms.py:32
+msgid "رقم الهاتف (اختياري)"
+msgstr "Phone number (optional)"
+
+#: .\forms.py:38
+msgid "موضوع الرسالة"
+msgstr "Message subject"
+
+#: .\forms.py:44
+msgid "اكتب رسالتك هنا..."
+msgstr "Write your message here..."
+
+#: .\forms.py:56
+msgid "الاسم الكامل *"
+msgstr "Full Name *"
+
+#: .\forms.py:57 .\forms.py:274
+msgid "البريد الإلكتروني *"
+msgstr "Email *"
+
+#: .\forms.py:58 .\models.py:29
+msgid "رقم الهاتف"
+msgstr "Phone Number"
+
+#: .\forms.py:59
+msgid "الموضوع *"
+msgstr "Subject *"
+
+#: .\forms.py:60
+msgid "الرسالة *"
+msgstr "Message *"
+
+#: .\forms.py:61
+msgid "مرفق (اختياري)"
+msgstr "Attachment (optional)"
+
+#: .\forms.py:65
+msgid "رقم هاتف صحيح للتواصل معك"
+msgstr "Valid phone number to contact you"
+
+#: .\forms.py:66
+msgid "اكتب تفاصيل رسالتك (حد أقصى 2000 حرف)"
+msgstr "Write your message details (maximum 2000 characters)"
+
+#: .\forms.py:67
+msgid "يمكنك إرفاق ملف (PDF, DOC, JPG, PNG) - حجم أقصى 5MB"
+msgstr "You can attach a file (PDF, DOC, JPG, PNG) - maximum size 5MB"
+
+#: .\forms.py:85
+msgid "الاسم يجب أن يكون أطول من حرفين"
+msgstr "Name must be longer than two characters"
+
+#: .\forms.py:88 .\forms.py:300
+msgid "الاسم طويل جداً"
+msgstr "Name is too long"
+
+#: .\forms.py:92
+msgid "الاسم يحتوي على أحرف غير صالحة"
+msgstr "Name contains invalid characters"
+
+#: .\forms.py:105 .\forms.py:288
+msgid "البريد الإلكتروني غير صحيح"
+msgstr "Invalid email"
+
+#: .\forms.py:114
+msgid "هذا النطاق البريدي غير مسموح"
+msgstr "This email domain is not allowed"
+
+#: .\forms.py:133
+msgid "رقم الهاتف قصير جداً"
+msgstr "Phone number is too short"
+
+#: .\forms.py:136
+msgid "رقم الهاتف طويل جداً"
+msgstr "Phone number is too long"
+
+#: .\forms.py:140
+msgid "صيغة رقم الهاتف غير صحيحة"
+msgstr "Invalid phone number format"
+
+#: .\forms.py:149
+msgid "الموضوع قصير جداً"
+msgstr "Subject is too short"
+
+#: .\forms.py:152
+msgid "الموضوع طويل جداً"
+msgstr "Subject is too long"
+
+#: .\forms.py:157
+msgid "الموضوع يحتوي على كلمات محظورة"
+msgstr "Subject contains prohibited words"
+
+#: .\forms.py:166
+msgid "الرسالة قصيرة جداً. اكتب على الأقل 10 أحرف"
+msgstr "Message is too short. Write at least 10 characters"
+
+#: .\forms.py:169
+msgid "الرسالة طويلة جداً. الحد الأقصى 2000 حرف"
+msgstr "Message is too long. Maximum 2000 characters"
+
+#: .\forms.py:173
+msgid "الرسالة تحتوي على تكرار مفرط للأحرف"
+msgstr "Message contains excessive character repetition"
+
+#: .\forms.py:185
+msgid "الرسالة تحتوي على روابط غير مسموحة"
+msgstr "Message contains unauthorized links"
+
+#: .\forms.py:199
+msgid "حجم الملف كبير جداً. الحد الأقصى 5MB"
+msgstr "File size is too large. Maximum 5MB"
+
+#: .\forms.py:213
+msgid "نوع الملف غير مدعوم. الملفات المسموحة: PDF, DOC, DOCX, JPG, PNG, GIF, TXT"
+msgstr "File type not supported. Allowed files: PDF, DOC, DOCX, JPG, PNG, GIF, TXT"
+
+#: .\forms.py:220
+msgid "امتداد الملف غير مدعوم"
+msgstr "File extension not supported"
+
+#: .\forms.py:246
+msgid "لقد أرسلت رسالة مشابهة مؤخراً. يرجى الانتظار قبل الإرسال مرة أخرى."
+msgstr "You have sent a similar message recently. Please wait before sending again."
+
+#: .\forms.py:265
+msgid "الاسم (اختياري)"
+msgstr "Name (optional)"
+
+#: .\forms.py:275 .\models.py:27 .\models.py:91
+msgid "الاسم"
+msgstr "Name"
+
+
+
+#: .\forms.py:297
+msgid "الاسم قصير جداً"
+msgstr "Name is too short"
+
+#: .\forms.py:307 .\models.py:45
+msgid "الرد"
+msgstr "Reply"
+
+#: .\forms.py:311
+msgid "اكتب ردك هنا..."
+msgstr "Write your reply here..."
+
+#: .\forms.py:318
+msgid "إرسال نسخة للإدارة"
+msgstr "Send copy to management"
+
+#: .\forms.py:325
+msgid "تحديد كمحلولة"
+msgstr "Mark as resolved"
+
+#: .\forms.py:336
+msgid "الرد قصير جداً"
+msgstr "Reply is too short"
+
+#: .\forms.py:339
+msgid "الرد طويل جداً"
+msgstr "Reply is too long"
+
+#: .\forms.py:347
+msgid "جميع الحالات"
+msgstr "All Statuses"
+
+#: .\forms.py:354
+msgid "جميع الأولويات"
+msgstr "All Priorities"
+
+#: .\forms.py:360
+msgid "من تاريخ"
+msgstr "From Date"
+
+#: .\forms.py:369
+msgid "إلى تاريخ"
+msgstr "To Date"
+
+#: .\forms.py:378 .\forms.py:609
+msgid "البحث"
+msgstr "Search"
+
+#: .\forms.py:383
+msgid "ابحث في الاسم، الإيميل، أو الموضوع..."
+msgstr "Search in name, email, or subject..."
+
+#: .\forms.py:396
+msgid "تم اكتشاف نشاط مشبوه"
+msgstr "Suspicious activity detected"
+
+#: .\forms.py:425
+msgid "أوافق على شروط الاستخدام وسياسة الخصوصية"
+msgstr "I agree to the terms of use and privacy policy"
+
+#: .\forms.py:437
+msgid "يجب الموافقة على الشروط للمتابعة"
+msgstr "You must agree to the terms to continue"
+
+#: .\forms.py:449 .\models.py:95
+msgid "المواضيع المفضلة"
+msgstr "Preferred Topics"
+
+#: .\forms.py:614
+msgid "ابحث في الأسئلة..."
+msgstr "Search in questions..."
+
+#: .\forms.py:636
+msgid "جميع الفئات"
+msgstr "All Categories"
+
+#: .\models.py:13
+msgid "جديدة"
+msgstr "New"
+
+#: .\models.py:14
+msgid "قيد القراءة"
+msgstr "Being Read"
+
+#: .\models.py:15
+msgid "تم الرد"
+msgstr "Replied"
+
+#: .\models.py:16
+msgid "مغلقة"
+msgstr "Closed"
+
+#: .\models.py:20
+msgid "منخفضة"
+msgstr "Low"
+
+#: .\models.py:21
+msgid "عادية"
+msgstr "Normal"
+
+#: .\models.py:22
+msgid "عالية"
+msgstr "High"
+
+#: .\models.py:23
+msgid "عاجلة"
+msgstr "Urgent"
+
+#: .\models.py:28 .\models.py:90
+msgid "البريد الإلكتروني"
+msgstr "Email"
+
+#: .\models.py:32
+msgid "الموضوع"
+msgstr "Subject"
+
+#: .\models.py:33
+msgid "الرسالة"
+msgstr "Message"
+
+#: .\models.py:34
+msgid "مرفق"
+msgstr "Attachment"
+
+#: .\models.py:41 .\models.py:104
+msgid "عنوان IP"
+msgstr "IP Address"
+
+#: .\models.py:42
+msgid "متصفح المستخدم"
+msgstr "User Agent"
+
+#: .\models.py:47
+msgid "تم الرد بواسطة"
+msgstr "Replied By"
+
+#: .\models.py:48
+msgid "تاريخ الرد"
+msgstr "Reply Date"
+
+#: .\models.py:51
+msgid "تاريخ الإرسال"
+msgstr "Sent Date"
+
+#: .\models.py:52 .\models.py:114 .\models.py:178 .\models.py:229 .\models.py:276
+msgid "تاريخ التحديث"
+msgstr "Update Date"
+
+#: .\models.py:55
+msgid "رسالة تواصل"
+msgstr "Contact Message"
+
+#: .\models.py:56
+msgid "رسائل التواصل"
+msgstr "Contact Messages"
+
+#: .\models.py:94 .\models.py:221 .\models.py:267
+msgid "مفعل"
+msgstr "Active"
+
+#: .\models.py:98
+msgid "يومي"
+msgstr "Daily"
+
+#: .\models.py:99
+msgid "أسبوعي"
+msgstr "Weekly"
+
+#: .\models.py:100
+msgid "شهري"
+msgstr "Monthly"
+
+#: .\models.py:105
+msgid "رمز التأكيد"
+msgstr "Confirmation Code"
+
+#: .\models.py:106
+msgid "تاريخ التأكيد"
+msgstr "Confirmation Date"
+
+#: .\models.py:109
+msgid "عدد الرسائل المرسلة"
+msgstr "Number of Sent Messages"
+
+#: .\models.py:110
+msgid "آخر رسالة"
+msgstr "Last Message"
+
+#: .\models.py:113
+msgid "تاريخ الاشتراك"
+msgstr "Subscription Date"
+
+#: .\models.py:117
+msgid "اشتراك في النشرة"
+msgstr "Newsletter Subscription"
+
+#: .\models.py:118
+msgid "اشتراكات النشرة البريدية"
+msgstr "Newsletter Subscriptions"
+
+#: .\models.py:140
+msgid "فيسبوك"
+msgstr "Facebook"
+
+#: .\models.py:141
+msgid "تويتر / X"
+msgstr "Twitter / X"
+
+#: .\models.py:142
+msgid "انستقرام"
+msgstr "Instagram"
+
+#: .\models.py:143
+msgid "لينكد إن"
+msgstr "LinkedIn"
+
+#: .\models.py:144
+msgid "يوتيوب"
+msgstr "YouTube"
+
+#: .\models.py:145
+msgid "تيك توك"
+msgstr "TikTok"
+
+#: .\models.py:146
+msgid "سناب شات"
+msgstr "Snapchat"
+
+#: .\models.py:147
+msgid "واتساب"
+msgstr "WhatsApp"
+
+#: .\models.py:148
+msgid "تليجرام"
+msgstr "Telegram"
+
+#: .\models.py:149
+msgid "بينترست"
+msgstr "Pinterest"
+
+#: .\models.py:150
+msgid "جيت هاب"
+msgstr "GitHub"
+
+#: .\models.py:151
+msgid "ديسكورد"
+msgstr "Discord"
+
+#: .\models.py:171
+msgid "اسم المستخدم"
+msgstr "Username"
+
+#: .\models.py:172
+msgid "رابط الحساب"
+msgstr "Account Link"
+
+#: .\models.py:173
+msgid "أيقونة"
+msgstr "Icon"
+
+#: .\models.py:174 .\models.py:225 .\models.py:268
+msgid "الترتيب"
+msgstr "Order"
+
+#: .\models.py:175
+msgid "مفعّل"
+msgstr "Enabled"
+
+#: .\models.py:176
+msgid "عدد النقرات"
+msgstr "Click Count"
+
+#: .\models.py:177 .\models.py:228 .\models.py:275
+msgid "تاريخ الإضافة"
+msgstr "Date Added"
+
+#: .\models.py:181
+msgid "رابط تواصل اجتماعي"
+msgstr "Social Media Link"
+
+#: .\models.py:182
+msgid "روابط التواصل الاجتماعي"
+msgstr "Social Media Links"
+
+#: .\models.py:208
+msgid "هاتف"
+msgstr "Phone"
+
+#: .\models.py:209
+msgid "بريد إلكتروني"
+msgstr "Email"
+
+#: .\models.py:210
+msgid "عنوان"
+msgstr "Address"
+
+#: .\models.py:211
+msgid "فاكس"
+msgstr "Fax"
+
+#: .\models.py:212
+msgid "صندوق بريد"
+msgstr "P.O. Box"
+
+#: .\models.py:213
+msgid "موقع إلكتروني"
+msgstr "Website"
+
+#: .\models.py:217
+msgid "التسمية"
+msgstr "Label"
+
+#: .\models.py:222
+msgid "عرض في الرأس"
+msgstr "Display in Header"
+
+#: .\models.py:223
+msgid "عرض في التذييل"
+msgstr "Display in Footer"
+
+#: .\models.py:224
+msgid "كلاس الأيقونة"
+msgstr "Icon Class"
+
+#: .\models.py:232 .\models.py:233
+msgid "معلومات التواصل"
+msgstr "Contact Information"
+
+#: .\models.py:256
+msgid "السؤال (عربي)"
+msgstr "Question (Arabic)"
+
+#: .\models.py:257
+msgid "السؤال (إنجليزي)"
+msgstr "Question (English)"
+
+#: .\models.py:259
+msgid "الإجابة (عربي)"
+msgstr "Answer (Arabic)"
+
+#: .\models.py:260
+msgid "الإجابة (إنجليزي)"
+msgstr "Answer (English)"
+
+#: .\models.py:264
+msgid "علامات"
+msgstr "Tags"
+
+#: .\models.py:264
+msgid "افصل بفاصلة"
+msgstr "Separate with commas"
+
+#: .\models.py:271
+msgid "عدد المشاهدات"
+msgstr "View Count"
+
+#: .\models.py:272
+msgid "تصويتات مفيد"
+msgstr "Helpful Votes"
+
+#: .\models.py:279
+msgid "سؤال شائع"
+msgstr "FAQ"
+
+#: .\views.py:87
+msgid "رسالة تواصل جديدة"
+msgstr "New Contact Message"
+
+#: .\views.py:118
+msgid "تم استلام رسالتك - جمعية نسائم فلسطين الخيرية"
+msgstr "Your message has been received - Palestinian Women's Charitable Association"
+
+#: .\views.py:146
+msgid "تأكيد الاشتراك في النشرة البريدية"
+msgstr "Newsletter Subscription Confirmation"
+
+#: .\views.py:201
+msgid "تم إرسال رسالتك بنجاح. سنقوم بالرد عليك في أقرب وقت ممكن."
+msgstr "Your message was sent successfully. We will reply to you as soon as possible."
+
+#: .\views.py:204
+msgid "يرجى تصحيح الأخطاء في النموذج."
+msgstr "Please correct the errors in the form."
+
+#: .\views.py:214
+msgid "تواصل مع جمعية نسائم فلسطين الخيرية. أرسل رسالتك واستفساراتك وسنقوم بالرد عليك في أقرب وقت ممكن."
+msgstr "Contact Nasaeem Palestine Charitable Association. Send your message and inquiries and we will reply to you as soon as possible."
+
+#: .\views.py:221
+msgid "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى."
+msgstr "An unexpected error occurred. Please try again."
+
+#: .\views.py:231 .\views.py:262
+msgid "تم إرسال رسالتك بنجاح"
+msgstr "Your message was sent successfully"
+
+#: .\views.py:232
+msgid "شكراً لك على التواصل معنا. سنقوم بالرد عليك قريباً."
+msgstr "Thank you for contacting us. We will reply to you soon."
+
+#: .\views.py:277
+msgid "حدث خطأ غير متوقع"
+msgstr "An unexpected error occurred"
+
+#: .\views.py:298
+msgid "الرابط غير موجود"
+msgstr "The link is not available."
+
+#: .\views.py:304
+msgid "حدث خطأ"
+msgstr "Something went wrong."
+
+#: .\views.py:326
+msgid "البريد الإلكتروني مطلوب"
+msgstr "Email is required"
+
+#: .\views.py:344
+msgid "تم تسجيل اشتراكك. يرجى تأكيد البريد الإلكتروني."
+msgstr "Your subscription has been registered. Please confirm your email."
+
+#: .\views.py:347
+msgid "تم تسجيل اشتراكك بنجاح."
+msgstr "Your subscription was registered successfully."
+
+#: .\views.py:350
+msgid "أنت مشترك بالفعل في النشرة البريدية."
+msgstr "You are already subscribed to the newsletter."
+
+#: .\views.py:354
+msgid "تم إعادة تفعيل اشتراكك."
+msgstr "Your subscription has been reactivated."
+
+#: .\views.py:364
+msgid "حدث خطأ في الاشتراك"
+msgstr "An error occurred in subscription"
+
+#: .\views.py:381
+msgid "تم تأكيد اشتراكك في النشرة البريدية بنجاح."
+msgstr "Your newsletter subscription has been confirmed successfully."
+
+#: .\views.py:383
+msgid "تم تأكيد اشتراكك مسبقاً."
+msgstr "Your subscription was confirmed previously."
+
+#: .\views.py:388
+msgid "رابط التأكيد غير صحيح أو منتهي الصلاحية."
+msgstr "Confirmation link is invalid or expired."
+
+#: .\views.py:400
+msgid "تم إلغاء اشتراكك في النشرة البريدية."
+msgstr "Your newsletter subscription has been cancelled."
+
+#: .\views.py:404
+msgid "رابط إلغاء الاشتراك غير صحيح."
+msgstr "Unsubscribe link is invalid."
+
+#: .\views.py:488
+msgid "حدث خطأ في تحميل الأسئلة الشائعة"
+msgstr "An error occurred while loading FAQs"
+
+#: .\views.py:541
+msgid "لقد قمت بالتصويت مسبقاً على هذا السؤال"
+msgstr "You have already voted on this question."
+
+#: .\views.py:559
+msgid "شكراً لك! تم تسجيل تصويتك بنجاح"
+msgstr "Thank you! Your vote has been recorded successfully"
+
+#: .\views.py:565
+msgid "السؤال غير موجود أو غير نشط"
+msgstr "The question does not exist or is inactive."
+
+#: .\views.py:571
+msgid "حدث خطأ في معالجة التصويت"
+msgstr "An error occurred while processing the vote"
+
+#: .\views.py:617
+msgid "يجب إدخال حرفين على الأقل"
+msgstr "At least two characters are required."
+
+#: .\views.py:644
+msgid "حدث خطأ في البحث"
+msgstr "An error occurred during search"
+
+msgid "اتصل بنا"
+msgstr "Contact Us"
+
+msgid "رسالة تواصل جديدة - إشعار الإدارة"
+msgstr "New Contact Message - Admin Notification"
+
+msgid "جمعية نسائم فلسطين الخيرية - نظام إدارة الرسائل"
+msgstr "Nasaeem Palestine Charity Association - Message Management System"
+
+msgid "رسالة عاجلة!"
+msgstr "Urgent Message!"
+
+msgid "يرجى الرد على هذه الرسالة في أقرب وقت ممكن."
+msgstr "Please respond to this message as soon as possible."
+
+msgid "رسالة مهمة"
+msgstr "Important Message"
+
+msgid "تحتاج إلى اهتمام خاص."
+msgstr "Requires special attention."
+
+msgid "اسم المرسل:"
+msgstr "Sender Name:"
+
+msgid "البريد الإلكتروني:"
+msgstr "Email:"
+
+msgid "رقم الهاتف:"
+msgstr "Phone:"
+
+msgid "الموضوع:"
+msgstr "Subject:"
+
+
+
+msgid "الأولوية:"
+msgstr "Priority:"
+
+msgid "رقم الرسالة:"
+msgstr "Message ID:"
+
+msgid "نص الرسالة:"
+msgstr "Message Content:"
+
+msgid "مرفق متوفر"
+msgstr "Attachment Available"
+
+msgid "يرجى تحميل المرفق من لوحة التحكم"
+msgstr "Please download the attachment from the admin panel"
+
+msgid "فتح في لوحة التحكم"
+msgstr "Open in Admin Panel"
+
+msgid "رد مباشر"
+msgstr "Direct Reply"
+
+msgid "جميع الرسائل"
+msgstr "All Messages"
+
+msgid "معلومات تقنية:"
+msgstr "Technical Information:"
+
+msgid "عنوان IP:"
+msgstr "IP Address:"
+
+msgid "متصفح المستخدم:"
+msgstr "User Browser:"
+
+msgid "معرف الرسالة:"
+msgstr "Message ID:"
+
+msgid "الحالة:"
+msgstr "Status:"
+
+msgid "هذه رسالة تلقائية من نظام إدارة الرسائل"
+msgstr "This is an automated message from the message management system"
+
+msgid "جمعية نسائم فلسطين الخيرية"
+msgstr "Nasaeem Palestine Charity Association"
+
+msgid "تأكيد استلام رسالتك - جمعية نسائم فلسطين الخيرية"
+msgstr "Message Received Confirmation - Nasaeem Palestine Charity Association"
+
+msgid "شكراً لتواصلك معنا!"
+msgstr "Thank you for contacting us!"
+
+msgid "تم استلام رسالتك بنجاح"
+msgstr "Your message has been received successfully"
+
+msgid "عزيزي/عزيزتي"
+msgstr "Dear"
+
+msgid "نشكرك على تواصلك معنا"
+msgstr "We appreciate your contact with us"
+
+msgid "📋 تفاصيل رسالتك:"
+msgstr "Message Details:"
+
+msgid "وقت الإرسال:"
+msgstr "Sent at:"
+
+msgid "الخطوات التالية:"
+msgstr "Next Steps:"
+
+msgid "المراجعة:"
+msgstr "Review:"
+
+msgid "سيقوم فريقنا بمراجعة رسالتك وتصنيفها حسب الموضوع"
+msgstr "Our team will review and categorize your message"
+
+msgid "المتابعة:"
+msgstr "Follow-up:"
+
+msgid "سنتواصل معك خلال 24-48 ساعة عمل"
+msgstr "We will contact you within 24–48 working hours"
+
+msgid "الرد:"
+msgstr "Response:"
+
+msgid "ستتلقى رداً مفصلاً على استفسارك من المختصين"
+msgstr "You will receive a detailed response from our team"
+
+msgid "للاستفسارات العاجلة:"
+msgstr "For urgent inquiries:"
+
+msgid "يمكنك التواصل معنا مباشرة من خلال:"
+msgstr "You can contact us directly through:"
+
+msgid "تابعنا على وسائل التواصل:"
+msgstr "Follow us on social media:"
+
+msgid "غزة - فلسطين | شارع الوحدة"
+msgstr "Gaza - Palestine | Al-Wahda Street"
+
+msgid "الموقع الإلكتروني:"
+msgstr "Website:"
+
+msgid "هذه رسالة تأكيد تلقائية، يرجى عدم الرد عليها مباشرة"
+msgstr "This is an automated confirmation message, please do not reply directly"
+
+msgid "تأكيد الاشتراك في النشرة البريدية - جمعية نسائم فلسطين الخيرية"
+msgstr "Newsletter Subscription Confirmation - Nasaeem Palestine Charity Association"
+
+msgid "مرحباً بك معنا!"
+msgstr "Welcome!"
+
+msgid "أهلاً وسهلاً في عائلة جمعية نسائم فلسطين الخيرية"
+msgstr "Welcome to the Nasaeem Palestine Charity family"
+
+msgid "شكراً لانضمامك إلينا!"
+msgstr "Thank you for joining us!"
+
+msgid "نحن سعداء لانضمامك لمجتمعنا"
+msgstr "We are happy to have you in our community"
+
+msgid "نحن سعداء لانضمامك لمجتمعنا الكبير"
+msgstr "We are happy to have you in our large community"
+
+msgid "تأكيد الاشتراك مطلوب"
+msgstr "Subscription confirmation required"
+
+msgid "لضمان وصول النشرة البريدية إليك بأمان، يرجى تأكيد اشتراكك بالنقر على الزر أدناه:"
+msgstr "To ensure the newsletter reaches you safely, please confirm your subscription by clicking below:"
+
+msgid "تأكيد الاشتراك الآن"
+msgstr "Confirm subscription now"
+
+msgid "مهم:"
+msgstr "Important:"
+
+msgid "إذا لم تؤكد اشتراكك خلال 48 ساعة، سيتم إلغاؤه تلقائياً"
+msgstr "If you do not confirm within 48 hours, your subscription will be canceled automatically"
+
+msgid "ما ستحصل عليه معنا:"
+msgstr "What you'll get with us:"
+
+msgid "آخر الأخبار"
+msgstr "Latest news"
+
+msgid "أحدث مشاريعنا وإنجازاتنا"
+msgstr "Our latest projects and achievements"
+
+msgid "انضم لأنشطتنا التطوعية"
+msgstr "Join our volunteer activities"
+
+msgid "مبادرات خاصة"
+msgstr "Special initiatives"
+
+msgid "كن أول من يعرف عن حملاتنا"
+msgstr "Be the first to know about our campaigns"
+
+msgid "قصص الأمل"
+msgstr "Stories of hope"
+
+msgid "قصص ملهمة من المستفيدين"
+msgstr "Inspiring stories from beneficiaries"
+
+msgid "تكرار الإرسال"
+msgstr "Send frequency"
+
+msgid "اختر التكرار المناسب لك (يمكنك تغييره لاحقاً):"
+msgstr "Choose the frequency that suits you (you can change it later):"
+
+msgid "أسبوعياً"
+msgstr "Weekly"
+
+msgid "كل يوم أحد"
+msgstr "Every Sunday"
+
+msgid "شهرياً"
+msgstr "Monthly"
+
+msgid "أول كل شهر"
+msgstr "First of every month"
+
+msgid "المهم فقط"
+msgstr "Important only"
+
+msgid "عند الحاجة"
+msgstr "When necessary"
+
+msgid "تخصيص التفضيلات"
+msgstr "Customize preferences"
+
+msgid "تابعنا على وسائل التواصل"
+msgstr "Follow us on social media"
+
+msgid "للحصول على التحديثات اليومية والتفاعل مع مجتمعنا"
+msgstr "For daily updates and engagement with our community"
+
+msgid "ملاحظة مهمة"
+msgstr "Important note"
+
+msgid "يمكنك إلغاء الاشتراك في أي وقت من خلال الرابط الموجود في أسفل كل نشرة، أو من خلال النقر"
+msgstr "You can unsubscribe anytime using the link at the bottom of each newsletter or by clicking"
+
+msgid "هنا"
+msgstr "here"
+
+msgid "نحن نحترم خصوصيتك ولن نشارك بياناتك مع أي طرف ثالث"
+msgstr "We respect your privacy and will not share your data with any third party"
+
+msgid "العنوان"
+msgstr "Address"
+
+msgid "غزة - فلسطين"
+msgstr "Gaza - Palestine"
+
+msgid "شارع الوحدة"
+msgstr "Al-Wahda Street"
+
+msgid "التواصل"
+msgstr "Contact"
+
+msgid "الموقع"
+msgstr "Website"
+
+msgid "مسجلة رسمياً منذ 2013"
+msgstr "Officially registered since 2013"
+
+msgid "جميع الحقوق محفوظة"
+msgstr "All rights reserved"
+
+msgid "أمان البيانات:"
+msgstr "Data security:"
+
+msgid "تم إرسال هذه الرسالة إلى بريدك بناءً على طلب الاشتراك، إذا لم تطلب ذلك يرجى تجاهل الرسالة."
+msgstr "This message was sent to your email upon subscription request. If you didn't request it, please ignore it."
+
+msgid "الهاتف الرئيسي"
+msgstr "Main Phone"
+
+msgid "ساعات العمل"
+msgstr "Working Hours"
+
+msgid "الأحد - الخميس"
+msgstr "Sunday - Thursday"
+
+msgid "الفاكس"
+msgstr "Fax"
+
+msgid "للحالات الطارئة"
+msgstr "For Emergencies"
+
+msgid "واتساب طوارئ"
+msgstr "Emergency WhatsApp"
+
+msgid "اشترك في نشرتنا البريدية"
+msgstr "Subscribe to our newsletter"
+
+msgid "احصل على آخر الأخبار والتحديثات من جمعية نسائم فلسطين الخيرية"
+msgstr "Get the latest news and updates from Nasaeem Palestine Charity Association"
+
+msgid "أدخل بريدك الإلكتروني..."
+msgstr "Enter your email..."
+
+msgid "اشترك"
+msgstr "Subscribe"
+
+msgid "تكرار الإرسال:"
+msgstr "Send frequency:"
+
+msgid "كل أحد"
+msgstr "Every Sunday"
+
+msgid "عند الضرورة"
+msgstr "When necessary"
+
+msgid "اختر اهتماماتك:"
+msgstr "Choose your interests:"
+
+msgid "المشاريع"
+msgstr "Projects"
+
+msgid "الأخبار"
+msgstr "News"
+
+msgid "التطوع"
+msgstr "Volunteering"
+
+msgid "التبرعات"
+msgstr "Donations"
+
+msgid "خصوصيتك مهمة لنا"
+msgstr "Your privacy matters to us"
+
+msgid "لن نشارك بياناتك مع أي جهة خارجية ويمكنك إلغاء الاشتراك في أي وقت"
+msgstr "We will not share your data with any third party and you can unsubscribe anytime"
+
+msgid "تم الاشتراك بنجاح! تحقق من بريدك الإلكتروني."
+msgstr "Successfully subscribed! Check your email."
+
+msgid "انضم لأكثر من"
+msgstr "Join more than"
+
+msgid "مشترك في نشرتنا"
+msgstr "Subscribers to our newsletter"
+
+msgid "انضم إليهم الآن"
+msgstr "Join them now"
+
+msgid "خيارات متقدمة"
+msgstr "Advanced options"
+
+msgid "كن جزءاً من مجتمعنا وتابع آخر أخبارنا"
+msgstr "Be part of our community and stay updated"
+
+msgid "إحصائيات التفاعل"
+msgstr "Engagement statistics"
+
+msgid "نقرة"
+msgstr "Click"
+
+msgid "تواصل معنا عبر منصاتنا الرسمية"
+msgstr "Contact us through our official platforms"
+
+msgid "نسائم فلسطين"
+msgstr "Nasaeem Palestine"
+
+msgid "تواصل مباشر"
+msgstr "Direct contact"
+
+msgid "انضم لمجتمعنا الآن!"
+msgstr "Join our community now!"
+
+msgid "اتبعنا للحصول على آخر الأخبار والتحديثات اليومية"
+msgstr "Follow us for the latest news and daily updates"
+
+msgid "#نسائم_فلسطين"
+msgstr "#Nasaeem_Palestine"
+
+msgid "#الخير_يجمعنا"
+msgstr "#Good_Unites_Us"
+
+msgid "#فلسطين_في_القلب"
+msgstr "#Palestine_in_Heart"
+
+msgid "نحن هنا للاستماع إليك والإجابة على جميع استفساراتك"
+msgstr "We are here to listen to you and answer all your questions."
+
+msgid "أرسل رسالتك"
+msgstr "Send your message"
+
+msgid "املأ النموذج أدناه وسنقوم بالرد عليك في أقرب وقت ممكن"
+msgstr "Fill out the form below, and we will get back to you as soon as possible."
+
+msgid "رائع!"
+msgstr "Amazing!"
+
+msgid "2000 حرف متبقي"
+msgstr "2000 characters remaining"
+
+msgid "عرض جميع الأسئلة"
+msgstr "View All Questions"
+
+msgid "حدث خطأ في الإرسال. يرجى المحاولة مرة أخرى."
+msgstr "There was a sending error. Please try again."
+
+msgid "يرجى الانتظار قبل إرسال رسالة أخرى"
+msgstr "Please wait before sending another message."
+
+msgid "حرف متبقي"
+msgstr "characters remaining"
+
+msgid "حجم الملف كبير جداً (حد أقصى 5MB)"
+msgstr "File size is too large (maximum 5MB)"
+
+msgid "نوع الملف غير مدعوم"
+msgstr "Unsupported file type"
+
+msgid "تم اختيار الملف"
+msgstr "File selected"
+
+msgid "جاري الإرسال..."
+msgstr "Sending..."
+
+msgid "تم إرسال رسالتك بنجاح!"
+msgstr "Your message has been sent successfully!"
+
+msgid "شكراً لك على تواصلك معنا. لقد استلمنا رسالتك وسنقوم بالرد عليك في أقرب وقت ممكن."
+msgstr "Thank you for contacting us. We have received your message and will respond to you as soon as possible."
+
+msgid "العودة للرئيسية"
+msgstr "Back to Home"
+
+msgid "تصفح المشاريع"
+msgstr "Browse projects"
+
+msgid "عادة ما نرد على الرسائل خلال 24-48 ساعة في أيام العمل. للاستفسارات العاجلة، يمكنك التواصل معنا هاتفياً."
+msgstr "We typically respond to messages within 24-48 hours on business days. For urgent inquiries, you can contact us by phone."
+
+msgid "تحقق من بريدك الإلكتروني"
+msgstr "Check your email"
+
+msgid "ستصلك رسالة تأكيد على البريد الإلكتروني المُدخل. تأكد من فحص مجلد الرسائل المزعجة إذا لم تجد الرسالة."
+msgstr "You will receive a confirmation message to the email address you entered. Be sure to check your spam folder if you don't find the message."
+
+msgid "تواصل فوري"
+msgstr "Instant communication"
+
+msgid "للاستفسارات العاجلة، يمكنك الاتصال بنا مباشرة أو مراسلتنا عبر وسائل التواصل الاجتماعي."
+msgstr "For urgent inquiries, you can call us directly or message us via social media."
+
+msgid "الخطوة 1"
+msgstr "Step 1"
+
+msgid "استلام الرسالة"
+msgstr "Message Received"
+
+msgid "يتم استلام رسالتك تلقائياً وإشعار فريق العمل المختص بها."
+msgstr "Your message is automatically received and the relevant team is notified."
+
+msgid "الخطوة 2"
+msgstr "Step 2"
+
+msgid "المراجعة والتصنيف"
+msgstr "Review and Categorization"
+
+msgid "يقوم فريقنا بمراجعة الرسالة وتصنيفها حسب الموضوع والأولوية."
+msgstr "Our team reviews the message and categorizes it based on topic and priority."
+
+msgid "الخطوة 3"
+msgstr "Step 3"
+
+msgid "إعداد الرد"
+msgstr "Preparing the Response"
+
+msgid "يتم إعداد رد مفصل ومناسب لاستفسارك من قبل المختصين."
+msgstr "A detailed and appropriate response is prepared by our specialists."
+
+msgid "الخطوة 4"
+msgstr "Step 4"
+
+msgid "إرسال الرد"
+msgstr "Sending the Response"
+
+msgid "نرسل لك الرد المفصل على بريدك الإلكتروني مع أي مرفقات ضرورية."
+msgstr "We send you the detailed response via email along with any necessary attachments."
+
+msgid "هل تود المزيد؟"
+msgstr "Want more?"
+
+msgid "اشترك في النشرة"
+msgstr "Subscribe to the Newsletter"
+
+msgid "تعرف علينا أكثر"
+msgstr "Learn More About Us"
+
+msgid "ماذا يحدث بعد إرسال رسالتك؟"
+msgstr "What happens after you send your message?"
+
+msgid "سيتم توجيهك للصفحة الرئيسية خلال"
+msgstr "You will be redirected to the homepage in"
+
+msgid "تم حفظ تفضيلاتك بنجاح!"
+msgstr "Your preferences have been saved successfully!"
+
+msgid "حدث خطأ في حفظ التفضيلات"
+msgstr "An error occurred while saving preferences"
+
+msgid "حدث خطأ في الاتصال"
+msgstr "A connection error occurred"
+
+msgid "ثانية"
+msgstr "seconds"
+
+msgid "مرحباً بك في عائلتنا!"
+msgstr "Welcome to our family!"
+
+msgid "تم تسجيل اشتراكك في النشرة البريدية بنجاح. ستصلك أحدث أخبار ومشاريع جمعية نسائم فلسطين الخيرية."
+msgstr "You have successfully subscribed to the newsletter. You will receive the latest news and projects from Nasaem Palestine Charity Association."
+
+msgid "تأكيد الاشتراك"
+msgstr "Subscription Confirmation"
+
+msgid "تحقق من بريدك الإلكتروني للحصول على رسالة التأكيد. إذا لم تجدها في صندوق الوارد، تأكد من فحص مجلد الرسائل المزعجة."
+msgstr "Check your email for the confirmation message. If you don't find it in your inbox, make sure to check your spam folder."
+
+msgid "ماذا ستحصل عليه؟"
+msgstr "What will you get?"
+
+msgid "اكتشف الفوائد العديدة لاشتراكك في نشرتنا البريدية"
+msgstr "Discover the many benefits of subscribing to our newsletter"
+
+msgid "كن أول من يعرف عن أحدث مشاريعنا وإنجازاتنا في خدمة المجتمع الفلسطيني."
+msgstr "Be the first to know about our latest projects and achievements in serving the Palestinian community."
+
+msgid "احصل على دعوات مبكرة للمشاركة في أنشطتنا التطوعية وكن جزءاً من التغيير الإيجابي."
+msgstr "Receive early invitations to participate in our volunteer activities and be part of positive change."
+
+msgid "حملات خاصة"
+msgstr "Exclusive Campaigns"
+
+msgid "تلقى معلومات حصرية عن حملات التبرع والمبادرات الخاصة قبل الإعلان عنها للعامة."
+msgstr "Receive exclusive information about donation campaigns and special initiatives before they are publicly announced."
+
+msgid "تقارير الإنجازات"
+msgstr "Impact Reports"
+
+msgid "اطلع على تقارير مفصلة عن تأثير المشاريع والمساعدات التي قدمناها للمستفيدين."
+msgstr "Access detailed reports on the impact of our projects and the aid we've provided to beneficiaries."
+
+msgid "الفعاليات القادمة"
+msgstr "Upcoming Events"
+
+msgid "كن على علم بالفعاليات والمؤتمرات والورش التدريبية التي تنظمها الجمعية."
+msgstr "Stay informed about events, conferences, and training workshops organized by the association."
+
+msgid "اقرأ قصص ملهمة عن المستفيدين وكيف ساهمت الجمعية في تحسين حياتهم."
+msgstr "Read inspiring stories about beneficiaries and how the association helped improve their lives."
+
+msgid "خصص تفضيلاتك"
+msgstr "Customize Your Preferences"
+
+msgid "يمكنك تخصيص تفضيلات النشرة البريدية لتناسب اهتماماتك"
+msgstr "You can customize your newsletter preferences to match your interests"
+
+msgid "نشرة أسبوعية تحتوي على أهم الأخبار والتطورات"
+msgstr "A weekly newsletter with the most important news and updates"
+
+msgid "ملخص شهري شامل لجميع أنشطة ومشاريع الجمعية"
+msgstr "A comprehensive monthly summary of all the association's activities and projects"
+
+msgid "فقط الأخبار والتحديثات المهمة والعاجلة"
+msgstr "Only important and urgent news and updates"
+
+msgid "الفعاليات والمؤتمرات"
+msgstr "Events and Conferences"
+
+msgid "قصص النجاح"
+msgstr "Success Stories"
+
+msgid "التقارير والإحصائيات"
+msgstr "Reports and Statistics"
+
+msgid "حفظ التفضيلات"
+msgstr "Save Preferences"
+
+msgid "يمكنك تغيير هذه التفضيلات في أي وقت من خلال الرابط الموجود في أسفل كل نشرة"
+msgstr "You can change these preferences at any time using the link at the bottom of each newsletter"
+
+msgid "انضم إلى مجتمعنا على وسائل التواصل"
+msgstr "Join our community on social media"
+
+msgid "تابعنا للحصول على التحديثات اليومية وشارك في نشاطاتنا"
+msgstr "Follow us for daily updates and participate in our activities"
+
+msgid "شكراً"
+msgstr "Thank you"
+
+msgid "لقد قمت بالتصويت مسبقاً"
+msgstr "You have already voted"
+
+msgid "جاري الحفظ..."
+msgstr "Saving..."
+
+msgid "تم التصويت بنجاح"
+msgstr "Vote submitted successfully"
+
+msgid "فشل التصويت"
+msgstr "Vote failed"
+
+msgid "الاستجابة ليست JSON صحيح"
+msgstr "Response is not valid JSON"
+
+msgid "حدث خطأ:"
+msgstr "An error occurred:"
+
+msgid "ابحث عن إجابات لأسئلتك"
+msgstr "Find answers to your questions"
+
+msgid "تم العثور على"
+msgstr "Found"
+
+msgid "نتيجة"
+msgstr "result(s)"
+
+msgid "للبحث:"
+msgstr "for search:"
+
+msgid "إعادة تعيين"
+msgstr "Reset"
+
+msgid "هل كانت مفيدة؟"
+msgstr "Was this helpful?"
+
+msgid "مفيد"
+msgstr "Helpful"
+
+msgid "لم يتم العثور على نتائج"
+msgstr "No results found"
+
+msgid "جرب البحث بكلمات مختلفة"
+msgstr "Try searching with different keywords"
+
+msgid "عرض الكل"
+msgstr "View All"
+
+msgid "الأكثر شعبية"
+msgstr "Most Popular"
+
+msgid "الفئات"
+msgstr "Categories"
+
+msgid "لم تجد إجابتك؟"
+msgstr "Didn't find your answer?"
+
+msgid "تواصل معنا مباشرة وسنكون سعداء بمساعدتك"
+msgstr "Contact us directly and we'll be happy to help you"
+
+msgid "بحث"
+msgstr "Search"
+
+msgid "خطأ!"
+msgstr "Error!"
+
+msgid "إرسال الرسالة"
+msgstr "Send Message"
+
+msgid "أسئلة شائعة"
+msgstr "Frequently Asked Questions"
+
+msgid "لا توجد معلومات تواصل متاحة حالياً"
+msgstr "No contact information available at the moment"
+
+msgid "تابعنا على"
+msgstr "Follow us on"
+
+msgid "يرجى تصحيح الأخطاء التالية:"
+msgstr "Please correct the following errors:"
+
+msgid " شكراً لك! تم تسجيل تصويتك بنجاح"
+msgstr "Thank you! Your vote has been successfully registered."
+
+
+
+
+msgid "عنوان الرسالة"
+msgstr "Message title"
+
+msgid "رقم الجوال"
+msgstr "Mobile number"
+
+
+msgid "الاسم الكامل"
+msgstr "Full name"
+
+
+msgid "حتى"
+msgstr "To"
+
+msgid "تم بنجاح! 🎉"
+msgstr "Successfully completed! 🎉"
+
+
+msgid "تم إرسال رسالتك بنجاح ✅"
+msgstr "Your message was sent successfully ✅"
+
+
+
+msgid "صباحاً"
+msgstr "Morning"
+
+
+msgid "مساءً"
+msgstr "Evening"
+
+
+
+msgid "موضوع رسالتك"
+msgstr "Subject of your message"
+
+
+msgid "أدخل اسمك الكامل"
+msgstr "Enter your full name"
+
+
+
+
+
+

@@ -1,0 +1,1013 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load i18n %}
+{% load custom_filters %}
+
+{% block title %}{% trans "موقعنا على الخريطة" %} - {{ site_settings|translate_field:"site_name" }} | {% trans "العنوان ومعلومات الاتصال" %}{% endblock %}
+
+{% block description %}{% trans "تعرف على موقع جمعية نسائم فلسطين الخيرية على الخريطة، مع معلومات الاتصال الكاملة، ساعات العمل، وطرق الوصول إلينا. نحن هنا لخدمتك!" %}{% endblock %}
+
+{% block keywords %}{% trans "موقع جمعية نسائم فلسطين, عنوان الجمعية, خريطة الموقع, معلومات الاتصال, أرقام التواصل, البريد الإلكتروني, ساعات العمل, كيفية الوصول" %}{% endblock %}
+
+{% block og_title %}{% trans "موقع جمعية نسائم فلسطين الخيرية على الخريطة" %}{% endblock %}
+{% block og_description %}{% trans "تفضل بزيارتنا أو تواصل معنا - موقعنا على الخريطة مع كافة معلومات الاتصال وطرق الوصول" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'vendor/leaflet/leaflet.css' %}">
+<link rel="stylesheet" href="{% static 'vendor/leaflet/leaflet-routing-machine.css' %}">
+<style>
+    :root {
+        --location-gradient-1: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        --location-gradient-2: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+        --shadow-soft: 0 10px 40px rgba(0,0,0,0.08);
+        --shadow-medium: 0 15px 50px rgba(0,0,0,0.12);
+        --shadow-hover: 0 20px 60px rgba(0,0,0,0.18);
+        --transition-smooth: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+    
+    /* Hero Section with Parallax Effect */
+    .location-hero {
+        background: var(--location-gradient-1);
+        color: white;
+        padding: 130px 0 70px;
+        position: relative;
+        overflow: hidden;
+        background-size: 200% 200%;
+        animation: gradientMove 15s ease infinite;
+    }
+    
+    .location-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        opacity: 0.4;
+        animation: moveBackground 20s linear infinite;
+    }
+    
+    @keyframes moveBackground {
+        0% { transform: translate(0, 0); }
+        100% { transform: translate(60px, 60px); }
+    }
+    
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+    
+    .hero-title {
+        font-size: 3rem;
+        font-weight: 800;
+        text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        margin-bottom: 20px;
+        animation: slideInDown 0.8s ease;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.3rem;
+        opacity: 0.95;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        animation: slideInUp 0.8s ease 0.2s backwards;
+    }
+    
+    .hero-icon {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+        animation: pulse 2s infinite;
+        filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
+    }
+    
+    /* Map Section */
+    .map-section {
+        background: linear-gradient(180deg, #f8f9ff 0%, #ffffff 50%, #f8f9ff 100%);
+        padding: 90px 0;
+        position: relative;
+    }
+    
+    .map-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: var(--location-gradient-2);
+        box-shadow: 0 2px 10px rgba(107, 142, 35, 0.3);
+    }
+    
+    /* Enhanced Interactive Map Container */
+    .map-container-wrapper {
+        position: relative;
+        animation: fadeInUp 0.8s ease;
+    }
+    
+    .map-container {
+        height: 550px;
+        border-radius: 25px;
+        overflow: hidden;
+        box-shadow: var(--shadow-medium);
+        position: relative;
+        border: 4px solid transparent;
+        background: linear-gradient(white, white) padding-box,
+                    var(--location-gradient-1) border-box;
+        transition: var(--transition-smooth);
+    }
+    
+    .map-container:hover {
+        box-shadow: var(--shadow-hover);
+        transform: translateY(-8px) scale(1.01);
+    }
+    
+    /* Map Interactive Overlay */
+    .map-overlay {
+        position: absolute;
+        top: 20px;
+        {% if LANGUAGE_CODE == 'ar' %}left{% else %}right{% endif %}: 20px;
+        background: white;
+        padding: 15px 25px;
+        border-radius: 50px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        z-index: 999;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        animation: slideInRight 0.8s ease;
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.95);
+        border: 2px solid rgba(107, 142, 35, 0.2);
+    }
+    
+    @keyframes slideInRight {
+        from {
+            transform: translateX({% if LANGUAGE_CODE == 'ar' %}-{% endif %}100px);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    .location-pin-icon {
+        color: var(--primary-color);
+        font-size: 1.5rem;
+        animation: bounce 2s infinite;
+        filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
+    }
+    
+    .coordinates-badge {
+        background: var(--location-gradient-1);
+        color: white;
+        padding: 10px 18px;
+        border-radius: 25px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 15px rgba(107, 142, 35, 0.4);
+        letter-spacing: 0.5px;
+    }
+    
+    /* Map Control Buttons */
+    .map-controls {
+        position: absolute;
+        bottom: 20px;
+        {% if LANGUAGE_CODE == 'ar' %}right{% else %}left{% endif %}: 20px;
+        z-index: 999;
+        display: flex;
+        gap: 12px;
+        animation: fadeInUp 1s ease 0.3s backwards;
+    }
+    
+    .map-control-btn {
+        width: 50px;
+        height: 50px;
+        background: white;
+        border: 2px solid var(--primary-color);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: var(--transition-smooth);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        color: var(--primary-color);
+        font-size: 1.2rem;
+    }
+    
+    .map-control-btn:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: scale(1.15) rotate(10deg);
+        box-shadow: 0 6px 25px rgba(107, 142, 35, 0.5);
+    }
+    
+    .map-control-btn.active {
+        background: var(--primary-color);
+        color: white;
+        animation: pulse 1.5s infinite;
+    }
+    
+    /* Loading Spinner */
+    .map-loading {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1000;
+        text-align: center;
+    }
+    
+    .spinner {
+        width: 60px;
+        height: 60px;
+        border: 5px solid rgba(107, 142, 35, 0.2);
+        border-top-color: var(--primary-color);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    
+    /* Contact Section */
+    .contact-section {
+        background: white;
+        padding: 80px 0;
+    }
+    
+    .section-header {
+        text-align: center;
+        margin-bottom: 60px;
+        animation: fadeInUp 0.8s ease;
+    }
+    
+    .section-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--primary-color);
+        margin-bottom: 15px;
+        position: relative;
+        display: inline-block;
+    }
+    
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background: var(--location-gradient-1);
+        border-radius: 2px;
+    }
+    
+    .section-subtitle {
+        font-size: 1.1rem;
+        color: #666;
+        margin-top: 25px;
+    }
+    
+    /* Modern Contact Cards */
+    .contact-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+    }
+    
+    .contact-item-modern {
+        background: white;
+        border-radius: 20px;
+        padding: 35px 25px;
+        text-align: center;
+        box-shadow: var(--shadow-soft);
+        transition: var(--transition-smooth);
+        border: 2px solid transparent;
+        cursor: pointer;
+        animation: fadeInUp 0.8s ease;
+        animation-fill-mode: backwards;
+    }
+    
+    .contact-item-modern:nth-child(1) { animation-delay: 0.1s; }
+    .contact-item-modern:nth-child(2) { animation-delay: 0.2s; }
+    .contact-item-modern:nth-child(3) { animation-delay: 0.3s; }
+    .contact-item-modern:nth-child(4) { animation-delay: 0.4s; }
+    
+    .contact-item-modern:hover {
+        transform: translateY(-12px) scale(1.03);
+        box-shadow: var(--shadow-hover);
+        border-color: var(--primary-color);
+    }
+    
+    .contact-icon-wrapper {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 20px;
+        background: var(--location-gradient-1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 8px 25px rgba(107, 142, 35, 0.3);
+        transition: var(--transition-smooth);
+    }
+    
+    .contact-item-modern:hover .contact-icon-wrapper {
+        transform: rotate(360deg) scale(1.1);
+        box-shadow: 0 12px 35px rgba(107, 142, 35, 0.5);
+    }
+    
+    .contact-icon {
+        font-size: 2rem;
+        color: white;
+        filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2));
+    }
+    
+    .contact-label {
+        font-size: 0.95rem;
+        color: #888;
+        margin-bottom: 8px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .contact-value {
+        font-size: 1.1rem;
+        color: var(--primary-color);
+        font-weight: 700;
+        word-break: break-word;
+    }
+    
+    .contact-value a {
+        color: inherit;
+        text-decoration: none;
+        transition: var(--transition-smooth);
+    }
+    
+    .contact-value a:hover {
+        color: var(--accent-color);
+        text-shadow: 0 2px 8px rgba(107, 142, 35, 0.3);
+    }
+    
+    /* Animations */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes slideInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes pulse {
+        0%, 100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+        50% {
+            transform: scale(1.05);
+            opacity: 0.8;
+        }
+    }
+    
+    @keyframes bounce {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+    
+    @keyframes gradientMove {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    
+    @keyframes fadeOut {
+        to {
+            opacity: 0;
+            transform: translateX({% if LANGUAGE_CODE == 'ar' %}50%{% else %}-50%{% endif %}) translateY(-20px);
+        }
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 2rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 1rem;
+        }
+        
+        .map-container {
+            height: 400px;
+            border-radius: 15px;
+        }
+        
+        .map-overlay {
+            flex-direction: column;
+            padding: 10px 15px;
+        }
+        
+        .coordinates-badge {
+            font-size: 0.75rem;
+            padding: 6px 12px;
+        }
+        
+        .map-controls {
+            gap: 8px;
+            bottom: 10px;
+            {% if LANGUAGE_CODE == 'ar' %}right{% else %}left{% endif %}: 10px;
+        }
+        
+        .map-control-btn {
+            width: 40px;
+            height: 40px;
+            font-size: 1rem;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+        }
+        
+        .contact-cards {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+    }
+    
+    /* Custom Leaflet Popup Styles */
+    .leaflet-popup-content-wrapper {
+        border-radius: 15px !important;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.2) !important;
+        overflow: hidden;
+    }
+    
+    .leaflet-popup-tip {
+        box-shadow: 0 3px 14px rgba(0,0,0,0.15) !important;
+    }
+    
+    .custom-popup h5 {
+        animation: slideInDown 0.5s ease;
+    }
+    
+    .custom-popup p {
+        animation: fadeInUp 0.5s ease 0.1s backwards;
+    }
+    
+    .custom-popup button {
+        animation: fadeInUp 0.5s ease 0.2s backwards;
+    }
+    
+    .custom-popup button:hover {
+        background: var(--accent-color) !important;
+        transform: scale(1.05);
+    }
+    
+    /* RTL Support */
+    [dir="rtl"] .map-overlay,
+    [dir="rtl"] .map-controls {
+        flex-direction: row-reverse;
+    }
+    
+    /* Structured Data Display */
+    .structured-data {
+        display: none;
+    }
+.location-hero h1 {
+    text-align: center !important;
+    direction: auto;
+    color: white;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="location-hero">
+    <div class="container">
+        <div class="hero-content" style="text-align: center; width: 100%;">
+            <div class="hero-icon" style="text-align: center;">
+                <i class="fas fa-map-marked-alt"></i>
+            </div>
+<h1 class="display-4 fw-bold mb-4"
+    style="text-align: center !important; direction: auto; color: white;">
+    {% trans "موقعنا على الخريطة" %}
+</h1>
+
+
+            <p class="hero-subtitle" style="color:white; text-align: center;">
+                {% trans "يمكنك زيارتنا أو التواصل معنا في أي وقت" %}
+            </p>
+        </div>
+    </div>
+</section>
+
+
+<!-- Interactive Map Section -->
+<section class="map-section">
+    <div class="container">
+        <div class="map-container-wrapper">
+            <!-- Map Overlay with Coordinates -->
+            <div class="map-overlay">
+                <i class="fas fa-map-pin location-pin-icon"></i>
+                <div class="coordinates-badge">
+                    <i class="fas fa-crosshairs"></i>
+                    <span>{{ latitude_simple }}</span>
+                </div>
+            </div>
+            
+            <!-- Map Container -->
+            <div class="map-container">
+                <div id="interactive-map" style="width: 100%; height: 100%;"></div>
+                
+                <!-- Loading Spinner -->
+                <div id="mapLoading" class="map-loading">
+                    <div class="spinner"></div>
+                    <p style="margin-top: 15px; color: var(--primary-color); font-weight: 600;">
+                        {% trans "جاري تحميل الخريطة" %}...
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Map Control Buttons -->
+            <div class="map-controls">
+                <button id="getDirectionsBtn" class="map-control-btn" title="{% trans 'احصل على الاتجاهات' %}">
+                    <i class="fas fa-route"></i>
+                </button>
+                <button id="zoomInBtn" class="map-control-btn" title="{% trans 'تكبير' %}">
+                    <i class="fas fa-plus"></i>
+                </button>
+                <button id="zoomOutBtn" class="map-control-btn" title="{% trans 'تصغير' %}">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button id="myLocationBtn" class="map-control-btn" title="{% trans 'موقعي' %}">
+                    <i class="fas fa-location-crosshairs"></i>
+                </button>
+                <button id="satelliteToggleBtn" class="map-control-btn" title="{% trans 'عرض القمر الصناعي' %}">
+                    <i class="fas fa-satellite"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Working Hours -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="display-6 fw-bold">{% trans "أوقات العمل" %}</h2>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="contact-card text-center">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <i class="fas fa-clock fa-2x mb-3" style="color: var(--primary-color);"></i>
+                            <h5>{% trans "أيام الأسبوع" %}</h5>
+                            <p class="mb-0">{% trans "الأحد - الخميس" %}<br>8:00 AM - 4:00 PM</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <i class="fas fa-calendar fa-2x mb-3" style="color: var(--secondary-color);"></i>
+                            <h5>{% trans "نهاية الأسبوع" %}</h5>
+                            <p class="mb-0">{% trans "الجمعة - السبت" %}<br>{% trans "مغلق" %}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Structured Data for SEO -->
+<div class="structured-data">
+    <div itemscope itemtype="https://schema.org/LocalBusiness">
+        <meta itemprop="name" content="{{ site_settings|translate_field:'site_name' }}">
+        <meta itemprop="address" content="{% get_current_language as LANGUAGE_CODE %}{% if LANGUAGE_CODE == 'en' %}{{ site_settings.address_en }}{% else %}{{ site_settings.address_ar }}{% endif %}">
+        <meta itemprop="latitude" content="{{ latitude_decimal }}">
+        <meta itemprop="longitude" content="{{ longitude_decimal }}">
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'vendor/leaflet/leaflet.js' %}"></script>
+<script src="{% static 'vendor/leaflet/leaflet-routing-machine.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // ⭐ تحديد اللغة الحالية ⭐
+    {% get_current_language as LANGUAGE_CODE %}
+    const currentLang = "{{ LANGUAGE_CODE }}"; // ar أو en
+    
+    // ⭐ الترجمات - تتغير تلقائياً حسب اللغة ⭐
+    const translations = {
+        currentLocation: "{% trans 'موقعك الحالي' %}",
+        youAreHere: "{% trans 'أنت هنا' %}",
+        distance: "{% trans 'المسافة' %}",
+        km: "{% trans 'كم' %}",
+        locationFailed: "{% trans 'فشل تحديد الموقع. يرجى السماح بالوصول للموقع' %}",
+        browserNotSupport: "{% trans 'المتصفح لا يدعم تحديد الموقع' %}",
+        locationDetermined: "{% trans 'تم تحديد موقعك' %}",
+        getDirections: "{% trans 'احصل على الاتجاهات' %}"
+    };
+    
+    // Configuration
+    const orgLocation = [{{ latitude_decimal }}, {{ longitude_decimal }}];
+    const orgName = "{{ site_settings|translate_field:'site_name' }}";
+    const orgAddress = "{% get_current_language as LANGUAGE_CODE %}{% if LANGUAGE_CODE == 'en' %}{{ site_settings.address_en }}{% else %}{{ site_settings.address_ar }}{% endif %}";
+    
+    // Hide loading spinner
+    setTimeout(() => {
+        document.getElementById('mapLoading').style.display = 'none';
+    }, 800);
+    
+    // Initialize Map
+    let map = L.map('interactive-map', {
+        center: orgLocation,
+        zoom: 15,
+        zoomControl: false,
+        scrollWheelZoom: true,
+        dragging: true,
+        touchZoom: true,
+        doubleClickZoom: true
+    });
+    
+    // ⭐ Base layers - تتغير اللغة حسب currentLang ⭐
+    const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors',
+        maxZoom: 19
+    });
+    
+    const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles © Esri',
+        maxZoom: 19
+    });
+    
+    // Add default layer
+    osmLayer.addTo(map);
+    
+    // Custom marker icon
+    const customIcon = L.divIcon({
+        html: `
+            <div style="position: relative;">
+                <div style="
+                    width: 50px;
+                    height: 50px;
+                    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+                    border-radius: 50% 50% 50% 0;
+                    transform: rotate(-45deg);
+                    border: 4px solid white;
+                    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                ">
+                    <i class="fas fa-building" style="
+                        color: white;
+                        font-size: 1.2rem;
+                        transform: rotate(45deg);
+                    "></i>
+                </div>
+                <div style="
+                    position: absolute;
+                    top: -40px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: white;
+                    padding: 5px 10px;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                    white-space: nowrap;
+                    font-weight: bold;
+                    color: var(--primary-color);
+                    font-size: 0.85rem;
+                    animation: bounce 2s infinite;
+                ">
+                    ${orgName}
+                </div>
+            </div>
+        `,
+        className: 'custom-marker',
+        iconSize: [50, 50],
+        iconAnchor: [25, 50],
+        popupAnchor: [0, -50]
+    });
+    
+    // Add organization marker
+    const orgMarker = L.marker(orgLocation, { icon: customIcon })
+        .addTo(map)
+        .bindPopup(`
+            <div class="custom-popup" style="min-width: 200px;">
+                <h5 style="margin: 0 0 10px 0; color: var(--primary-color); font-weight: 700;">
+                    <i class="fas fa-building" style="margin-${currentLang === 'ar' ? 'left' : 'right'}: 8px;"></i>
+                    ${orgName}
+                </h5>
+                <p style="margin: 5px 0; color: #555; font-size: 0.95rem;">
+                    <i class="fas fa-map-marker-alt" style="color: var(--primary-color); margin-${currentLang === 'ar' ? 'left' : 'right'}: 8px;"></i>
+                    ${orgAddress}
+                </p>
+                <p style="margin: 5px 0; color: #555; font-size: 0.85rem;">
+                    <i class="fas fa-crosshairs" style="color: var(--secondary-color); margin-${currentLang === 'ar' ? 'left' : 'right'}: 8px;"></i>
+                    {{ latitude }} | {{ longitude }}
+                </p>
+                <button onclick="getDirectionsToOrg()" style="
+                    margin-top: 10px;
+                    padding: 8px 15px;
+                    background: var(--primary-color);
+                    color: white;
+                    border: none;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    width: 100%;
+                    font-weight: 600;
+                    transition: all 0.3s ease;
+                ">
+                    <i class="fas fa-route" style="margin-${currentLang === 'ar' ? 'left' : 'right'}: 5px;"></i>
+                    ${translations.getDirections}
+                </button>
+            </div>
+        `, {
+            maxWidth: 300,
+            className: 'custom-leaflet-popup'
+        })
+        .openPopup();
+    
+    // Add circle around location
+    L.circle(orgLocation, {
+        color: 'var(--primary-color)',
+        fillColor: 'var(--primary-color)',
+        fillOpacity: 0.1,
+        radius: 200
+    }).addTo(map);
+    
+    // Variables for map controls
+    let userMarker = null;
+    let routingControl = null;
+    let isRouting = false;
+    let isSatellite = false;
+    
+    // Get Directions Function
+    window.getDirectionsToOrg = function() {
+        document.getElementById('getDirectionsBtn').click();
+    };
+    
+    // Map Controls
+    
+    // Get Directions Button
+    document.getElementById('getDirectionsBtn').addEventListener('click', function() {
+        if (isRouting) {
+            // Remove routing
+            if (routingControl) {
+                map.removeControl(routingControl);
+                routingControl = null;
+            }
+            if (userMarker) {
+                map.removeLayer(userMarker);
+                userMarker = null;
+            }
+            this.classList.remove('active');
+            this.innerHTML = '<i class="fas fa-route"></i>';
+            isRouting = false;
+            return;
+        }
+        
+        if (navigator.geolocation) {
+            this.classList.add('active');
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const userLocation = [position.coords.latitude, position.coords.longitude];
+                    
+                    // Add user marker
+                    const userIcon = L.divIcon({
+                        html: '<div style="width: 30px; height: 30px; background: #3498db; border-radius: 50%; border: 3px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;"><i class="fas fa-user" style="color: white; font-size: 0.9rem;"></i></div>',
+                        className: 'user-marker',
+                        iconSize: [30, 30],
+                        iconAnchor: [15, 15]
+                    });
+                    
+                    userMarker = L.marker(userLocation, { icon: userIcon })
+                        .addTo(map)
+                        .bindPopup(`<strong>${translations.currentLocation}</strong>`);
+                    
+                    // ⭐ Add routing مع تحديد اللغة ⭐
+                    routingControl = L.Routing.control({
+                        waypoints: [
+                            L.latLng(userLocation[0], userLocation[1]),
+                            L.latLng(orgLocation[0], orgLocation[1])
+                        ],
+                        routeWhileDragging: false,
+                        addWaypoints: false,
+                        draggableWaypoints: false,
+                        fitSelectedRoutes: true,
+                        showAlternatives: true,
+                        lineOptions: {
+                            styles: [{
+                                color: 'var(--primary-color)',
+                                opacity: 0.8,
+                                weight: 6
+                            }],
+                            extendToWaypoints: true,
+                            missingRouteTolerance: 0
+                        },
+                        createMarker: function() { return null; }, // Don't create default markers
+                        router: L.Routing.osrmv1({
+                            language: currentLang, // ⭐ استخدام اللغة الحالية ⭐
+                            profile: 'driving'
+                        })
+                    }).addTo(map);
+                    
+                    this.innerHTML = '<i class="fas fa-times"></i>';
+                    isRouting = true;
+                    
+                    // Calculate distance
+                    const distance = map.distance(userLocation, orgLocation);
+                    const distanceKm = (distance / 1000).toFixed(2);
+                    
+                    // Show notification
+                    showNotification(`${translations.distance}: ${distanceKm} ${translations.km}`, 'success');
+                },
+                (error) => {
+                    this.innerHTML = '<i class="fas fa-route"></i>';
+                    this.classList.remove('active');
+                    showNotification(translations.locationFailed, 'error');
+                }
+            );
+        } else {
+            showNotification(translations.browserNotSupport, 'error');
+        }
+    });
+    
+    // Zoom In Button
+    document.getElementById('zoomInBtn').addEventListener('click', function() {
+        map.zoomIn();
+        this.style.transform = 'scale(1.2) rotate(90deg)';
+        setTimeout(() => {
+            this.style.transform = '';
+        }, 300);
+    });
+    
+    // Zoom Out Button
+    document.getElementById('zoomOutBtn').addEventListener('click', function() {
+        map.zoomOut();
+        this.style.transform = 'scale(1.2) rotate(-90deg)';
+        setTimeout(() => {
+            this.style.transform = '';
+        }, 300);
+    });
+    
+    // My Location Button
+    document.getElementById('myLocationBtn').addEventListener('click', function() {
+        if (navigator.geolocation) {
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const userLocation = [position.coords.latitude, position.coords.longitude];
+                    map.setView(userLocation, 16);
+                    
+                    if (!userMarker) {
+                        const userIcon = L.divIcon({
+                            html: '<div style="width: 30px; height: 30px; background: #3498db; border-radius: 50%; border: 3px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; animation: pulse 2s infinite;"><i class="fas fa-user" style="color: white; font-size: 0.9rem;"></i></div>',
+                            className: 'user-marker',
+                            iconSize: [30, 30],
+                            iconAnchor: [15, 15]
+                        });
+                        
+                        userMarker = L.marker(userLocation, { icon: userIcon })
+                            .addTo(map)
+                            .bindPopup(`<strong>${translations.youAreHere}</strong>`)
+                            .openPopup();
+                    } else {
+                        userMarker.setLatLng(userLocation);
+                        map.setView(userLocation, 16);
+                    }
+                    
+                    this.innerHTML = '<i class="fas fa-location-crosshairs"></i>';
+                    showNotification(translations.locationDetermined, 'success');
+                },
+                (error) => {
+                    this.innerHTML = '<i class="fas fa-location-crosshairs"></i>';
+                    showNotification(translations.locationFailed, 'error');
+                }
+            );
+        } else {
+            showNotification(translations.browserNotSupport, 'error');
+        }
+    });
+    
+    // Satellite Toggle Button
+    document.getElementById('satelliteToggleBtn').addEventListener('click', function() {
+        if (isSatellite) {
+            map.removeLayer(satelliteLayer);
+            osmLayer.addTo(map);
+            this.innerHTML = '<i class="fas fa-satellite"></i>';
+            this.style.background = '';
+            this.style.color = '';
+            isSatellite = false;
+        } else {
+            map.removeLayer(osmLayer);
+            satelliteLayer.addTo(map);
+            this.innerHTML = '<i class="fas fa-map"></i>';
+            this.style.background = 'var(--primary-color)';
+            this.style.color = 'white';
+            isSatellite = true;
+        }
+    });
+    
+    // Notification Function
+    function showNotification(message, type = 'info') {
+        const colors = {
+            success: '#27ae60',
+            error: '#e74c3c',
+            info: 'var(--primary-color)'
+        };
+        
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 100px;
+            ${currentLang === 'ar' ? 'right' : 'left'}: 50%;
+            transform: translateX(${currentLang === 'ar' ? '50%' : '-50%'});
+            background: ${colors[type]};
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            z-index: 10000;
+            font-weight: 600;
+            animation: slideInDown 0.5s ease, fadeOut 0.5s ease 2.5s forwards;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        `;
+        
+        const icon = type === 'success' ? 'check-circle' : (type === 'error' ? 'exclamation-circle' : 'info-circle');
+        notification.innerHTML = `<i class="fas fa-${icon}"></i> ${message}`;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
+    }
+    
+    // Contact Items Click Action
+    document.querySelectorAll('.contact-item-modern').forEach(item => {
+        item.addEventListener('click', function() {
+            const link = this.querySelector('a');
+            if (link) {
+                link.click();
+            }
+        });
+    });
+    
+    // Map interaction tracking for analytics
+    map.on('moveend', function() {
+        console.log('Map moved to:', map.getCenter());
+    });
+    
+    map.on('zoomend', function() {
+        console.log('Map zoom level:', map.getZoom());
+    });
+});
+</script>
+{% endblock %}

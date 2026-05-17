@@ -1,0 +1,7 @@
+@font-face {
+  font-family: 'Noto Nastaliq Urdu';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('NotoNastaliqUrdu-Bold.ttf') format('truetype');
+}

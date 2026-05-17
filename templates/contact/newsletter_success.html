@@ -1,0 +1,703 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "تم الاشتراك بنجاح" %} - {{ site_settings.site_name_ar }}{% endblock %}
+{% block description %}{% trans "شكراً لك على الاشتراك في النشرة البريدية. ستصلك آخر أخبار ومشاريع الجمعية." %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .newsletter-hero {
+        background: linear-gradient(135deg, #17a2b8, #0d6efd);
+        color: white;
+        padding: 100px 0 80px;
+        position: relative;
+        overflow: hidden;
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
+    }
+    
+    .newsletter-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("data:image/svg+xml,%3Csvg width='50' height='50' viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M25 25m-20 0a20 20 0 1 1 40 0a20 20 0 1 1 -40 0'/%3E%3C/g%3E%3C/svg%3E") center/50px;
+        opacity: 0.4;
+    }
+    
+    .newsletter-icon {
+        width: 140px;
+        height: 140px;
+        background: rgba(255,255,255,0.15);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 30px;
+        position: relative;
+        animation: newsletterFloat 3s ease-in-out infinite;
+    }
+    
+    .newsletter-icon i {
+        font-size: 4rem;
+        color: white;
+    }
+    
+    .newsletter-content {
+        position: relative;
+        z-index: 2;
+        max-width: 700px;
+        margin: 0 auto;
+        text-align: center;
+    }
+    
+    .newsletter-title {
+        font-size: 3.2rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .newsletter-subtitle {
+        font-size: 1.4rem;
+        line-height: 1.6;
+        margin-bottom: 40px;
+        opacity: 0.95;
+    }
+    
+    .confirmation-card {
+        background: rgba(255,255,255,0.1);
+        border: 2px solid rgba(255,255,255,0.2);
+        border-radius: 20px;
+        padding: 30px;
+        margin: 40px 0;
+        backdrop-filter: blur(10px);
+    }
+    
+    .benefits-section {
+        padding: 80px 0;
+        background: #f8f9fa;
+    }
+    
+    .benefit-card {
+        background: white;
+        border-radius: 20px;
+        padding: 35px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        text-align: center;
+        height: 100%;
+        transition: all 0.3s ease;
+        border: 3px solid transparent;
+    }
+    
+    .benefit-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+        border-color: #17a2b8;
+    }
+    
+    .benefit-icon {
+        width: 90px;
+        height: 90px;
+        background: linear-gradient(135deg, #17a2b8, #0d6efd);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 25px;
+        font-size: 2.2rem;
+        position: relative;
+    }
+    
+    .benefit-icon::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 3px solid #17a2b8;
+        opacity: 0;
+        transform: scale(1.2);
+        transition: all 0.3s ease;
+    }
+    
+    .benefit-card:hover .benefit-icon::after {
+        opacity: 1;
+        transform: scale(1.4);
+    }
+    
+    .benefit-title {
+        color: var(--primary-color);
+        font-weight: bold;
+        margin-bottom: 15px;
+        font-size: 1.4rem;
+    }
+    
+    .benefit-text {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+    
+    .preferences-section {
+        background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+        color: white;
+        padding: 80px 0;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .preferences-form {
+        background: rgba(255,255,255,0.1);
+        border-radius: 20px;
+        padding: 40px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+    
+    .frequency-option {
+        background: rgba(255,255,255,0.1);
+        border: 2px solid rgba(255,255,255,0.3);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 15px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .frequency-option:hover,
+    .frequency-option.selected {
+        background: rgba(255,255,255,0.2);
+        border-color: white;
+        transform: translateX(-5px);
+    }
+    
+    .frequency-radio {
+        margin-left: 15px;
+    }
+    
+    .topic-checkbox {
+        background: rgba(255,255,255,0.1);
+        border-radius: 10px;
+        padding: 15px 20px;
+        margin-bottom: 10px;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+    
+    .topic-checkbox:hover,
+    .topic-checkbox.selected {
+        background: rgba(255,255,255,0.2);
+        border-color: rgba(255,255,255,0.5);
+    }
+    
+    @keyframes newsletterFloat {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+    }
+    
+    .sparkle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: rgba(255,255,255,0.8);
+        border-radius: 50%;
+        animation: sparkle 2s linear infinite;
+    }
+    
+    @keyframes sparkle {
+        0%, 100% { opacity: 0; transform: scale(0); }
+        50% { opacity: 1; transform: scale(1); }
+    }
+    
+    @media (max-width: 768px) {
+        .newsletter-title { font-size: 2.5rem; }
+        .newsletter-subtitle { font-size: 1.2rem; }
+        .confirmation-card { margin: 20px; padding: 20px; }
+        .preferences-form { margin: 0 15px; padding: 25px; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Newsletter Success Hero -->
+<section class="newsletter-hero">
+    <!-- Decorative sparkles -->
+    <div class="sparkle" style="top: 20%; right: 15%; animation-delay: 0s;"></div>
+    <div class="sparkle" style="top: 60%; right: 25%; animation-delay: 0.5s;"></div>
+    <div class="sparkle" style="top: 40%; left: 20%; animation-delay: 1s;"></div>
+    <div class="sparkle" style="top: 80%; left: 30%; animation-delay: 1.5s;"></div>
+    
+    <div class="container">
+        <div class="newsletter-content" data-aos="fade-up">
+            <div class="newsletter-icon">
+                <i class="fas fa-envelope-open-text"></i>
+            </div>
+            
+            <h1 class="newsletter-title">
+                {% trans "مرحباً بك في عائلتنا!" %}
+            </h1>
+            
+            <p class="newsletter-subtitle">
+                {% trans "تم تسجيل اشتراكك في النشرة البريدية بنجاح. ستصلك أحدث أخبار ومشاريع جمعية نسائم فلسطين الخيرية." %}
+            </p>
+            
+            <div class="confirmation-card" data-aos="fade-up" data-aos-delay="300">
+                <h4 class="mb-3">
+                    <i class="fas fa-check-circle me-2"></i>
+                    {% trans "تأكيد الاشتراك" %}
+                </h4>
+                <p class="mb-0">
+                    {% trans "تحقق من بريدك الإلكتروني للحصول على رسالة التأكيد. إذا لم تجدها في صندوق الوارد، تأكد من فحص مجلد الرسائل المزعجة." %}
+                </p>
+            </div>
+            
+            <div class="d-flex flex-wrap justify-content-center gap-3 mt-4" data-aos="fade-up" data-aos-delay="500">
+                <a href="{% url 'main:home' %}" class="btn btn-light btn-lg px-4">
+                    <i class="fas fa-home me-2"></i>
+                    {% trans "العودة للرئيسية" %}
+                </a>
+                <a href="{% url 'projects:all_projects' %}" class="btn btn-outline-light btn-lg px-4">
+                    <i class="fas fa-project-diagram me-2"></i>
+                    {% trans "تصفح المشاريع" %}
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Benefits Section -->
+<section class="benefits-section">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="text-primary fw-bold mb-4">
+                <i class="fas fa-gifts me-2"></i>
+                {% trans "ماذا ستحصل عليه؟" %}
+            </h2>
+            <p class="lead text-muted">
+                {% trans "اكتشف الفوائد العديدة لاشتراكك في نشرتنا البريدية" %}
+            </p>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-newspaper"></i>
+                    </div>
+                    <h4 class="benefit-title">{% trans "آخر الأخبار" %}</h4>
+                    <p class="benefit-text">
+                        {% trans "كن أول من يعرف عن أحدث مشاريعنا وإنجازاتنا في خدمة المجتمع الفلسطيني." %}
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="400">
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-hand-holding-heart"></i>
+                    </div>
+                    <h4 class="benefit-title">{% trans "فرص التطوع" %}</h4>
+                    <p class="benefit-text">
+                        {% trans "احصل على دعوات مبكرة للمشاركة في أنشطتنا التطوعية وكن جزءاً من التغيير الإيجابي." %}
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="600">
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <h4 class="benefit-title">{% trans "حملات خاصة" %}</h4>
+                    <p class="benefit-text">
+                        {% trans "تلقى معلومات حصرية عن حملات التبرع والمبادرات الخاصة قبل الإعلان عنها للعامة." %}
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h4 class="benefit-title">{% trans "تقارير الإنجازات" %}</h4>
+                    <p class="benefit-text">
+                        {% trans "اطلع على تقارير مفصلة عن تأثير المشاريع والمساعدات التي قدمناها للمستفيدين." %}
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="400">
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h4 class="benefit-title">{% trans "الفعاليات القادمة" %}</h4>
+                    <p class="benefit-text">
+                        {% trans "كن على علم بالفعاليات والمؤتمرات والورش التدريبية التي تنظمها الجمعية." %}
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="600">
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h4 class="benefit-title">{% trans "قصص الأمل" %}</h4>
+                    <p class="benefit-text">
+                        {% trans "اقرأ قصص ملهمة عن المستفيدين وكيف ساهمت الجمعية في تحسين حياتهم." %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Preferences Section -->
+<section class="preferences-section">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="fw-bold mb-4">
+                <i class="fas fa-cogs me-2"></i>
+                {% trans "خصص تفضيلاتك" %}
+            </h2>
+            <p class="lead">
+                {% trans "يمكنك تخصيص تفضيلات النشرة البريدية لتناسب اهتماماتك" %}
+            </p>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="preferences-form" data-aos="fade-up" data-aos-delay="200">
+                    <form id="preferencesForm">
+                        {% csrf_token %}
+                        
+                        <div class="mb-4">
+                            <h5 class="mb-3">
+                                <i class="fas fa-clock me-2"></i>
+                                {% trans "تكرار الإرسال" %}
+                            </h5>
+                            
+                            <div class="frequency-option" data-frequency="weekly">
+                                <input type="radio" name="frequency" value="weekly" class="frequency-radio" checked>
+                                <strong>{% trans "أسبوعياً" %}</strong>
+                                <p class="mb-0 mt-2 small">{% trans "نشرة أسبوعية تحتوي على أهم الأخبار والتطورات" %}</p>
+                            </div>
+                            
+                            <div class="frequency-option" data-frequency="monthly">
+                                <input type="radio" name="frequency" value="monthly" class="frequency-radio">
+                                <strong>{% trans "شهرياً" %}</strong>
+                                <p class="mb-0 mt-2 small">{% trans "ملخص شهري شامل لجميع أنشطة ومشاريع الجمعية" %}</p>
+                            </div>
+                            
+                            <div class="frequency-option" data-frequency="important">
+                                <input type="radio" name="frequency" value="important" class="frequency-radio">
+                                <strong>{% trans "المهم فقط" %}</strong>
+                                <p class="mb-0 mt-2 small">{% trans "فقط الأخبار والتحديثات المهمة والعاجلة" %}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5 class="mb-3">
+                                <i class="fas fa-tags me-2"></i>
+                                {% trans "المواضيع المفضلة" %}
+                            </h5>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="topic-checkbox d-block">
+                                        <input type="checkbox" name="topics" value="projects" class="me-2" checked>
+                                        <i class="fas fa-project-diagram me-2"></i>
+                                        {% trans "المشاريع والبرامج" %}
+                                    </label>
+                                    
+                                    <label class="topic-checkbox d-block">
+                                        <input type="checkbox" name="topics" value="volunteer" class="me-2">
+                                        <i class="fas fa-hands-helping me-2"></i>
+                                        {% trans "فرص التطوع" %}
+                                    </label>
+                                    
+                                    <label class="topic-checkbox d-block">
+                                        <input type="checkbox" name="topics" value="donations" class="me-2">
+                                        <i class="fas fa-donate me-2"></i>
+                                        {% trans "حملات التبرع" %}
+                                    </label>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label class="topic-checkbox d-block">
+                                        <input type="checkbox" name="topics" value="events" class="me-2">
+                                        <i class="fas fa-calendar-check me-2"></i>
+                                        {% trans "الفعاليات والمؤتمرات" %}
+                                    </label>
+                                    
+                                    <label class="topic-checkbox d-block">
+                                        <input type="checkbox" name="topics" value="stories" class="me-2">
+                                        <i class="fas fa-heart me-2"></i>
+                                        {% trans "قصص النجاح" %}
+                                    </label>
+                                    
+                                    <label class="topic-checkbox d-block">
+                                        <input type="checkbox" name="topics" value="reports" class="me-2">
+                                        <i class="fas fa-file-alt me-2"></i>
+                                        {% trans "التقارير والإحصائيات" %}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-light btn-lg px-5">
+                                <i class="fas fa-save me-2"></i>
+                                {% trans "حفظ التفضيلات" %}
+                            </button>
+                            <p class="small mt-3 opacity-75">
+                                {% trans "يمكنك تغيير هذه التفضيلات في أي وقت من خلال الرابط الموجود في أسفل كل نشرة" %}
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 bg-light">
+    <div class="container text-center">
+        <h3 class="text-primary fw-bold mb-4" data-aos="fade-up">
+            {% trans "انضم إلى مجتمعنا على وسائل التواصل" %}
+        </h3>
+        <p class="lead text-muted mb-4" data-aos="fade-up" data-aos-delay="200">
+            {% trans "تابعنا للحصول على التحديثات اليومية وشارك في نشاطاتنا" %}
+        </p>
+        
+        <div class="d-flex justify-content-center gap-3 flex-wrap" data-aos="fade-up" data-aos-delay="400">
+            <a href="#" class="btn btn-primary btn-lg">
+                <i class="fab fa-facebook-f me-2"></i>
+                Facebook
+            </a>
+            <a href="#" class="btn btn-info btn-lg">
+                <i class="fab fa-twitter me-2"></i>
+                Twitter
+            </a>
+            <a href="#" class="btn btn-danger btn-lg">
+                <i class="fab fa-instagram me-2"></i>
+                Instagram
+            </a>
+            <a href="#" class="btn btn-success btn-lg">
+                <i class="fab fa-whatsapp me-2"></i>
+                WhatsApp
+            </a>
+        </div>
+        
+        <div class="mt-5" data-aos="fade-up" data-aos-delay="600">
+            <a href="{% url 'contact:contact' %}" class="btn btn-outline-primary btn-lg me-3">
+                <i class="fas fa-envelope me-2"></i>
+                {% trans "تواصل معنا" %}
+            </a>
+            <a href="{% url 'main:about' %}" class="btn btn-outline-secondary btn-lg">
+                <i class="fas fa-info-circle me-2"></i>
+                {% trans "تعرف علينا أكثر" %}
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle frequency selection
+    const frequencyOptions = document.querySelectorAll('.frequency-option');
+    frequencyOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            // Remove selected class from all options
+            frequencyOptions.forEach(opt => opt.classList.remove('selected'));
+            
+            // Add selected class to clicked option
+            this.classList.add('selected');
+            
+            // Check the radio button
+            const radio = this.querySelector('input[type="radio"]');
+            if (radio) radio.checked = true;
+        });
+    });
+    
+    // Handle topic checkboxes
+    const topicCheckboxes = document.querySelectorAll('.topic-checkbox');
+    topicCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('click', function(e) {
+            if (e.target.tagName !== 'INPUT') {
+                const input = this.querySelector('input[type="checkbox"]');
+                input.checked = !input.checked;
+            }
+            
+            // Toggle selected class
+            if (this.querySelector('input[type="checkbox"]').checked) {
+                this.classList.add('selected');
+            } else {
+                this.classList.remove('selected');
+            }
+        });
+    });
+    
+    // Initialize selected states
+    document.querySelectorAll('input[type="checkbox"]:checked').forEach(input => {
+        input.closest('.topic-checkbox').classList.add('selected');
+    });
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        // تعريف الرسائل المترجمة
+        const successMessage = "{% trans 'تم حفظ تفضيلاتك بنجاح!' %}";
+        const saveErrorMessage = "{% trans 'حدث خطأ في حفظ التفضيلات' %}";
+        const connectionErrorMessage = "{% trans 'حدث خطأ في الاتصال' %}";
+    
+        // Handle preferences form submission
+        const preferencesForm = document.getElementById('preferencesForm');
+        if (preferencesForm) {
+            preferencesForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+    
+                const formData = new FormData(this);
+                const preferences = {
+                    frequency: formData.get('frequency'),
+                    topics: formData.getAll('topics')
+                };
+    
+                // إرسال التفضيلات إلى السيرفر
+                fetch('{% url "contact:newsletter_preferences" %}', {
+                    method: 'POST',
+                    body: JSON.stringify(preferences),
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken'),
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showSuccess(successMessage);
+                    } else {
+                        showError(saveErrorMessage);
+                    }
+                })
+                .catch(error => {
+                    showError(connectionErrorMessage);
+                });
+            });
+        }
+    });
+
+    
+    // Create sparkle animation
+    function createSparkle() {
+        const sparkle = document.createElement('div');
+        sparkle.className = 'sparkle';
+        sparkle.style.top = Math.random() * 100 + '%';
+        sparkle.style.left = Math.random() * 100 + '%';
+        sparkle.style.animationDelay = Math.random() * 2 + 's';
+        
+        document.querySelector('.newsletter-hero').appendChild(sparkle);
+        
+        setTimeout(() => {
+            if (sparkle && sparkle.parentNode) {
+                sparkle.remove();
+            }
+        }, 2000);
+    }
+    
+    // Add sparkles periodically
+    setInterval(createSparkle, 3000);
+    
+    // Helper functions
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    function showSuccess(message) {
+        const alert = document.createElement('div');
+        alert.className = 'alert alert-success position-fixed';
+        alert.style.cssText = 'top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; min-width: 300px;';
+        alert.innerHTML = `<i class="fas fa-check me-2"></i>${message}`;
+        document.body.appendChild(alert);
+        
+        setTimeout(() => alert.remove(), 4000);
+    }
+    
+    function showError(message) {
+        const alert = document.createElement('div');
+        alert.className = 'alert alert-danger position-fixed';
+        alert.style.cssText = 'top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; min-width: 300px;';
+        alert.innerHTML = `<i class="fas fa-exclamation-triangle me-2"></i>${message}`;
+        document.body.appendChild(alert);
+        
+        setTimeout(() => alert.remove(), 4000);
+    }
+    
+    // Track newsletter subscription success
+    if (typeof gtag !== 'undefined') {
+        gtag('event', 'newsletter_subscribe_success', {
+            'event_category': 'newsletter',
+            'event_label': 'subscription_complete'
+        });
+    }
+    
+    // Add confetti effect (optional)
+    function createConfetti() {
+        const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7'];
+        const confettiCount = 50;
+        
+        for (let i = 0; i < confettiCount; i++) {
+            const confetti = document.createElement('div');
+            confetti.style.cssText = `
+                position: absolute;
+                width: 10px;
+                height: 10px;
+                background: ${colors[Math.floor(Math.random() * colors.length)]};
+                top: -10px;
+                left: ${Math.random() * 100}%;
+                animation: confettiFall 3s linear forwards;
+                border-radius: 50%;
+            `;
+            
+            document.body.appendChild(confetti);
+            
+            setTimeout(() => confetti.remove(), 3000);
+        }
+    }
+    
+    // Add confetti CSS
+    const confettiStyle = document.createElement('style');
+    confettiStyle.textContent = `
+        @keyframes confettiFall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    `;
+    document.head.appendChild(confettiStyle);
+    
+    // Trigger confetti on page load
+    setTimeout(createConfetti, 1000);
+});
+</script>
+{% endblock %}

@@ -1,0 +1,957 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load i18n %}
+{% load custom_filters %}
+
+{% block title %}{{ page_title }} - {{ site_settings|translate_field:"site_name" }}{% endblock %}
+
+{% block description %}{{ meta_description }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ==================== Hero Section ==================== */
+    .board-hero {
+        background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        color: white;
+        padding: 120px 0 80px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .board-hero::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        opacity: 0.3;
+    }
+    
+    .board-hero .container {
+        position: relative;
+        z-index: 2;
+    }
+    
+    .board-hero h1 {
+        font-size: 3rem;
+        font-weight: 800;
+        text-shadow: 2px 4px 8px rgba(0,0,0,0.2);
+        margin-bottom: 1rem;
+    }
+    
+    .board-hero p {
+        font-size: 1.25rem;
+        opacity: 0.95;
+    }
+    
+    /* ==================== Section Styling ==================== */
+    .board-section {
+        padding: 80px 0;
+        position: relative;
+    }
+    
+    .board-section:nth-child(even) {
+        background: linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%);
+    }
+    
+    .section-title {
+        text-align: center;
+        margin-bottom: 60px;
+        position: relative;
+    }
+    
+    .section-title h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 15px;
+        position: relative;
+        display: inline-block;
+    }
+    
+    .section-title h2::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        border-radius: 2px;
+    }
+    
+    .section-title p {
+        color: #666;
+        font-size: 1.1rem;
+        margin-top: 20px;
+    }
+    
+    /* ==================== Grid System ==================== */
+    
+    /* President Card - Full Width & Centered */
+    .president-section {
+        margin-bottom: 80px;
+    }
+    
+    .president-card {
+        max-width: 700px;
+        margin: 0 auto;
+    }
+    
+    .president-card .member-photo-wrapper {
+        height: 450px;
+    }
+    
+    .president-card .member-name {
+        font-size: 2.2rem;
+    }
+    
+    .president-card .member-bio {
+        max-height: 150px;
+        font-size: 1.05rem;
+    }
+    
+    .president-card .position-badge {
+        background: linear-gradient(135deg, #ffd700, #ffed4e);
+        color: #333;
+        font-size: 1.1rem;
+        padding: 12px 30px;
+        font-weight: 700;
+    }
+    
+    /* Leadership Grid (3 Columns) */
+    .leadership-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 35px;
+        margin-bottom: 50px;
+    }
+    
+    /* Members Grid (4 Columns) */
+    .members-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 30px;
+        margin-bottom: 50px;
+    }
+    
+    /* ==================== Member Cards ==================== */
+    .member-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+    
+    .member-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        z-index: 3;
+    }
+    
+    .member-card:hover {
+        transform: translateY(-12px) scale(1.02);
+        box-shadow: 0 25px 60px rgba(0,0,0,0.18);
+    }
+    
+    .member-card:hover::before {
+        opacity: 1;
+    }
+    
+    /* Photo Section */
+    .member-photo-wrapper {
+        position: relative;
+        overflow: hidden;
+        height: 300px;
+        background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        flex-shrink: 0;
+    }
+    
+    .member-photo {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s ease;
+    }
+    
+    .member-card:hover .member-photo {
+        transform: scale(1.15) rotate(2deg);
+    }
+    
+    .member-default-photo {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        color: white;
+        font-size: 4rem;
+    }
+    
+    /* Position Badge */
+    .position-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(10px);
+        padding: 8px 18px;
+        border-radius: 30px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        z-index: 2;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    [dir="ltr"] .position-badge {
+        right: auto;
+        left: 15px;
+    }
+    
+    /* Content Section */
+    .member-content {
+        padding: 25px 20px;
+        text-align: center;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .member-name {
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: var(--dark-color);
+        margin-bottom: 8px;
+        line-height: 1.3;
+    }
+    
+    .member-position {
+        color: var(--primary-color);
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+    }
+    
+    .member-bio {
+        color: #666;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin-bottom: 15px;
+        text-align: center;
+        max-height: 80px;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        flex-grow: 1;
+    }
+    
+    /* Contact Info */
+    .member-contact {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 12px;
+        font-size: 0.8rem;
+    }
+    
+    .contact-item {
+        color: #888;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+    
+    .contact-item i {
+        color: var(--primary-color);
+        font-size: 0.85rem;
+    }
+    
+    .contact-item a {
+        color: #888;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+    
+    .contact-item a:hover {
+        color: var(--primary-color);
+    }
+    
+    /* Social Links */
+    .member-social {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        padding-top: 12px;
+        border-top: 1px solid rgba(0,0,0,0.06);
+        margin-top: auto;
+    }
+    
+    .social-link {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--light-color);
+        color: var(--primary-color);
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+    }
+    
+    .social-link:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: translateY(-3px) scale(1.1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.25);
+    }
+    
+    /* ==================== Responsive Design ==================== */
+    
+    /* Large Desktop (1400px+) */
+    @media (min-width: 1400px) {
+        .leadership-grid {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+        }
+        
+        .members-grid {
+            grid-template-columns: repeat(5, 1fr);
+            gap: 30px;
+        }
+    }
+    
+    /* Desktop (1200px - 1399px) */
+    @media (max-width: 1399px) {
+        .leadership-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        
+        .members-grid {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+    
+    /* Laptop (992px - 1199px) */
+    @media (max-width: 1199px) {
+        .leadership-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+        
+        .members-grid {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+        
+        .president-card {
+            max-width: 600px;
+        }
+        
+        .president-card .member-photo-wrapper {
+            height: 380px;
+        }
+    }
+    
+    /* Tablet (768px - 991px) */
+    @media (max-width: 991px) {
+        .board-hero h1 {
+            font-size: 2.5rem;
+        }
+        
+        .section-title h2 {
+            font-size: 2rem;
+        }
+        
+        .leadership-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+        
+        .members-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+        
+        .member-photo-wrapper {
+            height: 280px;
+        }
+        
+        .president-card .member-photo-wrapper {
+            height: 350px;
+        }
+        
+        .member-name {
+            font-size: 1.25rem;
+        }
+        
+        .member-bio {
+            font-size: 0.85rem;
+            max-height: 70px;
+        }
+    }
+    
+    /* Mobile (576px - 767px) */
+    @media (max-width: 767px) {
+        .board-hero {
+            padding: 80px 0 50px;
+        }
+        
+        .board-hero h1 {
+            font-size: 2rem;
+        }
+        
+        .board-hero p {
+            font-size: 1rem;
+        }
+        
+        .section-title h2 {
+            font-size: 1.75rem;
+        }
+        
+        .leadership-grid,
+        .members-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        .president-card {
+            max-width: 100%;
+        }
+        
+        .president-card .member-photo-wrapper {
+            height: 320px;
+        }
+        
+        .member-photo-wrapper {
+            height: 260px;
+        }
+        
+        .member-content {
+            padding: 20px 15px;
+        }
+        
+        .member-name {
+            font-size: 1.2rem;
+        }
+        
+        .member-bio {
+            max-height: 60px;
+            -webkit-line-clamp: 2;
+        }
+        
+        .position-badge {
+            font-size: 0.75rem;
+            padding: 6px 14px;
+        }
+    }
+    
+    /* Small Mobile (< 576px) */
+    @media (max-width: 575px) {
+        .board-hero h1 {
+            font-size: 1.75rem;
+        }
+        
+        .section-title h2 {
+            font-size: 1.5rem;
+        }
+        
+        .member-card {
+            border-radius: 15px;
+        }
+        
+        .member-photo-wrapper {
+            height: 240px;
+        }
+        
+        .president-card .member-photo-wrapper {
+            height: 280px;
+        }
+        
+        .member-default-photo {
+            font-size: 3rem;
+        }
+        
+        .member-name {
+            font-size: 1.1rem;
+        }
+        
+        .contact-item {
+            font-size: 0.75rem;
+        }
+        
+        .social-link {
+            width: 32px;
+            height: 32px;
+            font-size: 0.85rem;
+        }
+    }
+    
+    /* ==================== Animation ==================== */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Progress Bar -->
+<div id="scrollProgress" style="position: fixed; top: 0; left: 0; width: 0; height: 4px; background: linear-gradient(90deg, var(--primary-color), var(--secondary-color)); z-index: 9999; transition: width 0.3s ease;"></div>
+
+<!-- Hero Section -->
+<section class="board-hero">
+    <div class="container">
+        <div class="text-center" data-aos="fade-down">
+            <h1>{{ page_title }}</h1>
+            <p>{% trans "نخبة من القادة المتميزين الملتزمين بخدمة المجتمع الفلسطيني" %}</p>
+        </div>
+    </div>
+</section>
+
+<!-- President Section -->
+{% if president %}
+<section class="board-section president-section">
+    <div class="container">
+        <div class="section-title" data-aos="fade-up">
+            <h2>{% trans "رئيس مجلس الإدارة" %}</h2>
+            <p>{% trans "القائد والموجه لمسيرة الجمعية نحو تحقيق أهدافها النبيلة" %}</p>
+        </div>
+        
+        <div class="president-card" data-aos="zoom-in" data-aos-delay="200">
+            <div class="member-card">
+                <div class="member-photo-wrapper">
+                    {% if president.photo %}
+                        <img loading="lazy" src="{{ president.photo.url }}" alt="{{ president|translate_field:'name' }}" class="member-photo">
+                    {% else %}
+                        <div class="member-default-photo">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    {% endif %}
+                    <div class="position-badge">
+                        <i class="fas fa-crown me-1"></i>
+                        {% get_current_language as LANGUAGE_CODE %}
+                        {% if LANGUAGE_CODE == 'en' %}
+                            {{ president.get_position_display_en }}
+                        {% else %}
+                            {{ president.get_position_display_ar }}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="member-content">
+                    <h3 class="member-name">{{ president|translate_field:'name' }}</h3>
+                    
+                    {% if president.bio_ar or president.bio_en %}
+                    <p class="member-bio">{{ president|translate_field:'bio' }}</p>
+                    {% endif %}
+                    
+                    {% if president.email or president.phone %}
+                    <div class="member-contact">
+                        {% if president.email %}
+                        <span class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <a href="mailto:{{ president.email }}">{{ president.email }}</a>
+                        </span>
+                        {% endif %}
+                        {% if president.phone %}
+                        <span class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <a href="tel:{{ president.phone }}">{{ president.phone }}</a>
+                        </span>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    
+                    {% if president.get_social_links %}
+                    <div class="member-social">
+                        {% for link in president.get_social_links %}
+                        <a href="{{ link.url }}" target="_blank" class="social-link" title="{{ link.name }}">
+                            <i class="{{ link.icon }}"></i>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Leadership Team Section -->
+{% if vice_presidents or secretary or treasurer %}
+<section class="board-section">
+    <div class="container">
+        <div class="section-title" data-aos="fade-up">
+            <h2>{% trans "القيادة التنفيذية" %}</h2>
+            <p>{% trans "فريق العمل الأساسي المسؤول عن إدارة وتنفيذ أعمال الجمعية" %}</p>
+        </div>
+        
+        <div class="leadership-grid">
+            <!-- Vice Presidents -->
+            {% for vp in vice_presidents %}
+            <div class="member-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter|mul:100 }}">
+                <div class="member-photo-wrapper">
+                    {% if vp.photo %}
+                        <img loading="lazy" src="{{ vp.photo.url }}" alt="{{ vp|translate_field:'name' }}" class="member-photo">
+                    {% else %}
+                        <div class="member-default-photo">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    {% endif %}
+                    <div class="position-badge">
+                        {% get_current_language as LANGUAGE_CODE %}
+                        {% if LANGUAGE_CODE == 'en' %}
+                            {{ vp.get_position_display_en }}
+                        {% else %}
+                            {{ vp.get_position_display_ar }}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="member-content">
+                    <h3 class="member-name">{{ vp|translate_field:'name' }}</h3>
+                    
+                    {% if vp.bio_ar or vp.bio_en %}
+                    <p class="member-bio">{{ vp|translate_field:'bio' }}</p>
+                    {% endif %}
+                    
+                    {% if vp.email or vp.phone %}
+                    <div class="member-contact">
+                        {% if vp.email %}
+                        <span class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            {{ vp.email|truncatechars:20 }}
+                        </span>
+                        {% endif %}
+                        {% if vp.phone %}
+                        <span class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            {{ vp.phone }}
+                        </span>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    
+                    {% if vp.get_social_links %}
+                    <div class="member-social">
+                        {% for link in vp.get_social_links %}
+                        <a href="{{ link.url }}" target="_blank" class="social-link" title="{{ link.name }}">
+                            <i class="{{ link.icon }}"></i>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+            
+            <!-- Secretary -->
+            {% if secretary %}
+            <div class="member-card" data-aos="fade-up" data-aos-delay="300">
+                <div class="member-photo-wrapper">
+                    {% if secretary.photo %}
+                        <img loading="lazy" src="{{ secretary.photo.url }}" alt="{{ secretary|translate_field:'name' }}" class="member-photo">
+                    {% else %}
+                        <div class="member-default-photo">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    {% endif %}
+                    <div class="position-badge">
+                        {% get_current_language as LANGUAGE_CODE %}
+                        {% if LANGUAGE_CODE == 'en' %}
+                            {{ secretary.get_position_display_en }}
+                        {% else %}
+                            {{ secretary.get_position_display_ar }}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="member-content">
+                    <h3 class="member-name">{{ secretary|translate_field:'name' }}</h3>
+                    
+                    {% if secretary.bio_ar or secretary.bio_en %}
+                    <p class="member-bio">{{ secretary|translate_field:'bio' }}</p>
+                    {% endif %}
+                    
+                    {% if secretary.email or secretary.phone %}
+                    <div class="member-contact">
+                        {% if secretary.email %}
+                        <span class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            {{ secretary.email|truncatechars:20 }}
+                        </span>
+                        {% endif %}
+                        {% if secretary.phone %}
+                        <span class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            {{ secretary.phone }}
+                        </span>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    
+                    {% if secretary.get_social_links %}
+                    <div class="member-social">
+                        {% for link in secretary.get_social_links %}
+                        <a href="{{ link.url }}" target="_blank" class="social-link" title="{{ link.name }}">
+                            <i class="{{ link.icon }}"></i>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Treasurer -->
+            {% if treasurer %}
+            <div class="member-card" data-aos="fade-up" data-aos-delay="400">
+                <div class="member-photo-wrapper">
+                    {% if treasurer.photo %}
+                        <img loading="lazy" src="{{ treasurer.photo.url }}" alt="{{ treasurer|translate_field:'name' }}" class="member-photo">
+                    {% else %}
+                        <div class="member-default-photo">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    {% endif %}
+                    <div class="position-badge">
+                        {% get_current_language as LANGUAGE_CODE %}
+                        {% if LANGUAGE_CODE == 'en' %}
+                            {{ treasurer.get_position_display_en }}
+                        {% else %}
+                            {{ treasurer.get_position_display_ar }}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="member-content">
+                    <h3 class="member-name">{{ treasurer|translate_field:'name' }}</h3>
+                    
+                    {% if treasurer.bio_ar or treasurer.bio_en %}
+                    <p class="member-bio">{{ treasurer|translate_field:'bio' }}</p>
+                    {% endif %}
+                    
+                    {% if treasurer.email or treasurer.phone %}
+                    <div class="member-contact">
+                        {% if treasurer.email %}
+                        <span class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            {{ treasurer.email|truncatechars:20 }}
+                        </span>
+                        {% endif %}
+                        {% if treasurer.phone %}
+                        <span class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            {{ treasurer.phone }}
+                        </span>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    
+                    {% if treasurer.get_social_links %}
+                    <div class="member-social">
+                        {% for link in treasurer.get_social_links %}
+                        <a href="{{ link.url }}" target="_blank" class="social-link" title="{{ link.name }}">
+                            <i class="{{ link.icon }}"></i>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Regular Members Section -->
+{% if members %}
+<section class="board-section">
+    <div class="container">
+        <div class="section-title" data-aos="fade-up">
+            <h2>{% trans "أعضاء مجلس الإدارة" %}</h2>
+            <p>{% trans "فريق متميز من المساهمين في دعم رؤية الجمعية وتحقيق رسالتها" %}</p>
+        </div>
+        
+        <div class="members-grid">
+            {% for member in members %}
+            <div class="member-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter|mul:80 }}">
+                <div class="member-photo-wrapper">
+                    {% if member.photo %}
+                        <img loading="lazy" src="{{ member.photo.url }}" alt="{{ member|translate_field:'name' }}" class="member-photo">
+                    {% else %}
+                        <div class="member-default-photo">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    {% endif %}
+                    <div class="position-badge">
+                        {% get_current_language as LANGUAGE_CODE %}
+                        {% if LANGUAGE_CODE == 'en' %}
+                            {{ member.get_position_display_en }}
+                        {% else %}
+                            {{ member.get_position_display_ar }}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="member-content">
+                    <h3 class="member-name">{{ member|translate_field:'name' }}</h3>
+                    
+                    {% if member.bio_ar or member.bio_en %}
+                    <p class="member-bio">{{ member|translate_field:'bio' }}</p>
+                    {% endif %}
+                    
+                    {% if member.email or member.phone %}
+                    <div class="member-contact">
+                        {% if member.email %}
+                        <span class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            {{ member.email|truncatechars:20 }}
+                        </span>
+                        {% endif %}
+                        {% if member.phone %}
+                        <span class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            {{ member.phone }}
+                        </span>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    
+                    {% if member.get_social_links %}
+                    <div class="member-social">
+                        {% for link in member.get_social_links %}
+                        <a href="{{ link.url }}" target="_blank" class="social-link" title="{{ link.name }}">
+                            <i class="{{ link.icon }}"></i>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Custom Position Members Section -->
+{% if custom_members %}
+<section class="board-section">
+    <div class="container">
+        <div class="section-title" data-aos="fade-up">
+            <h2>{% trans "أعضاء آخرون" %}</h2>
+        </div>
+        
+        <div class="members-grid">
+            {% for member in custom_members %}
+            <div class="member-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter|mul:80 }}">
+                <div class="member-photo-wrapper">
+                    {% if member.photo %}
+                        <img loading="lazy" src="{{ member.photo.url }}" alt="{{ member|translate_field:'name' }}" class="member-photo">
+                    {% else %}
+                        <div class="member-default-photo">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    {% endif %}
+                    <div class="position-badge">
+                        {% get_current_language as LANGUAGE_CODE %}
+                        {% if LANGUAGE_CODE == 'en' %}
+                            {{ member.get_position_display_en }}
+                        {% else %}
+                            {{ member.get_position_display_ar }}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="member-content">
+                    <h3 class="member-name">{{ member|translate_field:'name' }}</h3>
+                    
+                    {% if member.bio_ar or member.bio_en %}
+                    <p class="member-bio">{{ member|translate_field:'bio' }}</p>
+                    {% endif %}
+                    
+                    {% if member.email or member.phone %}
+                    <div class="member-contact">
+                        {% if member.email %}
+                        <span class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            {{ member.email|truncatechars:20 }}
+                        </span>
+                        {% endif %}
+                        {% if member.phone %}
+                        <span class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            {{ member.phone }}
+                        </span>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    
+                    {% if member.get_social_links %}
+                    <div class="member-social">
+                        {% for link in member.get_social_links %}
+                        <a href="{{ link.url }}" target="_blank" class="social-link" title="{{ link.name }}">
+                            <i class="{{ link.icon }}"></i>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Call to Action -->
+<section class="py-5" style="background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); color: white;">
+    <div class="container text-center" data-aos="fade-up">
+        <h2 class="display-5 fw-bold mb-3">{% trans "انضم إلى مسيرتنا" %}</h2>
+        <p class="lead mb-4">{% trans "كن جزءاً من التغيير الإيجابي في المجتمع الفلسطيني" %}</p>
+        <a href="{% url 'contact:contact' %}" class="btn btn-warning btn-lg">
+            <i class="fas fa-phone me-2"></i>{% trans "تواصل معنا" %}
+        </a>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Scroll Progress Bar
+    const scrollProgress = document.getElementById('scrollProgress');
+    function updateScrollProgress() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrollPercentage = (scrollTop / scrollHeight) * 100;
+        scrollProgress.style.width = scrollPercentage + '%';
+    }
+    window.addEventListener('scroll', updateScrollProgress);
+});
+</script>
+{% endblock %}

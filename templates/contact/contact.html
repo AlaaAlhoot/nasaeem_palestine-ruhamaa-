@@ -1,0 +1,731 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load custom_filters %}
+
+{% block title %}{% trans "تواصل معنا" %}{% endblock %}
+
+{% block extra_css %}
+<style>
+
+/* ================================================
+   KEYFRAMES
+================================================ */
+@keyframes floatIcon    { 0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)} }
+@keyframes slideInUp    { from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)} }
+@keyframes slideInRight { from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)} }
+@keyframes fadeInUp     { from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)} }
+@keyframes zoomIn       { from{opacity:0;transform:scale(0)}to{opacity:1;transform:scale(1)} }
+@keyframes expandWidth  { from{width:0}to{width:60px} }
+@keyframes shake        { 0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)} }
+@keyframes fadeInOverlay{ from{opacity:0}to{opacity:1} }
+@keyframes fadeOutOverlay{ to{opacity:0} }
+@keyframes popIn        { from{transform:scale(0.5);opacity:0}to{transform:scale(1);opacity:1} }
+@keyframes scaleCheck   { from{transform:scale(0)}to{transform:scale(1)} }
+@keyframes drawCheck    { to{stroke-dashoffset:0} }
+@keyframes timerBar     { from{width:100%}to{width:0%} }
+@keyframes pulse        { 0%,100%{transform:scale(1)}50%{transform:scale(1.1)} }
+
+/* ================================================
+   HERO
+================================================ */
+.contact-hero {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: white; padding: 100px 0 50px;
+    position: relative; overflow: hidden;
+}
+.contact-hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M20 20c0 11.046-8.954 20-20 20v20h40V20H20z'/%3E%3C/g%3E%3C/svg%3E") center/40px;
+    opacity: 0.3;
+}
+.hero-content { position: relative; z-index: 2; text-align: center; }
+.hero-icon { font-size: 4rem; margin-bottom: 1rem; animation: floatIcon 3s ease-in-out infinite; display: block; }
+.hero-content p { color: rgba(255,255,255,0.85); }
+
+/* ================================================
+   MAIN SECTION
+================================================ */
+.contact-main {
+    padding: 80px 0;
+    background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+/* ================================================
+   CARDS
+================================================ */
+.contact-form-card, .sidebar-card {
+    background: white; border-radius: 20px; padding: 40px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    transition: all 0.3s ease; margin-top: -60px;
+}
+.contact-form-card { animation: slideInUp 0.6s ease-out; }
+.sidebar-card      { animation: slideInRight 0.6s ease-out; }
+.contact-form-card:hover,
+.sidebar-card:hover { box-shadow: 0 20px 45px rgba(0,0,0,0.15); transform: translateY(-5px); }
+
+/* ================================================
+   HEADERS
+================================================ */
+.form-header {
+    text-align: center; margin-bottom: 35px;
+    padding-bottom: 20px; border-bottom: 3px solid var(--primary-color);
+    position: relative;
+}
+.form-header::after {
+    content: ''; position: absolute; bottom: -3px;
+    right: 50%; transform: translateX(50%);
+    width: 60px; height: 3px;
+    background: var(--secondary-color);
+    animation: expandWidth 0.8s ease-out;
+}
+.form-header h2 { color: var(--primary-color); font-weight: 700; font-size: 1.8rem; margin-bottom: 8px; }
+.form-header p  { color: #6c757d; margin: 0; }
+
+.card-header-custom {
+    text-align: center; margin-bottom: 22px;
+    padding-bottom: 14px; border-bottom: 2px solid #f0f0f0;
+    position: relative;
+}
+.card-header-custom::after {
+    content: ''; position: absolute; bottom: -2px;
+    right: 50%; transform: translateX(50%);
+    width: 40px; height: 2px; background: var(--secondary-color);
+}
+.card-header-custom h3 {
+    color: var(--primary-color); font-weight: 700; margin: 0; font-size: 1.3rem;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.card-header-custom h3 i { color: var(--secondary-color); animation: pulse 2s infinite; }
+
+/* ================================================
+   FORM ELEMENTS
+================================================ */
+.form-label {
+    font-weight: 600; color: var(--primary-color);
+    margin-bottom: 6px; display: block; font-size: 0.88rem;
+}
+.form-control {
+    border: 2px solid #e9ecef; border-radius: 12px;
+    padding: 11px 16px; font-size: 0.95rem;
+    transition: all 0.3s; width: 100%;
+}
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(107,142,35,0.25); outline: none;
+}
+.form-control::placeholder { color: #adb5bd; }
+.form-control.is-invalid   { border-color: #dc3545 !important; animation: shake 0.5s; }
+.form-control.is-valid     { border-color: var(--primary-color) !important; }
+.field-error { color: #dc3545; font-size: 0.78rem; margin-top: 4px; display: none; }
+.field-error.show { display: block; }
+
+/* ================================================
+   PHONE PICKER
+================================================ */
+.pp-wrap { position: relative; }
+.phone-picker {
+    display: flex; align-items: stretch;
+    border: 2px solid #e9ecef; border-radius: 12px;
+    overflow: hidden; background: white; transition: border-color 0.3s, box-shadow 0.3s;
+}
+.phone-picker:focus-within {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(107,142,35,0.25);
+}
+.pp-selector {
+    display: flex; align-items: center; gap: 6px;
+    padding: 10px 12px; cursor: pointer;
+    background: #f8f9fa; border-left: 2px solid #e9ecef;
+    white-space: nowrap; user-select: none;
+    transition: background 0.2s; flex-shrink: 0;
+}
+.pp-selector:hover { background: rgba(107,142,35,0.08); }
+.pp-flag  { font-size: 1.1rem; line-height: 1; }
+.pp-dial  { font-size: 0.85rem; color: #333; font-weight: 600; }
+.pp-arrow { font-size: 0.65rem; color: #6c757d; transition: transform 0.2s; }
+.pp-input {
+    flex: 1; border: none !important; border-radius: 0 !important;
+    box-shadow: none !important; background: transparent !important;
+    padding: 11px 14px; font-size: 0.95rem; color: #333; min-width: 0;
+}
+.pp-input:focus { outline: none; box-shadow: none !important; }
+.pp-input::placeholder { color: #adb5bd; }
+.pp-dropdown {
+    position: absolute; top: calc(100% + 6px); right: 0; left: 0;
+    background: white; border: 1px solid #dee2e6; border-radius: 12px;
+    box-shadow: 0 12px 36px rgba(0,0,0,0.12); z-index: 999;
+    max-height: 280px; overflow: hidden; display: flex; flex-direction: column;
+}
+.pp-dropdown.d-none { display: none !important; }
+.pp-search-wrap { padding: 10px 12px; border-bottom: 1px solid #f0f0f0; }
+.pp-search {
+    width: 100%; border: 1.5px solid #e9ecef; border-radius: 8px;
+    padding: 8px 12px; font-size: 0.85rem; outline: none; transition: border-color 0.2s;
+}
+.pp-search:focus { border-color: var(--primary-color); }
+.pp-list { overflow-y: auto; flex: 1; }
+.pp-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px; cursor: pointer; transition: background 0.15s;
+}
+.pp-item:hover     { background: rgba(107,142,35,0.06); }
+.pp-item-flag      { font-size: 1.1rem; flex-shrink: 0; }
+.pp-item-name      { flex: 1; font-size: 0.88rem; color: #333; }
+.pp-item-dial      { font-size: 0.8rem; color: #6c757d; font-weight: 600; }
+.pp-loading, .pp-empty { text-align: center; padding: 20px; color: #6c757d; font-size: 0.85rem; }
+.pp-hint { font-size: 0.78rem; color: var(--primary-color); margin-top: 4px; min-height: 18px; }
+
+/* ================================================
+   SUBMIT BUTTON
+================================================ */
+.btn-submit {
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    color: white; border: none; padding: 14px 40px; border-radius: 25px;
+    font-size: 1.05rem; font-weight: 700; transition: all 0.3s; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%;
+}
+.btn-submit:hover:not(:disabled) {
+    transform: translateY(-3px); color: white;
+    box-shadow: 0 10px 25px rgba(107,142,35,0.3);
+}
+.btn-submit:disabled { opacity: 0.7; cursor: not-allowed; }
+
+/* ================================================
+   CONTACT INFO ITEMS
+================================================ */
+.contact-item {
+    display: flex; align-items: flex-start; margin-bottom: 14px;
+    padding: 13px; background: #f8f9fa; border-radius: 12px;
+    transition: all 0.3s; animation: fadeInUp 0.5s ease-out backwards;
+}
+.contact-item:nth-child(1){animation-delay:0.1s}
+.contact-item:nth-child(2){animation-delay:0.2s}
+.contact-item:nth-child(3){animation-delay:0.3s}
+.contact-item:hover { background: var(--primary-color); color: white; transform: translateX(-5px); }
+.contact-icon {
+    width: 42px; height: 42px; background: var(--secondary-color);
+    color: #333; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin-left: 12px; font-size: 1rem; flex-shrink: 0; transition: all 0.3s;
+}
+.contact-item:hover .contact-icon { background: white; color: var(--primary-color); transform: scale(1.1) rotate(360deg); }
+.contact-details h6 { margin: 0 0 3px; font-weight: 700; color: var(--primary-color); font-size: 0.88rem; transition: color 0.3s; }
+.contact-details p  { margin: 0; color: #666; font-size: 0.83rem; line-height: 1.5; transition: color 0.3s; }
+.contact-item:hover .contact-details h6,
+.contact-item:hover .contact-details p { color: white; }
+
+/* ================================================
+   WORK HOURS
+================================================ */
+.work-hours-box {
+    background: linear-gradient(135deg, rgba(107,142,35,0.08), rgba(255,215,0,0.08));
+    border: 1px solid rgba(107,142,35,0.2);
+    border-radius: 14px; padding: 18px; margin-top: 8px; text-align: center;
+}
+.work-days-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: white; border-radius: 30px;
+    padding: 6px 18px; font-weight: 700; font-size: 0.88rem; margin-bottom: 8px;
+}
+.work-time-text { color: #666; font-size: 0.88rem; }
+.work-time-text strong { color: var(--primary-color); }
+
+/* ================================================
+   SOCIAL LINKS
+================================================ */
+.social-section { padding: 16px 0 0; margin-top: 16px; border-top: 2px solid #f0f0f0; }
+.social-section h6 { text-align: center; color: var(--primary-color); font-weight: 700; margin-bottom: 14px; font-size: 0.95rem; }
+.social-links-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 10px; justify-items: center; }
+.social-link {
+    display: flex; align-items: center; justify-content: center;
+    width: 44px; height: 44px;
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    color: white; border-radius: 50%; text-decoration: none;
+    transition: all 0.3s; font-size: 1rem;
+    animation: zoomIn 0.5s ease-out backwards;
+}
+.social-link:nth-child(1){animation-delay:0.1s} .social-link:nth-child(2){animation-delay:0.15s}
+.social-link:nth-child(3){animation-delay:0.2s} .social-link:nth-child(4){animation-delay:0.25s}
+.social-link:nth-child(5){animation-delay:0.3s} .social-link:nth-child(6){animation-delay:0.35s}
+.social-link:hover { color: white; transform: translateY(-5px) scale(1.1); box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+.social-link.facebook:hover  { background: #1877f2; }
+.social-link.twitter:hover   { background: #000; }
+.social-link.instagram:hover { background: linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); }
+.social-link.youtube:hover   { background: #ff0000; }
+.social-link.linkedin:hover  { background: #0077b5; }
+.social-link.telegram:hover  { background: #0088cc; }
+.social-link.whatsapp:hover  { background: #25d366; }
+.social-link.tiktok:hover    { background: #000; }
+.social-link.github:hover    { background: #333; }
+.social-link.discord:hover   { background: #5865F2; }
+
+/* ================================================
+   FAQ
+================================================ */
+.faq-card-full {
+    background: white; border-radius: 20px; padding: 40px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    transition: all 0.3s; animation: slideInUp 0.8s ease-out;
+}
+.faq-card-full:hover { box-shadow: 0 20px 45px rgba(0,0,0,0.15); }
+.faq-list-horizontal { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; margin: 24px 0; }
+.faq-item {
+    border: 2px solid #eee; border-radius: 12px; padding: 16px;
+    transition: all 0.3s; background: #f8f9fa;
+    animation: fadeInUp 0.5s ease-out backwards;
+}
+.faq-item:nth-child(1){animation-delay:0.1s} .faq-item:nth-child(2){animation-delay:0.2s}
+.faq-item:nth-child(3){animation-delay:0.3s} .faq-item:nth-child(4){animation-delay:0.4s}
+.faq-item:hover { border-color: var(--primary-color); background: white; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+.faq-item.active { border-color: var(--primary-color); background: white; }
+.faq-question {
+    background: none; border: none; width: 100%; text-align: right;
+    padding: 6px 0; font-weight: 700; color: var(--primary-color);
+    font-size: 0.9rem; cursor: pointer; transition: all 0.3s;
+    display: flex; justify-content: space-between; align-items: center; gap: 8px;
+}
+.faq-question:hover { color: var(--accent-color); }
+.faq-question i { transition: transform 0.3s; color: var(--secondary-color); font-size: 0.82rem; flex-shrink: 0; }
+.faq-item.active .faq-question i { transform: rotate(180deg); }
+.faq-answer {
+    color: #555; line-height: 1.7; font-size: 0.87rem;
+    max-height: 0; overflow: hidden; opacity: 0; transition: all 0.3s ease;
+}
+.faq-item.active .faq-answer { max-height: 500px; opacity: 1; padding-top: 10px; }
+.faq-footer { text-align: center; margin-top: 24px; padding-top: 20px; border-top: 2px solid #f0f0f0; }
+.btn-view-all-faq {
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    color: white; border: none; padding: 11px 28px; border-radius: 25px;
+    font-weight: 700; font-size: 0.95rem; transition: all 0.3s; text-decoration: none; display: inline-block;
+}
+.btn-view-all-faq:hover { color: white; transform: translateY(-3px); box-shadow: 0 8px 20px rgba(107,142,35,0.3); }
+
+/* ================================================
+   SUCCESS MODAL
+================================================ */
+.success-modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+    z-index: 9999; display: flex; align-items: center; justify-content: center;
+    animation: fadeInOverlay 0.3s ease;
+}
+.success-modal-overlay.fade-out { animation: fadeOutOverlay 0.4s ease forwards; }
+.success-modal-box {
+    background: white; border-radius: 24px; padding: 48px 40px;
+    text-align: center; min-width: 300px;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.2);
+    animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+.success-check-circle {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px;
+    animation: scaleCheck 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.2s both;
+    box-shadow: 0 8px 24px rgba(107,142,35,0.35);
+}
+.success-check-svg { width: 40px; height: 40px; stroke: #fff; stroke-width: 3; fill: none; stroke-dasharray: 60; stroke-dashoffset: 60; animation: drawCheck 0.5s ease 0.5s forwards; }
+.success-modal-title { color: var(--primary-color); font-size: 1.4rem; font-weight: 700; margin-bottom: 8px; }
+.success-modal-text  { color: #6c757d; font-size: 0.95rem; }
+.success-modal-timer { width: 100%; height: 3px; background: #f0f0f0; border-radius: 3px; margin-top: 22px; overflow: hidden; }
+.success-modal-timer-bar { height: 100%; background: linear-gradient(90deg, var(--primary-color), var(--secondary-color)); border-radius: 3px; animation: timerBar 3s linear forwards; }
+
+/* ================================================
+   EMPTY STATE
+================================================ */
+.empty-state { text-align: center; padding: 24px; color: #6c757d; }
+.empty-state i { font-size: 2.5rem; color: #dee2e6; margin-bottom: 10px; display: block; }
+
+/* ================================================
+   RESPONSIVE
+================================================ */
+@media (max-width: 991px) {
+    .contact-form-card, .sidebar-card { margin-top: 20px; }
+    .faq-list-horizontal { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+    .contact-hero { padding: 80px 0 40px; }
+    .contact-form-card, .sidebar-card, .faq-card-full { padding: 24px 16px; }
+    .social-links-grid { grid-template-columns: repeat(4,1fr); }
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ==================== Hero ==================== -->
+<section class="contact-hero">
+    <div class="container">
+        <div class="hero-content">
+            <span class="hero-icon"><i class="fas fa-comments"></i></span>
+            <h1 class="display-5 fw-bold mb-3">{% trans "تواصل معنا" %}</h1>
+            <p class="lead mb-0">{% trans "نحن هنا للاستماع إليك والإجابة على جميع استفساراتك" %}</p>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== المحتوى الرئيسي ==================== -->
+<section class="contact-main">
+    <div class="container">
+
+        <!-- Row 1: الفورم + Sidebar -->
+        <div class="row align-items-stretch g-4 mb-4">
+
+            <!-- الفورم -->
+            <div class="col-lg-8">
+                <div class="contact-form-card h-100">
+                    <div class="form-header">
+                        <h2><i class="fas fa-envelope me-2"></i>{% trans "أرسل رسالتك" %}</h2>
+                        <p>{% trans "املأ النموذج أدناه وسنقوم بالرد عليك في أقرب وقت ممكن" %}</p>
+                    </div>
+
+                    <div id="contactAlert" style="display:none;border-radius:12px;padding:14px 18px;font-size:0.9rem;margin-bottom:16px"></div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="fas fa-user me-1"></i>{% trans "الاسم الكامل" %} *</label>
+                            <input type="text" id="contactName" class="form-control"
+                                   placeholder="{% trans 'أدخل اسمك الكامل' %}"
+                                   oninput="clearContactErr('contactName','errName')">
+                            <div class="field-error" id="errName"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="fas fa-envelope me-1"></i>{% trans "البريد الإلكتروني" %} *</label>
+                            <input type="email" id="contactEmail" class="form-control"
+                                   placeholder="example@email.com"
+                                   oninput="clearContactErr('contactEmail','errEmail')">
+                            <div class="field-error" id="errEmail"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="fas fa-phone me-1"></i>{% trans "رقم الجوال" %} *</label>
+                            <div id="contactPhoneContainer" class="pp-wrap"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="fas fa-tag me-1"></i>{% trans "عنوان الرسالة" %} *</label>
+                            <input type="text" id="contactSubject" class="form-control"
+                                   placeholder="{% trans 'موضوع رسالتك' %}" maxlength="200"
+                                   oninput="clearContactErr('contactSubject','errSubject')">
+                            <div class="field-error" id="errSubject"></div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label"><i class="fas fa-comment-alt me-1"></i>{% trans "الرسالة" %} *</label>
+                            <textarea id="contactMessage" class="form-control" rows="5"
+                                      placeholder="{% trans 'اكتب رسالتك هنا...' %}" maxlength="700"
+                                      oninput="clearContactErr('contactMessage','errMessage')"></textarea>
+                            <div style="text-align:left;font-size:0.75rem;color:#6c757d;margin-top:3px">
+                                <span id="msgCount">0</span>/700
+                            </div>
+                            <div class="field-error" id="errMessage"></div>
+                        </div>
+<div class="col-12 text-center mt-2">
+    <button id="contactBtn" class="btn-submit" data-url="{% url 'contact:contact' %}" onclick="submitContact()">
+        <i class="fas fa-paper-plane"></i> {% trans "إرسال الرسالة" %}
+    </button>
+</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <div class="sidebar-card h-100">
+
+                    <!-- معلومات التواصل -->
+                    {% if contact_info %}
+                    <div class="card-header-custom">
+                        <h3><i class="fas fa-address-book"></i>{% trans "معلومات التواصل" %}</h3>
+                    </div>
+                    {% for info in contact_info %}
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="{{ info.icon_class|default:'fas fa-info-circle' }}"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h6>{{ info|translate_field:"type" }}</h6>
+                            <p>{{ info|translate_field:"value" }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+
+<!-- أوقات العمل -->
+<div class="card-header-custom {% if contact_info %}mt-3{% endif %}">
+    <h3><i class="fas fa-clock"></i>{% trans "أوقات العمل" %}</h3>
+</div>
+<div class="work-hours-box">
+    <div class="work-days-badge">
+        {% if work_days_type == 'week' %}
+            {{ work_days_from|translate_day }} — {{ work_days_to|translate_day }}
+        {% else %}
+            {{ work_days_custom|translate_day }}
+        {% endif %}
+    </div>
+    <div class="work-time-text">
+        <strong>{{ work_time_from|split:" "|first }}</strong> {{ work_time_from|split:" "|last|translate_time_of_day }}
+        {% trans "حتى" %}
+        <strong>{{ work_time_to|split:" "|first }}</strong> {{ work_time_to|split:" "|last|translate_time_of_day }}
+    </div>
+</div>
+
+                    <!-- منصات التواصل -->
+                    {% if social_links %}
+                    <div class="social-section">
+                        <h6><i class="fas fa-share-alt me-2"></i>{% trans "تابعنا على" %}</h6>
+                        <div class="social-links-grid">
+                            {% for social in social_links %}
+                            <a href="{{ social.url }}" target="_blank"
+                               class="social-link {{ social.platform }}"
+                               title="{{ social.username }}"
+                               rel="noopener noreferrer"
+                               onclick="trackSocialClick({{ social.id }})">
+                                {% if social.platform == 'facebook' %}<i class="fab fa-facebook-f"></i>
+                                {% elif social.platform == 'twitter' %}<i class="fab fa-x-twitter"></i>
+                                {% elif social.platform == 'instagram' %}<i class="fab fa-instagram"></i>
+                                {% elif social.platform == 'youtube' %}<i class="fab fa-youtube"></i>
+                                {% elif social.platform == 'linkedin' %}<i class="fab fa-linkedin-in"></i>
+                                {% elif social.platform == 'telegram' %}<i class="fab fa-telegram-plane"></i>
+                                {% elif social.platform == 'whatsapp' %}<i class="fab fa-whatsapp"></i>
+                                {% elif social.platform == 'tiktok' %}<i class="fab fa-tiktok"></i>
+                                {% elif social.platform == 'snapchat' %}<i class="fab fa-snapchat-ghost"></i>
+                                {% elif social.platform == 'github' %}<i class="fab fa-github"></i>
+                                {% elif social.platform == 'discord' %}<i class="fab fa-discord"></i>
+                                {% else %}<i class="fas fa-link"></i>{% endif %}
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                </div>
+            </div>
+
+        </div>
+        <!-- End Row 1 -->
+
+        <!-- Row 2: FAQ -->
+        {% if recent_faqs %}
+        <div class="row">
+            <div class="col-12">
+                <div class="faq-card-full">
+                    <div class="card-header-custom">
+                        <h3><i class="fas fa-question-circle"></i>{% trans "أسئلة شائعة" %}</h3>
+                    </div>
+                    <div class="faq-list-horizontal">
+                        {% for faq in recent_faqs %}
+                        <div class="faq-item">
+                            <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                                <span>{{ faq|translate_field:"question" }}</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="faq-answer">{{ faq|translate_field:"answer" }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="faq-footer">
+                        <a href="{% url 'contact:faq_list' %}" class="btn-view-all-faq">
+                            <i class="fas fa-list me-2"></i>{% trans "عرض جميع الأسئلة" %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/phone_picker.js' %}"></script>
+<script src="https://unpkg.com/libphonenumber-js@1.11.4/bundle/libphonenumber-min.js"></script>
+<script>
+
+// ==================== PhonePicker ====================
+if (document.getElementById('contactPhoneContainer')) {
+    PhonePicker.init({
+        containerId: 'contactPhoneContainer',
+        inputId:     'contactPhoneInput',
+        dialId:      'contactDial',
+        codeId:      'contactCode',
+        errorId:     'errContactPhone',
+        hintId:      'hintContactPhone',
+        defaultCode: 'PS',
+    });
+}
+
+// ==================== Message Counter ====================
+document.getElementById('contactMessage')?.addEventListener('input', function() {
+    document.getElementById('msgCount').textContent = this.value.length;
+});
+
+// ==================== FAQ Toggle ====================
+function toggleFaq(btn) {
+    const item     = btn.closest('.faq-item');
+    const isActive = item.classList.contains('active');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+    if (!isActive) item.classList.add('active');
+}
+
+// ==================== Success Modal ====================
+function showSuccessModal(message) {
+    const overlay = document.createElement('div');
+    overlay.className = 'success-modal-overlay';
+    overlay.innerHTML = `
+        <div class="success-modal-box">
+            <div class="success-check-circle">
+                <svg class="success-check-svg" viewBox="0 0 52 52">
+                    <polyline points="14,27 22,35 38,17"/>
+                </svg>
+            </div>
+            <div class="success-modal-title">{% trans "تم بنجاح! 🎉" %}</div>
+            <div class="success-modal-text">${message}</div>
+            <div class="success-modal-timer"><div class="success-modal-timer-bar"></div></div>
+        </div>`;
+    document.body.appendChild(overlay);
+    const close = () => { overlay.classList.add('fade-out'); setTimeout(() => overlay.remove(), 400); };
+    setTimeout(close, 3000);
+    overlay.addEventListener('click', close);
+}
+
+// ==================== التحقق من رقم الجوال ====================
+function validateContactPhone(number, countryCode) {
+    if (!number || !number.trim()) return { valid: false, msg: '{% trans "رقم الجوال مطلوب" %}' };
+    try {
+        const parsed = libphonenumber.parsePhoneNumber(number.trim(), countryCode);
+        if (parsed && parsed.isValid()) return { valid: true, msg: '' };
+        return { valid: false, msg: '{% trans "رقم الجوال غير صالح لهذه الدولة" %}' };
+    } catch (e) {
+        return { valid: false, msg: '{% trans "رقم الجوال غير صالح لهذه الدولة" %}' };
+    }
+}
+
+// ==================== Social Click Tracking ====================
+function trackSocialClick(socialId) {
+    fetch(`/contact/ajax/social-click/${socialId}/`, {
+        method: 'POST',
+        headers: { 'X-CSRFToken': getCsrf() }
+    });
+}
+
+// ==================== Submit ====================
+function submitContact() {
+    const name         = document.getElementById('contactName').value.trim();
+    const email        = document.getElementById('contactEmail').value.trim();
+    const subject      = document.getElementById('contactSubject').value.trim();
+    const message      = document.getElementById('contactMessage').value.trim();
+    const phoneInput   = document.getElementById('contactPhoneInput')?.value?.trim() || '';
+    const phoneCountry = document.getElementById('contactCode')?.value  || 'PS';
+    const phoneDial    = document.getElementById('contactDial')?.value  || '+970';
+
+    clearAllContactErrors();
+    const hintEl = document.getElementById('hintContactPhone');
+    if (hintEl) hintEl.textContent = '';
+    document.getElementById('contactPhoneInput')?.classList.remove('is-valid');
+
+    let valid = true;
+
+    if (!name || name.length < 3) {
+        showErr('contactName', 'errName', !name ? '{% trans "الاسم مطلوب" %}' : '{% trans "الاسم قصير جداً" %}');
+        valid = false;
+    }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showErr('contactEmail', 'errEmail', !email ? '{% trans "البريد مطلوب" %}' : '{% trans "البريد غير صالح" %}');
+        valid = false;
+    }
+    const phoneResult = validateContactPhone(phoneInput, phoneCountry);
+    if (!phoneResult.valid) {
+        const el = document.getElementById('errContactPhone');
+        if (el) { el.textContent = phoneResult.msg; el.classList.add('show'); }
+        document.getElementById('contactPhoneInput')?.classList.add('is-invalid');
+        shake('contactPhoneInput');
+        valid = false;
+    }
+    if (!subject || subject.length < 3) {
+        showErr('contactSubject', 'errSubject', !subject ? '{% trans "عنوان الرسالة مطلوب" %}' : '{% trans "العنوان قصير جداً" %}');
+        valid = false;
+    }
+    if (!message || message.length < 10) {
+        showErr('contactMessage', 'errMessage', !message ? '{% trans "الرسالة مطلوبة" %}' : '{% trans "الرسالة قصيرة جداً" %}');
+        valid = false;
+    }
+    if (!valid) return;
+
+    const btn = document.getElementById('contactBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>{% trans "جار الإرسال..." %}';
+
+    const fd = new FormData();
+    fd.append('csrfmiddlewaretoken', getCsrf());
+    fd.append('name',          name);
+    fd.append('email',         email);
+    fd.append('phone',         phoneDial + phoneInput);
+    fd.append('phone_country', phoneDial);
+    fd.append('subject',       subject);
+    fd.append('message',       message);
+
+
+    const sendUrl = document.getElementById('contactBtn').dataset.url;
+    fetch(sendUrl, { method: 'POST', body: fd })
+        .then(r => r.json())
+        .then(data => {
+            if (data.status === 'success') {
+                showSuccessModal(data.message || '{% trans "تم إرسال رسالتك بنجاح ✅" %}');
+                ['contactName','contactEmail','contactSubject','contactMessage'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.value = '';
+                });
+                const pi = document.getElementById('contactPhoneInput');
+                if (pi) pi.value = '';
+                document.getElementById('msgCount').textContent = '0';
+            } else {
+                const alertEl = document.getElementById('contactAlert');
+                alertEl.style.cssText = 'display:flex;align-items:center;gap:8px;background:rgba(220,53,69,0.1);color:#842029;border-radius:12px;padding:14px 18px;';
+                alertEl.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>' + (data.message || '{% trans "حدث خطأ، يرجى المحاولة مجدداً" %}');
+                setTimeout(() => { alertEl.style.display = 'none'; }, 5000);
+            }
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>{% trans "إرسال الرسالة" %}';
+        })
+        .catch(() => {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>{% trans "إرسال الرسالة" %}';
+        });
+}
+
+// ==================== Helpers ====================
+function showErr(fieldId, errId, msg) {
+    const input = document.getElementById(fieldId);
+    const err   = document.getElementById(errId);
+    if (input) { input.classList.add('is-invalid'); shake(fieldId); }
+    if (err)   { err.textContent = msg; err.classList.add('show'); }
+}
+function clearContactErr(fieldId, errId) {
+    document.getElementById(fieldId)?.classList.remove('is-invalid');
+    const err = document.getElementById(errId);
+    if (err) { err.textContent = ''; err.classList.remove('show'); }
+}
+function clearAllContactErrors() {
+    ['contactName','contactEmail','contactSubject','contactMessage','contactPhoneInput'].forEach(id =>
+        document.getElementById(id)?.classList.remove('is-invalid','is-valid'));
+    ['errName','errEmail','errContactPhone','errSubject','errMessage'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) { el.textContent = ''; el.classList.remove('show'); }
+    });
+}
+function shake(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.remove('shake');
+    void el.offsetWidth;
+    el.classList.add('shake');
+    el.addEventListener('animationend', () => el.classList.remove('shake'), { once: true });
+}
+function getCsrf() {
+    return document.cookie.split(';').find(c => c.trim().startsWith('csrftoken='))?.split('=')[1] || '';
+}
+
+</script>
+{% endblock %}

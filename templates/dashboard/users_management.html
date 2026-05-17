@@ -1,0 +1,1142 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}إدارة المستخدمين{% endblock %}
+{% block page_title %}إدارة المستخدمين{% endblock %}
+
+{% block extra_css %}
+<style>
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    .user-status-online  { border: 2px solid #28a745; }
+    .user-status-offline { border: 2px solid #6c757d; }
+
+    .table-responsive {
+        border-radius: 0.375rem;
+        overflow-x: auto !important;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        display: block;
+        width: 100%;
+    }
+    .table-responsive::-webkit-scrollbar       { height: 8px; }
+    .table-responsive::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+    .table-responsive::-webkit-scrollbar-thumb { background: #888; border-radius: 10px; }
+    .table-responsive::-webkit-scrollbar-thumb:hover { background: #555; }
+
+    @media (max-width: 992px) { .table { min-width: 900px; } }
+    @media (max-width: 768px)  { .table { min-width: 800px; } .card-body.p-0 { padding: 0 !important; } }
+
+    .stats-card { transition: transform 0.2s; }
+    .stats-card:hover { transform: translateY(-5px); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+
+    .action-btn {
+        width: 32px; height: 32px; padding: 0;
+        display: inline-flex; align-items: center; justify-content: center;
+        border-radius: 4px;
+    }
+    .modal-body .form-label { font-weight: 600; color: #495057; margin-bottom: 0.5rem; }
+    .invalid-feedback { display: block; margin-top: 0.25rem; }
+
+    .password-strength { height: 5px; border-radius: 3px; margin-top: 5px; background: #e9ecef; overflow: hidden; }
+    .password-strength-bar { height: 100%; transition: all 0.3s; }
+    .strength-weak   { background: #dc3545; width: 33%; }
+    .strength-medium { background: #ffc107; width: 66%; }
+    .strength-strong { background: #28a745; width: 100%; }
+
+    .view-modal-row { padding: 12px 0; border-bottom: 1px solid #e9ecef; }
+    .view-modal-row:last-child { border-bottom: none; }
+    .view-modal-label { font-weight: 600; color: #6c757d; }
+    .view-modal-value { color: #212529; font-weight: 500; }
+    .badge-status { padding: 0.35rem 0.65rem; font-size: 0.875rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- إحصائيات سريعة -->
+<div class="row mb-4">
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card border-primary stats-card h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="text-primary mb-1" id="stat-total">{{ users_stats.total|default:0 }}</h3>
+                        <div class="small text-muted">إجمالي المستخدمين</div>
+                    </div>
+                    <i class="fas fa-users fa-2x text-primary opacity-25"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card border-success stats-card h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="text-success mb-1" id="stat-active">{{ users_stats.active|default:0 }}</h3>
+                        <div class="small text-muted">مستخدمين نشطين</div>
+                    </div>
+                    <i class="fas fa-user-check fa-2x text-success opacity-25"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card border-danger stats-card h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="text-danger mb-1" id="stat-inactive">{{ users_stats.inactive|default:0 }}</h3>
+                        <div class="small text-muted">مستخدمين غير نشطين</div>
+                    </div>
+                    <i class="fas fa-user-times fa-2x text-danger opacity-25"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card border-info stats-card h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="text-info mb-1" id="stat-online">{{ users_stats.online|default:0 }}</h3>
+                        <div class="small text-muted">متصلين الآن</div>
+                    </div>
+                    <i class="fas fa-wifi fa-2x text-info opacity-25"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- أدوات البحث والفلترة -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h6 class="mb-0"><i class="fas fa-filter me-2"></i>البحث والفلترة</h6>
+    </div>
+    <div class="card-body">
+        <form method="GET" class="row g-3 align-items-end" id="searchForm">
+            <div class="col-md-6">
+                <label class="form-label">البحث</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    <input type="text" name="search" class="form-control"
+                           placeholder="ابحث بالاسم، البريد، اسم المستخدم، رقم الجوال..."
+                           value="{{ search_query }}">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">الحالة</label>
+                <select name="status" class="form-select">
+                    <option value="">جميع الحالات</option>
+                    <option value="active"   {% if status_filter == 'active'   %}selected{% endif %}>نشط</option>
+                    <option value="inactive" {% if status_filter == 'inactive' %}selected{% endif %}>غير نشط</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-primary me-2">
+                    <i class="fas fa-search"></i> بحث
+                </button>
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                    <i class="fas fa-plus"></i> إضافة
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="clearFilters()">
+                    <i class="fas fa-times"></i> مسح
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- قائمة المستخدمين -->
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h6 class="mb-0"><i class="fas fa-list me-2"></i>قائمة المستخدمين (<span id="users-count">{{ users_page.paginator.count }}</span>)</h6>
+        <small class="text-muted">عرض {{ users_page.start_index }}-{{ users_page.end_index }} من {{ users_page.paginator.count }}</small>
+    </div>
+
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>الاسم الكامل</th>
+                        <th>اسم المستخدم</th>
+                        <th>البريد الإلكتروني</th>
+                        <th>رقم الجوال</th>
+                        <th>نوع المستخدم</th>
+                        <th>الحالة</th>
+                        <th>آخر تسجيل دخول</th>
+                        <th width="150">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody id="users-table-body">
+                    {% for user in users_page %}
+                    <tr id="user-row-{{ user.id }}">
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0 me-3">
+                                    {% if user.profile_image %}
+                                    <img loading="lazy" src="{{ user.profile_image.url }}"
+                                         class="user-avatar {% if user.last_seen and user.last_seen >= online_threshold %}user-status-online{% else %}user-status-offline{% endif %}"
+                                         alt="{{ user.get_full_name }}">
+                                    {% else %}
+                                    <div class="user-avatar bg-primary d-flex align-items-center justify-content-center text-white fw-bold {% if user.last_seen and user.last_seen >= online_threshold %}user-status-online{% else %}user-status-offline{% endif %}">
+                                        {{ user.first_name|first|default:user.username|first|upper }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <div class="fw-bold">{{ user.get_full_name }}</div>
+                                    {% if user.is_superuser %}
+                                    <span class="badge bg-danger badge-sm">مدير عام</span>
+                                    {% endif %}
+                                    {% if not user.is_approved %}
+                                    <span class="badge bg-warning badge-sm">بانتظار الموافقة</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </td>
+                        <td class="text-muted">{{ user.username }}</td>
+                        <td class="text-muted">
+                            <small><i class="fas fa-envelope me-1"></i>{{ user.email }}</small>
+                        </td>
+                        <td class="text-muted">
+                            {% if user.phone %}
+                            <small><i class="fas fa-phone me-1"></i>{{ user.phone_country }}{{ user.phone }}</small>
+                            {% else %}
+                            <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="badge bg-secondary">{{ user.get_user_type_display }}</span>
+                        </td>
+                        <td>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox"
+                                       {% if user.is_active %}checked{% endif %}
+                                       onchange="toggleUserStatus('{{ user.id }}', this.checked)"
+                                       {% if user == request.user %}disabled title="لا يمكن تعطيل حسابك الشخصي"{% endif %}>
+                            </div>
+                        </td>
+                        <td>
+                            {% if user.last_login %}
+                            <div class="small text-muted">
+                                <i class="fas fa-clock me-1"></i>
+                                {{ user.last_login|date:"Y-m-d" }}<br>
+                                <small>{{ user.last_login|date:"H:i" }}</small>
+                            </div>
+                            {% else %}
+                            <span class="text-muted">لم يسجل دخول</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="d-flex gap-1">
+                                <button class="btn btn-sm btn-outline-info action-btn"
+                                        onclick="viewUser('{{ user.id }}')"
+                                        title="عرض التفاصيل">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-warning action-btn"
+                                        onclick="editUser('{{ user.id }}')"
+                                        title="تعديل">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                {% if user != request.user and not user.is_superuser %}
+                                <button class="btn btn-sm btn-outline-danger action-btn"
+                                        onclick="deleteUser('{{ user.id }}', '{{ user.get_full_name }}')"
+                                        title="حذف">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center py-5">
+                            <div class="text-muted">
+                                <i class="fas fa-users fa-3x mb-3 d-block"></i>
+                                <h5>لا توجد مستخدمين</h5>
+                                <p>لم يتم العثور على مستخدمين يطابقون معايير البحث</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% if users_page.has_other_pages %}
+    <div class="card-footer">
+        <nav aria-label="ترقيم الصفحات">
+            <ul class="pagination pagination-sm justify-content-center mb-0">
+                {% if users_page.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ users_page.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">
+                        <i class="fas fa-chevron-right"></i> السابق
+                    </a>
+                </li>
+                {% endif %}
+                {% for num in users_page.paginator.page_range %}
+                    {% if users_page.number == num %}
+                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                    {% elif num > users_page.number|add:'-3' and num < users_page.number|add:'3' %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">{{ num }}</a>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+                {% if users_page.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ users_page.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">
+                        التالي <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+</div>
+
+<!-- ===== مودال إضافة مستخدم ===== -->
+<div class="modal fade" id="addUserModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title"><i class="fas fa-user-plus me-2"></i>إضافة مستخدم جديد</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addUserForm" novalidate>
+                    {% csrf_token %}
+
+                    <!-- اسم المستخدم والبريد -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">اسم المستخدم <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="username" id="add_username" required>
+                            <div class="invalid-feedback" id="add_username_error"></div>
+                            <small class="text-muted">8 أحرف على الأقل (أحرف إنجليزية وأرقام فقط)</small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">البريد الإلكتروني <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control" name="email" id="add_email" required>
+                            <div class="invalid-feedback" id="add_email_error"></div>
+                        </div>
+                    </div>
+
+                    <!-- الاسم الرباعي -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">الاسم الأول <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="first_name" id="add_first_name" required>
+                            <div class="invalid-feedback" id="add_first_name_error"></div>
+                            <small class="text-muted">بالأحرف العربية فقط</small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">اسم الأب</label>
+                            <input type="text" class="form-control" name="father_name" id="add_father_name">
+                            <div class="invalid-feedback" id="add_father_name_error"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">اسم الجد</label>
+                            <input type="text" class="form-control" name="grand_name" id="add_grand_name">
+                            <div class="invalid-feedback" id="add_grand_name_error"></div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">اسم العائلة <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="family_name" id="add_family_name" required>
+                            <div class="invalid-feedback" id="add_family_name_error"></div>
+                        </div>
+                    </div>
+
+                    <!-- الجوال ونوع المستخدم -->
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">كود الدولة</label>
+                            <input type="text" class="form-control" name="phone_country" id="add_phone_country" value="+970">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">رقم الجوال</label>
+                            <input type="text" class="form-control" name="phone" id="add_phone" placeholder="0591234567">
+                            <div class="invalid-feedback" id="add_phone_error"></div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">نوع المستخدم</label>
+                            <select class="form-select" name="user_type" id="add_user_type">
+                                <option value="admin">مدير النظام</option>
+                                <option value="sponsor">كافل</option>
+                                <option value="orphan">يتيم</option>
+                                <option value="family">أسرة</option>
+                                <option value="special">ذوو احتياجات خاصة</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- الحالة -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">الحالة</label>
+                            <div class="form-check form-switch mt-2">
+                                <input class="form-check-input" type="checkbox" name="is_active" id="add_is_active" checked>
+                                <label class="form-check-label" for="add_is_active">مفعّل</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- كلمة المرور -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">كلمة المرور <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" name="password" id="add_password" required>
+                                <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('add_password')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="password-strength" id="add_password_strength">
+                                <div class="password-strength-bar"></div>
+                            </div>
+                            <div class="invalid-feedback" id="add_password_error"></div>
+                            <small class="text-muted">8 أحرف على الأقل (أحرف كبيرة وصغيرة، أرقام، رموز)</small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">تأكيد كلمة المرور <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" name="confirm_password" id="add_confirm_password" required>
+                                <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('add_confirm_password')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="invalid-feedback" id="add_confirm_password_error"></div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>ملاحظة:</strong> الحقول المميزة بـ <span class="text-danger">*</span> إلزامية
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times"></i> إلغاء
+                </button>
+                <button type="button" class="btn btn-success" onclick="saveUser()">
+                    <i class="fas fa-save"></i> حفظ المستخدم
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== مودال عرض المستخدم ===== -->
+<div class="modal fade" id="viewUserModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title"><i class="fas fa-user me-2"></i>تفاصيل المستخدم</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="viewUserContent">
+                <div class="text-center py-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">جاري التحميل...</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times"></i> إغلاق
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== مودال تعديل المستخدم ===== -->
+<div class="modal fade" id="editUserModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title"><i class="fas fa-edit me-2"></i>تعديل بيانات المستخدم</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editUserForm" novalidate>
+                    {% csrf_token %}
+                    <input type="hidden" name="user_id" id="edit_user_id">
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">اسم المستخدم <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="username" id="edit_username" required>
+                            <div class="invalid-feedback" id="edit_username_error"></div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">البريد الإلكتروني <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control" name="email" id="edit_email" required>
+                            <div class="invalid-feedback" id="edit_email_error"></div>
+                        </div>
+                    </div>
+
+                    <!-- الاسم الرباعي -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">الاسم الأول <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="first_name" id="edit_first_name" required>
+                            <div class="invalid-feedback" id="edit_first_name_error"></div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">اسم الأب</label>
+                            <input type="text" class="form-control" name="father_name" id="edit_father_name">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">اسم الجد</label>
+                            <input type="text" class="form-control" name="grand_name" id="edit_grand_name">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">اسم العائلة <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="family_name" id="edit_family_name" required>
+                            <div class="invalid-feedback" id="edit_family_name_error"></div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">كود الدولة</label>
+                            <input type="text" class="form-control" name="phone_country" id="edit_phone_country" value="+970">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">رقم الجوال</label>
+                            <input type="text" class="form-control" name="phone" id="edit_phone">
+                            <div class="invalid-feedback" id="edit_phone_error"></div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">نوع المستخدم</label>
+                            <select class="form-select" name="user_type" id="edit_user_type">
+                                <option value="admin">مدير النظام</option>
+                                <option value="sponsor">كافل</option>
+                                <option value="orphan">يتيم</option>
+                                <option value="family">أسرة</option>
+                                <option value="special">ذوو احتياجات خاصة</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">الحالة</label>
+                            <div class="form-check form-switch mt-2">
+                                <input class="form-check-input" type="checkbox" name="is_active" id="edit_is_active">
+                                <label class="form-check-label" for="edit_is_active">مفعّل</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">موافق عليه</label>
+                            <div class="form-check form-switch mt-2">
+                                <input class="form-check-input" type="checkbox" name="is_approved" id="edit_is_approved">
+                                <label class="form-check-label" for="edit_is_approved">معتمد</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+                    <h6 class="mb-3"><i class="fas fa-key me-2"></i>تغيير كلمة المرور (اختياري)</h6>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">كلمة المرور الجديدة</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" name="new_password" id="edit_new_password">
+                                <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('edit_new_password')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="password-strength" id="edit_password_strength">
+                                <div class="password-strength-bar"></div>
+                            </div>
+                            <div class="invalid-feedback" id="edit_new_password_error"></div>
+                            <small class="text-muted">اتركها فارغة إذا لم ترد تغييرها</small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">تأكيد كلمة المرور الجديدة</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" name="confirm_password" id="edit_confirm_password">
+                                <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('edit_confirm_password')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="invalid-feedback" id="edit_confirm_password_error"></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times"></i> إلغاء
+                </button>
+                <button type="button" class="btn btn-warning" onclick="updateUser()">
+                    <i class="fas fa-save"></i> حفظ التعديلات
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+// ========== التحقق من البيانات ==========
+
+function validateUsername(username) {
+    const errors = [];
+    if (username.length < 8) errors.push('اسم المستخدم يجب أن يكون 8 أحرف على الأقل');
+    if (!/^[a-zA-Z0-9_]+$/.test(username)) errors.push('اسم المستخدم يجب أن يحتوي على أحرف إنجليزية وأرقام فقط');
+    return errors;
+}
+
+function validatePassword(password) {
+    const errors = [];
+    if (password.length < 8)              errors.push('كلمة المرور يجب أن تكون 8 أحرف على الأقل');
+    if (!/[A-Z]/.test(password))          errors.push('كلمة المرور يجب أن تحتوي على حرف كبير');
+    if (!/[a-z]/.test(password))          errors.push('كلمة المرور يجب أن تحتوي على حرف صغير');
+    if (!/[0-9]/.test(password))          errors.push('كلمة المرور يجب أن تحتوي على رقم');
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) errors.push('كلمة المرور يجب أن تحتوي على رمز خاص');
+    return errors;
+}
+
+function checkPasswordStrength(password, strengthBarId) {
+    const strengthBar = document.querySelector(`#${strengthBarId} .password-strength-bar`);
+    if (!strengthBar) return;
+    let strength = 0;
+    if (password.length >= 8)                      strength++;
+    if (/[A-Z]/.test(password))                    strength++;
+    if (/[a-z]/.test(password))                    strength++;
+    if (/[0-9]/.test(password))                    strength++;
+    if (/[!@#$%^&*(),.?":{}|<>]/.test(password))  strength++;
+    strengthBar.className = 'password-strength-bar';
+    if      (strength <= 2) strengthBar.classList.add('strength-weak');
+    else if (strength <= 4) strengthBar.classList.add('strength-medium');
+    else                    strengthBar.classList.add('strength-strong');
+}
+
+function validateArabicName(name) {
+    const errors = [];
+    if (!name || name.trim().length === 0) { errors.push('الاسم مطلوب'); return errors; }
+    if (!/^[\u0621-\u064A\s]+$/.test(name)) errors.push('الاسم يجب أن يحتوي على أحرف عربية فقط');
+    return errors;
+}
+
+function validateEmail(email) {
+    const errors = [];
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push('البريد الإلكتروني غير صحيح');
+    return errors;
+}
+
+function togglePassword(inputId) {
+    const input = document.getElementById(inputId);
+    const icon  = event.currentTarget.querySelector('i');
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+    }
+}
+
+function clearErrors(formId) {
+    const form = document.getElementById(formId);
+    form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+    form.querySelectorAll('.invalid-feedback').forEach(el => el.textContent = '');
+}
+
+// ========== حفظ مستخدم جديد ==========
+
+function saveUser() {
+    clearErrors('addUserForm');
+    const form     = document.getElementById('addUserForm');
+    const formData = new FormData(form);
+
+    const username    = (formData.get('username')    || '').trim();
+    const email       = (formData.get('email')       || '').trim();
+    const firstName   = (formData.get('first_name')  || '').trim();
+    const fatherName  = (formData.get('father_name') || '').trim();
+    const grandName   = (formData.get('grand_name')  || '').trim();
+    const familyName  = (formData.get('family_name') || '').trim();
+    const phone       = (formData.get('phone')       || '').trim();
+    const phoneCountry= (formData.get('phone_country')|| '+970').trim();
+    const userType    = formData.get('user_type') || 'admin';
+    const password    = formData.get('password')         || '';
+    const confirmPass = formData.get('confirm_password') || '';
+    const isActive    = document.getElementById('add_is_active').checked;
+
+    let hasErrors = false;
+
+    const usernameErrors = validateUsername(username);
+    if (usernameErrors.length) {
+        document.getElementById('add_username').classList.add('is-invalid');
+        document.getElementById('add_username_error').textContent = usernameErrors.join(', ');
+        hasErrors = true;
+    }
+
+    const emailErrors = validateEmail(email);
+    if (emailErrors.length) {
+        document.getElementById('add_email').classList.add('is-invalid');
+        document.getElementById('add_email_error').textContent = emailErrors.join(', ');
+        hasErrors = true;
+    }
+
+    const firstNameErrors = validateArabicName(firstName);
+    if (firstNameErrors.length) {
+        document.getElementById('add_first_name').classList.add('is-invalid');
+        document.getElementById('add_first_name_error').textContent = firstNameErrors.join(', ');
+        hasErrors = true;
+    }
+
+    const familyNameErrors = validateArabicName(familyName);
+    if (familyNameErrors.length) {
+        document.getElementById('add_family_name').classList.add('is-invalid');
+        document.getElementById('add_family_name_error').textContent = familyNameErrors.join(', ');
+        hasErrors = true;
+    }
+
+    const passwordErrors = validatePassword(password);
+    if (passwordErrors.length) {
+        document.getElementById('add_password').classList.add('is-invalid');
+        document.getElementById('add_password_error').textContent = passwordErrors.join(', ');
+        hasErrors = true;
+    }
+
+    if (password !== confirmPass) {
+        document.getElementById('add_confirm_password').classList.add('is-invalid');
+        document.getElementById('add_confirm_password_error').textContent = 'كلمات المرور غير متطابقة';
+        hasErrors = true;
+    }
+
+    if (hasErrors) { showToast('يرجى تصحيح الأخطاء في النموذج', 'error'); return; }
+
+    const data = {
+        username:         username,
+        email:            email,
+        first_name:       firstName,
+        father_name:      fatherName,
+        grand_name:       grandName,
+        family_name:      familyName,
+        phone:            phone,
+        phone_country:    phoneCountry,
+        user_type:        userType,
+        password:         password,
+        confirm_password: confirmPass,
+        is_active:        isActive,
+    };
+
+    fetch('/dashboard/api/users/create/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+        body: JSON.stringify(data)
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            showToast('تم إنشاء المستخدم بنجاح', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('addUserModal')).hide();
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            if (Array.isArray(data.errors)) data.errors.forEach(e => showToast(e, 'error'));
+            else showToast(data.error || 'حدث خطأ في إنشاء المستخدم', 'error');
+        }
+    })
+    .catch(() => showToast('حدث خطأ في الاتصال بالخادم', 'error'));
+}
+
+// ========== عرض بيانات المستخدم ==========
+
+function viewUser(userId) {
+    const modal = new bootstrap.Modal(document.getElementById('viewUserModal'));
+    modal.show();
+    document.getElementById('viewUserContent').innerHTML = `
+        <div class="text-center py-3">
+            <div class="spinner-border text-primary" role="status"></div>
+        </div>`;
+
+    fetch(`/dashboard/api/users/${userId}/view/`)
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            const u = data.data;
+            document.getElementById('viewUserContent').innerHTML = `
+                <div class="row">
+                    <div class="col-12 text-center mb-4">
+                        <div class="user-avatar bg-primary d-inline-flex align-items-center justify-content-center text-white fw-bold" style="width:80px;height:80px;font-size:2rem;">
+                            ${u.first_name.charAt(0)}
+                        </div>
+                        <h4 class="mt-3 mb-0">${u.full_name}</h4>
+                        <p class="text-muted">@${u.username}</p>
+                        ${u.is_active ? '<span class="badge bg-success badge-status">مفعّل</span>' : '<span class="badge bg-danger badge-status">غير مفعّل</span>'}
+                        ${u.is_approved ? '<span class="badge bg-info badge-status ms-1">معتمد</span>' : '<span class="badge bg-warning badge-status ms-1">بانتظار الموافقة</span>'}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="view-modal-row">
+                            <div class="view-modal-label">البريد الإلكتروني</div>
+                            <div class="view-modal-value"><i class="fas fa-envelope me-2 text-muted"></i>${u.email}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="view-modal-row">
+                            <div class="view-modal-label">رقم الجوال</div>
+                            <div class="view-modal-value"><i class="fas fa-phone me-2 text-muted"></i>${u.phone_country || ''}${u.phone || 'غير محدد'}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="view-modal-row">
+                            <div class="view-modal-label">نوع المستخدم</div>
+                            <div class="view-modal-value"><i class="fas fa-user-tag me-2 text-muted"></i>${u.user_type}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="view-modal-row">
+                            <div class="view-modal-label">الدور</div>
+                            <div class="view-modal-value">${u.role || '-'}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="view-modal-row">
+                            <div class="view-modal-label">تاريخ الإنشاء</div>
+                            <div class="view-modal-value"><i class="fas fa-calendar-plus me-2 text-muted"></i>${u.date_joined}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="view-modal-row">
+                            <div class="view-modal-label">آخر تسجيل دخول</div>
+                            <div class="view-modal-value"><i class="fas fa-clock me-2 text-muted"></i>${u.last_login}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="view-modal-row">
+                            <div class="view-modal-label">عدد تسجيلات الدخول</div>
+                            <div class="view-modal-value"><i class="fas fa-sign-in-alt me-2 text-muted"></i>${u.login_count} مرة</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="view-modal-row">
+                            <div class="view-modal-label">صلاحيات خاصة</div>
+                            <div class="view-modal-value">
+                                ${u.is_superuser ? '<span class="badge bg-danger">مدير عام</span>' : ''}
+                                ${u.is_staff ? '<span class="badge bg-warning">موظف</span>' : ''}
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+        } else {
+            document.getElementById('viewUserContent').innerHTML = `<div class="alert alert-danger">حدث خطأ في تحميل البيانات</div>`;
+        }
+    })
+    .catch(() => {
+        document.getElementById('viewUserContent').innerHTML = `<div class="alert alert-danger">حدث خطأ في الاتصال بالخادم</div>`;
+    });
+}
+
+// ========== تعديل المستخدم ==========
+
+function editUser(userId) {
+    clearErrors('editUserForm');
+    fetch(`/dashboard/api/users/${userId}/edit/`)
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            const u = data.data;
+            document.getElementById('edit_user_id').value        = u.id;
+            document.getElementById('edit_username').value       = u.username;
+            document.getElementById('edit_email').value          = u.email;
+            document.getElementById('edit_first_name').value     = u.first_name;
+            document.getElementById('edit_father_name').value    = u.father_name  || '';
+            document.getElementById('edit_grand_name').value     = u.grand_name   || '';
+            document.getElementById('edit_family_name').value    = u.family_name  || '';
+            document.getElementById('edit_phone').value          = u.phone        || '';
+            document.getElementById('edit_phone_country').value  = u.phone_country|| '+970';
+            document.getElementById('edit_user_type').value      = u.user_type    || 'admin';
+            document.getElementById('edit_is_active').checked    = u.is_active;
+            document.getElementById('edit_is_approved').checked  = u.is_approved;
+            document.getElementById('edit_new_password').value   = '';
+            document.getElementById('edit_confirm_password').value = '';
+            new bootstrap.Modal(document.getElementById('editUserModal')).show();
+        } else {
+            showToast('حدث خطأ في تحميل بيانات المستخدم', 'error');
+        }
+    })
+    .catch(() => showToast('حدث خطأ في الاتصال بالخادم', 'error'));
+}
+
+function updateUser() {
+    clearErrors('editUserForm');
+
+    const userId      = document.getElementById('edit_user_id').value;
+    const username    = document.getElementById('edit_username').value.trim();
+    const email       = document.getElementById('edit_email').value.trim();
+    const firstName   = document.getElementById('edit_first_name').value.trim();
+    const fatherName  = document.getElementById('edit_father_name').value.trim();
+    const grandName   = document.getElementById('edit_grand_name').value.trim();
+    const familyName  = document.getElementById('edit_family_name').value.trim();
+    const phone       = document.getElementById('edit_phone').value.trim();
+    const phoneCountry= document.getElementById('edit_phone_country').value.trim();
+    const userType    = document.getElementById('edit_user_type').value;
+    const isActive    = document.getElementById('edit_is_active').checked;
+    const isApproved  = document.getElementById('edit_is_approved').checked;
+    const newPassword = document.getElementById('edit_new_password').value;
+    const confirmPass = document.getElementById('edit_confirm_password').value;
+
+    let hasErrors = false;
+
+    const usernameErrors = validateUsername(username);
+    if (usernameErrors.length) {
+        document.getElementById('edit_username').classList.add('is-invalid');
+        document.getElementById('edit_username_error').textContent = usernameErrors.join(', ');
+        hasErrors = true;
+    }
+
+    const emailErrors = validateEmail(email);
+    if (emailErrors.length) {
+        document.getElementById('edit_email').classList.add('is-invalid');
+        document.getElementById('edit_email_error').textContent = emailErrors.join(', ');
+        hasErrors = true;
+    }
+
+    const firstNameErrors = validateArabicName(firstName);
+    if (firstNameErrors.length) {
+        document.getElementById('edit_first_name').classList.add('is-invalid');
+        document.getElementById('edit_first_name_error').textContent = firstNameErrors.join(', ');
+        hasErrors = true;
+    }
+
+    const familyNameErrors = validateArabicName(familyName);
+    if (familyNameErrors.length) {
+        document.getElementById('edit_family_name').classList.add('is-invalid');
+        document.getElementById('edit_family_name_error').textContent = familyNameErrors.join(', ');
+        hasErrors = true;
+    }
+
+    if (newPassword) {
+        const passwordErrors = validatePassword(newPassword);
+        if (passwordErrors.length) {
+            document.getElementById('edit_new_password').classList.add('is-invalid');
+            document.getElementById('edit_new_password_error').textContent = passwordErrors.join(', ');
+            hasErrors = true;
+        }
+        if (newPassword !== confirmPass) {
+            document.getElementById('edit_confirm_password').classList.add('is-invalid');
+            document.getElementById('edit_confirm_password_error').textContent = 'كلمات المرور غير متطابقة';
+            hasErrors = true;
+        }
+    }
+
+    if (hasErrors) { showToast('يرجى تصحيح الأخطاء في النموذج', 'error'); return; }
+
+    const data = {
+        username:         username,
+        email:            email,
+        first_name:       firstName,
+        father_name:      fatherName,
+        grand_name:       grandName,
+        family_name:      familyName,
+        phone:            phone,
+        phone_country:    phoneCountry,
+        user_type:        userType,
+        is_active:        isActive,
+        is_approved:      isApproved,
+        new_password:     newPassword,
+        confirm_password: confirmPass,
+    };
+
+    fetch(`/dashboard/api/users/${userId}/edit/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+        body: JSON.stringify(data)
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            showToast('تم تحديث البيانات بنجاح', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('editUserModal')).hide();
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            if (Array.isArray(data.errors)) data.errors.forEach(e => showToast(e, 'error'));
+            else showToast(data.error || 'حدث خطأ في تحديث البيانات', 'error');
+        }
+    })
+    .catch(() => showToast('حدث خطأ في الاتصال بالخادم', 'error'));
+}
+
+// ========== حذف المستخدم ==========
+
+function deleteUser(userId, fullName) {
+    const confirmModal = document.createElement('div');
+    confirmModal.className = 'modal fade';
+    confirmModal.innerHTML = `
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title"><i class="fas fa-exclamation-triangle me-2"></i>تأكيد الحذف</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-3"><i class="fas fa-user-times fa-3x text-danger"></i></div>
+                    <p class="text-center">هل أنت متأكد من حذف المستخدم <strong>"${fullName}"</strong>؟</p>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>تحذير:</strong> هذا الإجراء لا يمكن التراجع عنه.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>إلغاء
+                    </button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                        <i class="fas fa-trash me-1"></i>حذف نهائياً
+                    </button>
+                </div>
+            </div>
+        </div>`;
+
+    document.body.appendChild(confirmModal);
+    const modal = new bootstrap.Modal(confirmModal);
+    modal.show();
+
+    document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+        this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>جاري الحذف...';
+        this.disabled = true;
+
+        fetch(`/dashboard/api/users/${userId}/delete/`, {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' }
+        })
+        .then(r => r.json())
+        .then(data => {
+            modal.hide();
+            if (data.success) {
+                const row = document.getElementById(`user-row-${userId}`);
+                if (row) { row.style.opacity = '0'; setTimeout(() => { row.remove(); updateStats(); }, 300); }
+                showToast(data.message, 'success');
+            } else {
+                showToast(data.error || 'فشل في حذف المستخدم', 'error');
+            }
+        })
+        .catch(() => { modal.hide(); showToast('حدث خطأ في الاتصال بالخادم', 'error'); })
+        .finally(() => {
+            confirmModal.addEventListener('hidden.bs.modal', () => document.body.removeChild(confirmModal));
+        });
+    });
+}
+
+// ========== تبديل الحالة ==========
+
+function toggleUserStatus(id, active) {
+    fetch('/dashboard/api/users/toggle-status/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+        body: JSON.stringify({ user_id: id, is_active: active })
+    })
+    .then(r => r.json())
+    .then(d => { if (d.success) location.reload(); else { showToast('خطأ في التحديث', 'error'); location.reload(); } })
+    .catch(() => { showToast('خطأ في الخادم', 'error'); location.reload(); });
+}
+
+// ========== تحديث الإحصائيات ==========
+
+function updateStats() {
+    fetch('/dashboard/api/users/stats/')
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('stat-total').textContent   = data.total;
+            document.getElementById('stat-active').textContent  = data.active;
+            document.getElementById('stat-inactive').textContent= data.inactive;
+            document.getElementById('stat-online').textContent  = data.online;
+            document.getElementById('users-count').textContent  = data.total;
+        }
+    })
+    .catch(e => console.error('Error updating stats:', e));
+}
+
+function clearFilters() { window.location.href = window.location.pathname; }
+
+// ========== Toast ==========
+
+function showToast(message, type) {
+    const container = document.getElementById('toastContainer') || createToastContainer();
+    const bgColor   = type === 'success' ? 'success' : type === 'error' ? 'danger' : type === 'warning' ? 'warning' : 'info';
+    const toast     = document.createElement('div');
+    toast.className = `toast align-items-center text-white bg-${bgColor} border-0`;
+    toast.setAttribute('role', 'alert');
+    toast.innerHTML = `
+        <div class="d-flex">
+            <div class="toast-body">${message}</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>`;
+    container.appendChild(toast);
+    new bootstrap.Toast(toast).show();
+    toast.addEventListener('hidden.bs.toast', () => toast.remove());
+}
+
+function createToastContainer() {
+    const c = document.createElement('div');
+    c.id = 'toastContainer';
+    c.className = 'toast-container position-fixed top-0 end-0 p-3';
+    c.style.zIndex = '9999';
+    document.body.appendChild(c);
+    return c;
+}
+
+// ========== DOMContentLoaded ==========
+
+document.addEventListener('DOMContentLoaded', function() {
+    const addPassword = document.getElementById('add_password');
+    if (addPassword) addPassword.addEventListener('input', function() { checkPasswordStrength(this.value, 'add_password_strength'); });
+
+    const editPassword = document.getElementById('edit_new_password');
+    if (editPassword) editPassword.addEventListener('input', function() { checkPasswordStrength(this.value, 'edit_password_strength'); });
+
+    document.getElementById('addUserModal').addEventListener('hidden.bs.modal', function() {
+        document.getElementById('addUserForm').reset();
+        clearErrors('addUserForm');
+    });
+
+    document.getElementById('editUserModal').addEventListener('hidden.bs.modal', function() {
+        document.getElementById('editUserForm').reset();
+        clearErrors('editUserForm');
+    });
+
+    let searchTimeout;
+    const searchInput = document.querySelector('input[name="search"]');
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => document.getElementById('searchForm').submit(), 500);
+        });
+    }
+});
+
+setInterval(updateStats, 60000);
+</script>
+{% endblock %}

@@ -1,0 +1,318 @@
+{% load static %}
+{% load i18n %}
+{% load custom_filters %}
+
+<!-- Contact Information Partial -->
+<div class="contact-info-wrapper">
+    {% load custom_filters %}
+    {% if contact_info %}
+        {% for info in contact_info %}
+            <div class="contact-info-item" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1|stringformat:'d' }}00">
+                <div class="contact-icon">
+                    <i class="{{ info.get_icon_class|safe_value }}"></i>
+                </div>
+                <div class="contact-details">
+                    <h5 class="contact-label">{{ info.label|safe_value }}</h5>
+                    <div class="contact-value">
+                        {% if info.type == 'phone' %}
+                            <a href="tel:{{ info.value|safe_value }}" class="contact-link">
+                                {{ info.value|safe_value }}
+                            </a>
+                        {% elif info.type == 'email' %}
+                            <a href="mailto:{{ info.value|safe_value }}" class="contact-link">
+                                {{ info.value|safe_value }}
+                            </a>
+                        {% elif info.type == 'website' %}
+                            <a href="{{ info.value|safe_value }}" target="_blank" class="contact-link">
+                                {{ info.value|safe_value }}
+                            </a>
+                        {% else %}
+                            {{ info.value|safe_value|linebreaksbr }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <!-- Default contact info -->
+        <div class="contact-info-item" data-aos="fade-up">
+            <div class="contact-icon">
+                <i class="fas fa-phone"></i>
+            </div>
+            <div class="contact-details">
+                <h5 class="contact-label">{% trans "الهاتف الرئيسي" %}</h5>
+                <div class="contact-value">
+                    <a href="tel:+970812345678" class="contact-link">+970 8 123 4567</a>
+                </div>
+            </div>
+        </div>
+    <div class="contact-info-item" data-aos="fade-up" data-aos-delay="100">
+        <div class="contact-icon">
+            <i class="fas fa-envelope"></i>
+        </div>
+        <div class="contact-details">
+            <h5 class="contact-label">{% trans "البريد الإلكتروني" %}</h5>
+            <div class="contact-value">
+                <a href="mailto:info@nasaeem-palestine.org" class="contact-link">info@nasaeem-palestine.org</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="contact-info-item" data-aos="fade-up" data-aos-delay="200">
+        <div class="contact-icon">
+            <i class="fas fa-map-marker-alt"></i>
+        </div>
+        <div class="contact-details">
+            <h5 class="contact-label">{% trans "العنوان" %}</h5>
+            <div class="contact-value">
+                {% trans "غزة - فلسطين" %}<br>
+                {% trans "شارع الوحدة" %}
+            </div>
+        </div>
+    </div>
+
+    <div class="contact-info-item" data-aos="fade-up" data-aos-delay="300">
+        <div class="contact-icon">
+            <i class="fas fa-clock"></i>
+        </div>
+        <div class="contact-details">
+            <h5 class="contact-label">{% trans "ساعات العمل" %}</h5>
+            <div class="contact-value">
+                {% trans "الأحد - الخميس" %}<br>
+                8:00 - 16:00
+            </div>
+        </div>
+    </div>
+
+    <div class="contact-info-item" data-aos="fade-up" data-aos-delay="400">
+        <div class="contact-icon">
+            <i class="fas fa-fax"></i>
+        </div>
+        <div class="contact-details">
+            <h5 class="contact-label">{% trans "الفاكس" %}</h5>
+            <div class="contact-value">+970 8 123 4568</div>
+        </div>
+    </div>
+{% endif %}
+
+<!-- Emergency Contact -->
+<div class="emergency-contact" data-aos="fade-up" data-aos-delay="500">
+    <div class="emergency-header">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        <span>{% trans "للحالات الطارئة" %}</span>
+    </div>
+    <div class="emergency-numbers">
+        <a href="tel:+970599123456" class="emergency-number">
+            <i class="fas fa-phone-alt me-2"></i> +970 59 912 3456
+        </a>
+        <a href="https://wa.me/970599123456" target="_blank" class="emergency-number whatsapp">
+            <i class="fab fa-whatsapp me-2"></i> {% trans "واتساب طوارئ" %}
+        </a>
+    </div>
+</div>
+
+
+</div>
+
+
+<!-- Styles for Contact Info -->
+<style>
+.contact-info-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.contact-info-item {
+    display: flex;
+    align-items: flex-start;
+    background: rgba(107, 142, 35, 0.05);
+    padding: 20px;
+    border-radius: 12px;
+    border-left: 4px solid var(--primary-color);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.contact-info-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, transparent, rgba(107, 142, 35, 0.02));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.contact-info-item:hover {
+    background: rgba(107, 142, 35, 0.1);
+    transform: translateX(-5px);
+    box-shadow: 0 5px 15px rgba(107, 142, 35, 0.1);
+}
+
+.contact-info-item:hover::before {
+    opacity: 1;
+}
+
+.contact-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 20px;
+    flex-shrink: 0;
+    font-size: 1.2rem;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.contact-info-item:hover .contact-icon {
+    transform: scale(1.1) rotate(10deg);
+    box-shadow: 0 5px 15px rgba(107, 142, 35, 0.3);
+}
+
+.contact-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.contact-label {
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 0 0 8px 0;
+    font-size: 1rem;
+}
+
+.contact-value {
+    color: #333;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.contact-link {
+    color: #333;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+    position: relative;
+}
+
+.contact-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary-color);
+    transition: width 0.3s ease;
+}
+
+.contact-link:hover {
+    color: var(--primary-color);
+    transform: translateX(3px);
+}
+
+.contact-link:hover::after {
+    width: 100%;
+}
+
+.emergency-contact {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    margin-top: 10px;
+    box-shadow: 0 5px 15px rgba(220, 53, 69, 0.2);
+}
+
+.emergency-header {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.emergency-numbers {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.emergency-number {
+    color: white;
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    min-width: 200px;
+    justify-content: center;
+}
+
+.emergency-number:hover {
+    background: white;
+    color: #dc3545;
+    transform: scale(1.05);
+}
+
+.emergency-number.whatsapp:hover {
+    color: #25d366;
+}
+
+@media (max-width: 768px) {
+    .contact-info-item {
+        flex-direction: column;
+        text-align: center;
+        padding: 15px;
+    }
+    
+    .contact-icon {
+        margin: 0 0 15px 0;
+    }
+    
+    .emergency-numbers {
+        flex-direction: column;
+    }
+    
+    .emergency-number {
+        width: 100%;
+        max-width: 250px;
+    }
+}
+
+@media (max-width: 480px) {
+    .contact-info-item {
+        padding: 12px;
+    }
+    
+    .contact-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+    
+    .contact-label {
+        font-size: 0.9rem;
+    }
+    
+    .contact-value {
+        font-size: 0.85rem;
+    }
+}
+</style>

@@ -1,0 +1,394 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load custom_filters %}
+{% block title %}{% trans "سياسة الخصوصية" %} - {{ site_settings.site_name_ar }}{% endblock %}
+{% block description %}{% trans "سياسة الخصوصية وحماية البيانات في جمعية نسائم فلسطين الخيرية" %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .privacy-hero {
+        background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        color: white;
+        padding: 100px 0 50px;
+    }
+    
+    .privacy-content {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        padding: 40px;
+        margin-bottom: 30px;
+        position: relative;
+    }
+    
+    .privacy-content::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 5px;
+        height: 100%;
+        background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+        border-radius: 5px;
+    }
+    
+    .section-title {
+        color: var(--primary-color);
+        font-weight: 700;
+        margin-bottom: 20px;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+    }
+    
+    .section-title i {
+        margin-left: 15px;
+        font-size: 1.3rem;
+        color: var(--secondary-color);
+    }
+    
+    .privacy-content p {
+        line-height: 1.8;
+        margin-bottom: 15px;
+        color: #555;
+    }
+    
+    .privacy-content ul {
+        padding-right: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .privacy-content li {
+        margin-bottom: 10px;
+        color: #555;
+        line-height: 1.7;
+    }
+    
+    .highlight-box {
+        background: linear-gradient(135deg, rgba(107,142,35,0.1), rgba(255,215,0,0.1));
+        border-radius: 10px;
+        padding: 25px;
+        margin: 25px 0;
+        border-right: 4px solid var(--primary-color);
+    }
+    
+    .contact-section {
+        background: var(--bg-light);
+        border-radius: 15px;
+        padding: 30px;
+        text-align: center;
+        margin-top: 40px;
+    }
+    
+    .last-updated {
+        background: var(--secondary-color);
+        color: var(--dark-color);
+        padding: 10px 20px;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        display: inline-block;
+        margin-bottom: 30px;
+    }
+    
+    .table-of-contents {
+        background: var(--bg-light);
+        border-radius: 10px;
+        padding: 25px;
+        margin-bottom: 30px;
+        position: sticky;
+        top: 100px;
+    }
+    
+    .toc-link {
+        color: var(--primary-color);
+        text-decoration: none;
+        padding: 8px 15px;
+        display: block;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+        margin-bottom: 5px;
+    }
+    
+    .toc-link:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: translateX(10px);
+    }
+    
+    @media (max-width: 768px) {
+        .table-of-contents {
+            position: static;
+        }
+        .privacy-content {
+            padding: 25px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="privacy-hero text-center">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-4" data-aos="fade-up">{% trans "سياسة الخصوصية" %}</h1>
+        <p class="lead" data-aos="fade-up" data-aos-delay="200">
+            {% trans "نحن نقدر خصوصيتك ونلتزم بحماية بياناتك الشخصية" %}
+        </p>
+        <div class="last-updated" data-aos="fade-up" data-aos-delay="400">
+            <i class="fas fa-calendar-alt me-2"></i>
+            {% trans "آخر تحديث: 15 ديسمبر 2024" %}
+        </div>
+    </div>
+</section>
+
+<!-- Content Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <!-- Table of Contents -->
+            <div class="col-lg-3 mb-4">
+                <div class="table-of-contents" data-aos="fade-right">
+                    <h5 class="mb-3">
+                        <i class="fas fa-list me-2"></i>
+                        {% trans "المحتويات" %}
+                    </h5>
+                    <a href="#introduction" class="toc-link">{% trans "مقدمة" %}</a>
+                    <a href="#information-collect" class="toc-link">{% trans "المعلومات التي نجمعها" %}</a>
+                    <a href="#how-we-use" class="toc-link">{% trans "كيف نستخدم المعلومات" %}</a>
+                    <a href="#information-sharing" class="toc-link">{% trans "مشاركة المعلومات" %}</a>
+                    <a href="#data-security" class="toc-link">{% trans "أمان البيانات" %}</a>
+                    <a href="#cookies" class="toc-link">{% trans "ملفات تعريف الارتباط" %}</a>
+                    <a href="#your-rights" class="toc-link">{% trans "حقوقك" %}</a>
+                    <a href="#contact-us" class="toc-link">{% trans "اتصل بنا" %}</a>
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="col-lg-9">
+                <!-- Introduction -->
+                <div id="introduction" class="privacy-content" data-aos="fade-up">
+                    <h2 class="section-title">
+                        <i class="fas fa-info-circle"></i>
+                        {% trans "مقدمة" %}
+                    </h2>
+                    <p>
+                        {% trans "مرحباً بك في موقع جمعية نسائم فلسطين الخيرية. نحن نقدر ثقتك بنا ونلتزم بحماية خصوصيتك وبياناتك الشخصية. توضح هذه السياسة كيفية جمعنا واستخدامنا وحمايتنا للمعلومات التي تقدمها لنا." %}
+                    </p>
+                    <p>
+                        {% trans "باستخدام موقعنا أو خدماتنا، فإنك توافق على الممارسات الموضحة في سياسة الخصوصية هذه." %}
+                    </p>
+                </div>
+
+                <!-- Information We Collect -->
+                <div id="information-collect" class="privacy-content" data-aos="fade-up">
+                    <h2 class="section-title">
+                        <i class="fas fa-database"></i>
+                        {% trans "المعلومات التي نجمعها" %}
+                    </h2>
+                    <p>{% trans "نقوم بجمع المعلومات التالية:" %}</p>
+                    
+                    <h4>{% trans "المعلومات الشخصية:" %}</h4>
+                    <ul>
+                        <li>{% trans "الاسم الكامل" %}</li>
+                        <li>{% trans "عنوان البريد الإلكتروني" %}</li>
+                        <li>{% trans "رقم الهاتف" %}</li>
+                        <li>{% trans "العنوان (إذا قدمته طواعية)" %}</li>
+                        <li>{% trans "أي معلومات أخرى تقدمها عند التواصل معنا" %}</li>
+                    </ul>
+                    
+                    <h4>{% trans "المعلومات التقنية:" %}</h4>
+                    <ul>
+                        <li>{% trans "عنوان IP الخاص بك" %}</li>
+                        <li>{% trans "نوع المتصفح والجهاز" %}</li>
+                        <li>{% trans "الصفحات التي تزورها على موقعنا" %}</li>
+                        <li>{% trans "وقت وتاريخ الزيارة" %}</li>
+                        <li>{% trans "مصدر الإحالة" %}</li>
+                    </ul>
+
+                    <div class="highlight-box">
+                        <strong>{% trans "ملاحظة مهمة:" %}</strong>
+                        {% trans "نحن لا نجمع معلومات حساسة مثل أرقام الهوية أو المعلومات المالية إلا بموافقة صريحة منك ولأغراض محددة مثل التبرعات." %}
+                    </div>
+                </div>
+
+                <!-- How We Use Information -->
+                <div id="how-we-use" class="privacy-content" data-aos="fade-up">
+                    <h2 class="section-title">
+                        <i class="fas fa-cogs"></i>
+                        {% trans "كيف نستخدم المعلومات" %}
+                    </h2>
+                    <p>{% trans "نستخدم المعلومات التي نجمعها للأغراض التالية:" %}</p>
+                    <ul>
+                        <li>{% trans "الرد على استفساراتك وطلباتك" %}</li>
+                        <li>{% trans "إرسال معلومات حول أنشطة ومشاريع الجمعية" %}</li>
+                        <li>{% trans "تحسين خدماتنا وتجربة المستخدم" %}</li>
+                        <li>{% trans "إجراء التحليلات الإحصائية لفهم استخدام الموقع" %}</li>
+                        <li>{% trans "الحفاظ على أمان وسلامة الموقع" %}</li>
+                        <li>{% trans "الامتثال للقوانين والأنظمة المعمول بها" %}</li>
+                    </ul>
+                </div>
+
+                <!-- Information Sharing -->
+                <div id="information-sharing" class="privacy-content" data-aos="fade-up">
+                    <h2 class="section-title">
+                        <i class="fas fa-share-alt"></i>
+                        {% trans "مشاركة المعلومات" %}
+                    </h2>
+                    <p>{% trans "نحن لا نبيع أو نؤجر أو نتاجر بمعلوماتك الشخصية لأطراف ثالثة. قد نشارك معلوماتك في الحالات التالية فقط:" %}</p>
+                    <ul>
+                        <li>{% trans "عند حصولنا على موافقة صريحة منك" %}</li>
+                        <li>{% trans "مع مقدمي الخدمات الموثوقين الذين يساعدوننا في تشغيل الموقع" %}</li>
+                        <li>{% trans "عند الضرورة للامتثال للقوانين أو الأوامر القضائية" %}</li>
+                        <li>{% trans "لحماية حقوقنا وسلامة المستخدمين" %}</li>
+                    </ul>
+
+                    <div class="highlight-box">
+                        <i class="fas fa-shield-alt me-2"></i>
+                        <strong>{% trans "التزامنا:" %}</strong>
+                        {% trans "جميع الأطراف الثالثة التي قد تتعامل مع بياناتك ملزمة بنفس معايير الخصوصية والحماية التي نلتزم بها." %}
+                    </div>
+                </div>
+
+                <!-- Data Security -->
+                <div id="data-security" class="privacy-content" data-aos="fade-up">
+                    <h2 class="section-title">
+                        <i class="fas fa-lock"></i>
+                        {% trans "أمان البيانات" %}
+                    </h2>
+                    <p>{% trans "نتخذ الإجراءات التالية لحماية بياناتك:" %}</p>
+                    <ul>
+                        <li>{% trans "تشفير البيانات أثناء النقل والتخزين" %}</li>
+                        <li>{% trans "استخدام خوادم آمنة ومحمية" %}</li>
+                        <li>{% trans "تقييد الوصول للبيانات للموظفين المخولين فقط" %}</li>
+                        <li>{% trans "إجراء نسخ احتياطية منتظمة للبيانات" %}</li>
+                        <li>{% trans "مراقبة النظام للكشف عن أي نشاط مشبوه" %}</li>
+                    </ul>
+                </div>
+
+                <!-- Cookies -->
+                <div id="cookies" class="privacy-content" data-aos="fade-up">
+                    <h2 class="section-title">
+                        <i class="fas fa-cookie-bite"></i>
+                        {% trans "ملفات تعريف الارتباط (Cookies)" %}
+                    </h2>
+                    <p>{% trans "نستخدم ملفات تعريف الارتباط لتحسين تجربتك على موقعنا:" %}</p>
+                    
+                    <h4>{% trans "الكوكيز الأساسية:" %}</h4>
+                    <ul>
+                        <li>{% trans "ضرورية لتشغيل الموقع بشكل صحيح" %}</li>
+                        <li>{% trans "تذكر تفضيلات اللغة والسمة" %}</li>
+                    </ul>
+                    
+                    <h4>{% trans "كوكيز التحليلات:" %}</h4>
+                    <ul>
+                        <li>{% trans "تساعدنا في فهم كيفية استخدام الموقع" %}</li>
+                        <li>{% trans "لا تحتوي على معلومات شخصية" %}</li>
+                    </ul>
+
+                    <p>{% trans "يمكنك تعطيل الكوكيز من إعدادات المتصفح، لكن هذا قد يؤثر على بعض وظائف الموقع." %}</p>
+                </div>
+
+                <!-- Your Rights -->
+                <div id="your-rights" class="privacy-content" data-aos="fade-up">
+                    <h2 class="section-title">
+                        <i class="fas fa-user-shield"></i>
+                        {% trans "حقوقك" %}
+                    </h2>
+                    <p>{% trans "لديك الحقوق التالية فيما يتعلق بمعلوماتك الشخصية:" %}</p>
+                    <ul>
+                        <li><strong>{% trans "الحق في المعرفة:" %}</strong> {% trans "معرفة أي معلومات نجمعها عنك" %}</li>
+                        <li><strong>{% trans "الحق في التصحيح:" %}</strong> {% trans "طلب تصحيح أي معلومات خاطئة" %}</li>
+                        <li><strong>{% trans "الحق في الحذف:" %}</strong> {% trans "طلب حذف معلوماتك الشخصية" %}</li>
+                        <li><strong>{% trans "الحق في النقل:" %}</strong> {% trans "الحصول على نسخة من بياناتك" %}</li>
+                        <li><strong>{% trans "الحق في الاعتراض:" %}</strong> {% trans "رفض معالجة معلوماتك لأغراض معينة" %}</li>
+                    </ul>
+
+                    <div class="highlight-box">
+                        <p class="mb-0">
+                            <i class="fas fa-envelope me-2"></i>
+                            {% trans "لممارسة أي من هذه الحقوق، يرجى التواصل معنا على:" %}
+                            <strong>{{ site_settings.email }}</strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact-us" class="py-5 bg-light">
+    <div class="container">
+        <div class="contact-section" data-aos="fade-up">
+            <h2 class="mb-4">
+                <i class="fas fa-phone me-2" style="color: var(--primary-color);"></i>
+                {% trans "لديك أسئلة حول الخصوصية؟" %}
+            </h2>
+            <p class="lead mb-4">
+                {% trans "نحن هنا للإجابة على جميع استفساراتك حول سياسة الخصوصية وحماية البيانات" %}
+            </p>
+            <div class="d-flex flex-wrap justify-content-center gap-3">
+                <a href="mailto:{{ site_settings.email }}?subject=استفسار حول سياسة الخصوصية" class="btn btn-primary btn-lg">
+                    <i class="fas fa-envelope me-2"></i>{% trans "راسلنا" %}
+                </a>
+                <a href="tel:{{ site_settings.phone }}" class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-phone me-2"></i>{{ site_settings.phone }}
+                </a>
+                <a href="{% url 'contact:contact' %}" class="btn btn-outline-secondary btn-lg">
+                    <i class="fas fa-comments me-2"></i>{% trans "نموذج التواصل" %}
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Smooth scrolling for table of contents
+document.querySelectorAll('.toc-link').forEach(link => {
+    link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href').substring(1);
+        const targetElement = document.getElementById(targetId);
+        
+        if (targetElement) {
+            const offset = 100; // Account for sticky header
+            const targetPosition = targetElement.offsetTop - offset;
+            
+            window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+            });
+            
+            // Update active link
+            document.querySelectorAll('.toc-link').forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
+        }
+    });
+});
+
+// Highlight current section in TOC while scrolling
+window.addEventListener('scroll', function() {
+    const sections = document.querySelectorAll('[id]');
+    const tocLinks = document.querySelectorAll('.toc-link');
+    
+    let currentSection = '';
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop - 150;
+        if (window.scrollY >= sectionTop) {
+            currentSection = section.getAttribute('id');
+        }
+    });
+    
+    tocLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${currentSection}`) {
+            link.classList.add('active');
+        }
+    });
+});
+</script>
+{% endblock %}

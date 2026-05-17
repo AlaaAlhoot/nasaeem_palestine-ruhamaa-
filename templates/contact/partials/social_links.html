@@ -1,0 +1,506 @@
+{% load static %}
+{% load i18n %}
+{% load custom_filters %}
+<!-- Social Media Links Partial -->
+<div class="social-links-wrapper">
+    {% if social_links %}
+        <div class="social-header" data-aos="fade-up">
+            <h4 class="social-title">
+                <i class="fas fa-share-alt me-2"></i>
+                {% trans "تابعنا على وسائل التواصل" %}
+            </h4>
+            <p class="social-subtitle">{% trans "كن جزءاً من مجتمعنا وتابع آخر أخبارنا" %}</p>
+        </div>
+
+
+    <div class="social-links-grid" data-aos="fade-up" data-aos-delay="200">
+        {% for social in social_links %}
+            <a href="{{ social.url }}"
+               target="_blank"
+               class="social-link social-{{ social.platform }}"
+               data-social-id="{{ social.id }}"
+               onclick="trackSocialClick({{ social.id }}, '{{ social.platform }}')"
+               title="{{ social.get_platform_display }} - {{ social.username }}"
+               data-bs-toggle="tooltip"
+               data-bs-placement="top">
+                <div class="social-icon">
+                    <i class="{{ social.get_icon_class }}"></i>
+                </div>
+                <div class="social-info">
+                    <span class="social-platform">{{ social.get_platform_display }}</span>
+                    <span class="social-username">@{{ social.username }}</span>
+                </div>
+                <div class="social-arrow">
+                    <i class="fas fa-external-link-alt"></i>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+
+    <!-- Social Stats -->
+    <div class="social-stats" data-aos="fade-up" data-aos-delay="400">
+        <div class="stats-header">
+            <i class="fas fa-chart-bar me-2"></i>
+            {% trans "إحصائيات التفاعل" %}
+        </div>
+        <div class="stats-grid">
+            {% for social in social_links %}
+                <div class="stat-item">
+                    <i class="{{ social.get_icon_class }}"></i>
+                    <span class="stat-number">{{ social.clicks_count|default:0 }}</span>
+                    <span class="stat-label">{% trans "نقرة" %}</span>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% else %}
+    <!-- Default social links -->
+    <div class="social-header" data-aos="fade-up">
+        <h4 class="social-title">
+            <i class="fas fa-share-alt me-2"></i>
+            {% trans "تابعنا على وسائل التواصل" %}
+        </h4>
+        <p class="social-subtitle">{% trans "تواصل معنا عبر منصاتنا الرسمية" %}</p>
+    </div>
+
+    <div class="social-links-grid" data-aos="fade-up" data-aos-delay="200">
+        <a href="#" target="_blank" class="social-link social-facebook">
+            <div class="social-icon"><i class="fab fa-facebook-f"></i></div>
+            <div class="social-info">
+                <span class="social-platform">Facebook</span>
+                <span class="social-username">@nasaeem.palestine</span>
+            </div>
+            <div class="social-arrow"><i class="fas fa-external-link-alt"></i></div>
+        </a>
+
+        <a href="#" target="_blank" class="social-link social-twitter">
+            <div class="social-icon"><i class="fab fa-twitter"></i></div>
+            <div class="social-info">
+                <span class="social-platform">Twitter</span>
+                <span class="social-username">@nasaeem_ps</span>
+            </div>
+            <div class="social-arrow"><i class="fas fa-external-link-alt"></i></div>
+        </a>
+
+        <a href="#" target="_blank" class="social-link social-instagram">
+            <div class="social-icon"><i class="fab fa-instagram"></i></div>
+            <div class="social-info">
+                <span class="social-platform">Instagram</span>
+                <span class="social-username">@nasaeem.palestine</span>
+            </div>
+            <div class="social-arrow"><i class="fas fa-external-link-alt"></i></div>
+        </a>
+
+        <a href="#" target="_blank" class="social-link social-youtube">
+            <div class="social-icon"><i class="fab fa-youtube"></i></div>
+            <div class="social-info">
+                <span class="social-platform">YouTube</span>
+                <span class="social-username">{% trans "نسائم فلسطين" %}</span>
+            </div>
+            <div class="social-arrow"><i class="fas fa-external-link-alt"></i></div>
+        </a>
+
+        <a href="#" target="_blank" class="social-link social-whatsapp">
+            <div class="social-icon"><i class="fab fa-whatsapp"></i></div>
+            <div class="social-info">
+                <span class="social-platform">WhatsApp</span>
+                <span class="social-username">{% trans "تواصل مباشر" %}</span>
+            </div>
+            <div class="social-arrow"><i class="fas fa-external-link-alt"></i></div>
+        </a>
+
+        <a href="#" target="_blank" class="social-link social-telegram">
+            <div class="social-icon"><i class="fab fa-telegram-plane"></i></div>
+            <div class="social-info">
+                <span class="social-platform">Telegram</span>
+                <span class="social-username">@nasaeem_palestine</span>
+            </div>
+            <div class="social-arrow"><i class="fas fa-external-link-alt"></i></div>
+        </a>
+    </div>
+{% endif %}
+
+<!-- Call to Action -->
+<div class="social-cta" data-aos="fade-up" data-aos-delay="600">
+    <div class="cta-content">
+        <h5>{% trans "انضم لمجتمعنا الآن!" %}</h5>
+        <p>{% trans "اتبعنا للحصول على آخر الأخبار والتحديثات اليومية" %}</p>
+        <div class="cta-tags">
+            <span class="tag">#نسائم_فلسطين</span>
+            <span class="tag">#الخير_يجمعنا</span>
+            <span class="tag">#فلسطين_في_القلب</span>
+        </div>
+    </div>
+</div>
+
+
+</div>
+
+
+<!-- Styles for Social Links -->
+<style>
+.social-links-wrapper {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-radius: 20px;
+    padding: 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+.social-links-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%236b8e23' fill-opacity='0.02'%3E%3Cpath d='M20 20c0 11.046-8.954 20-20 20v20h40V20H20z'/%3E%3C/g%3E%3C/svg%3E") center/40px;
+    opacity: 0.5;
+}
+
+.social-header {
+    text-align: center;
+    margin-bottom: 30px;
+    position: relative;
+    z-index: 1;
+}
+
+.social-title {
+    color: var(--primary-color);
+    font-weight: bold;
+    margin: 0 0 10px 0;
+    font-size: 1.4rem;
+}
+
+.social-subtitle {
+    color: #6c757d;
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.social-links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 15px;
+    position: relative;
+    z-index: 1;
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    background: white;
+    border: 2px solid #e9ecef;
+    border-radius: 15px;
+    padding: 15px 20px;
+    text-decoration: none;
+    color: #333;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.social-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.social-link:hover::before {
+    left: 100%;
+}
+
+.social-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: white;
+    margin-left: 15px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.social-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.social-platform {
+    display: block;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 2px;
+}
+
+.social-username {
+    display: block;
+    color: #6c757d;
+    font-size: 0.85rem;
+}
+
+.social-arrow {
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.3s ease;
+    color: #6c757d;
+}
+
+.social-link:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    border-color: currentColor;
+}
+
+.social-link:hover .social-arrow {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.social-link:hover .social-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+/* Platform-specific colors */
+.social-facebook { color: #1877f2; }
+.social-facebook .social-icon { background: #1877f2; }
+.social-facebook:hover { border-color: #1877f2; }
+
+.social-twitter { color: #1da1f2; }
+.social-twitter .social-icon { background: #1da1f2; }
+.social-twitter:hover { border-color: #1da1f2; }
+
+.social-instagram { color: #e4405f; }
+.social-instagram .social-icon { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+.social-instagram:hover { border-color: #e4405f; }
+
+.social-youtube { color: #ff0000; }
+.social-youtube .social-icon { background: #ff0000; }
+.social-youtube:hover { border-color: #ff0000; }
+
+.social-whatsapp { color: #25d366; }
+.social-whatsapp .social-icon { background: #25d366; }
+.social-whatsapp:hover { border-color: #25d366; }
+
+.social-telegram { color: #0088cc; }
+.social-telegram .social-icon { background: #0088cc; }
+.social-telegram:hover { border-color: #0088cc; }
+
+.social-linkedin { color: #0077b5; }
+.social-linkedin .social-icon { background: #0077b5; }
+.social-linkedin:hover { border-color: #0077b5; }
+
+.social-tiktok { color: #000; }
+.social-tiktok .social-icon { background: #000; }
+.social-tiktok:hover { border-color: #000; }
+
+.social-stats {
+    margin-top: 30px;
+    background: rgba(255,255,255,0.7);
+    border-radius: 15px;
+    padding: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.stats-header {
+    text-align: center;
+    color: var(--primary-color);
+    font-weight: bold;
+    margin-bottom: 15px;
+    font-size: 1rem;
+}
+
+.stats-grid {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.stat-item {
+    text-align: center;
+    min-width: 60px;
+}
+
+.stat-item i {
+    display: block;
+    font-size: 1.2rem;
+    color: #6c757d;
+    margin-bottom: 5px;
+}
+
+.stat-number {
+    display: block;
+    font-weight: bold;
+    color: var(--primary-color);
+    font-size: 1.1rem;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.75rem;
+    color: #6c757d;
+}
+
+.social-cta {
+    margin-top: 30px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.cta-content h5 {
+    margin: 0 0 10px 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.cta-content p {
+    margin: 0 0 15px 0;
+    opacity: 0.9;
+    font-size: 0.9rem;
+}
+
+.cta-tags {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag {
+    background: rgba(255,255,255,0.2);
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .social-links-wrapper {
+        padding: 20px;
+    }
+    
+    .social-links-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .social-link {
+        padding: 12px 15px;
+    }
+    
+    .social-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+        margin-left: 12px;
+    }
+    
+    .social-platform {
+        font-size: 0.9rem;
+    }
+    
+    .social-username {
+        font-size: 0.8rem;
+    }
+    
+    .stats-grid {
+        justify-content: space-between;
+    }
+    
+    .cta-tags {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .social-links-wrapper {
+        padding: 15px;
+    }
+    
+    .social-title {
+        font-size: 1.2rem;
+    }
+    
+    .social-subtitle {
+        font-size: 0.85rem;
+    }
+    
+    .social-link {
+        padding: 10px 12px;
+    }
+}
+</style>
+
+<!-- JavaScript for Social Links -->
+<script>
+// Track social media clicks
+function trackSocialClick(socialId, platform) {
+    // Send tracking data to server
+    fetch(`{% url 'contact:track_social_click' 0 %}`.replace('0', socialId), {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            platform: platform,
+            timestamp: Date.now()
+        })
+    }).then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update click count if displayed
+            const statItem = document.querySelector(`[data-social-id="${socialId}"] .stat-number`);
+            if (statItem) {
+                statItem.textContent = data.clicks || parseInt(statItem.textContent) + 1;
+            }
+        }
+    }).catch(error => {
+        console.log('Social tracking failed:', error);
+    });
+    
+    // Google Analytics tracking
+    if (typeof gtag !== 'undefined') {
+        gtag('event', 'social_click', {
+            'event_category': 'social_media',
+            'event_label': platform,
+            'social_platform': platform
+        });
+    }
+}
+
+// Copy social link functionality
+function copySocialLink(url, platform) {
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(() => {
+            showToast(`تم نسخ رابط ${platform}!`, 'success');
+        });
+    } else {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = url;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        showToast(`تم نسخ رابط ${platform}!`, 'success');
+    }
+}
+</script>

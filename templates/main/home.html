@@ -1,0 +1,1843 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load custom_filters %}
+
+{% block title %}{{ site_settings|translate_field:"site_name" }} - {% trans "الصفحة الرئيسية" %}{% endblock %}
+
+{% block description %}{{ site_settings|translate_field:"about_summary"|truncatechars:160 }}{% endblock %}
+
+{% block extra_css %}
+<style>
+.hero-slide .container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.hero-slide {
+    display: flex;
+    align-items: center;
+}
+
+/* ================================================
+   CSS VARIABLES
+================================================ */
+:root {
+    --primary:        #6B8E23;
+    --secondary:      #5C4033;
+    --accent:         #FFD700;
+    --tertiary:       #8B7355;
+    --bg:             #ffffff;
+    --bg-light:       #f8f9fa;
+    --card-bg:        #ffffff;
+    --text:           #333333;
+    --text-muted:     #6c757d;
+    --border:         #dee2e6;
+
+    --hover-1: #6B8E23;
+    --hover-2: #5C4033;
+    --hover-3: #FFD700;
+    --hover-4: #8B7355;
+    --hover-5: #9ACD32;
+}
+
+[data-theme="dark"] {
+    --bg:         #1a1a1a;
+    --bg-light:   #252525;
+    --card-bg:    #2d2d2d;
+    --text:       #e0e0e0;
+    --text-muted: #a0a0a0;
+    --border:     #444444;
+}
+
+/* ================================================
+   KEYFRAMES
+================================================ */
+@keyframes pulse {
+    0%,100% { transform: scale(1);    opacity: 0.9; }
+    50%      { transform: scale(1.03); opacity: 1;   }
+}
+@keyframes float {
+    0%,100% { transform: translate(0,0);     }
+    50%      { transform: translate(30px,30px); }
+}
+@keyframes borderFlow {
+    0%,100% { border-color: var(--hover-1); }
+    25%      { border-color: var(--hover-2); }
+    50%      { border-color: var(--hover-3); }
+    75%      { border-color: var(--hover-4); }
+}
+@keyframes fadeInUp {
+    from { opacity:0; transform:translateY(20px); }
+    to   { opacity:1; transform:translateY(0);    }
+}
+@keyframes slideIn {
+    from { opacity:0; transform:translateX(60px); }
+    to   { opacity:1; transform:translateX(0);    }
+}
+@keyframes backgroundMove {
+    from { transform: translate(0,0);       }
+    to   { transform: translate(50px,50px); }
+}
+
+/* ================================================
+   HERO SLIDER
+================================================ */
+.hero-slider {
+    width: 100%;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+    margin-top: -80px; /* للديسكتوب */
+}
+
+.hero-slide {
+    position: relative;
+    width: 100%;
+    height: 600px;
+    overflow: hidden;
+}
+
+.hero-background-image,
+.hero-slide img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    z-index: 0;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(45deg, rgba(107,142,35,0.75), rgba(92,64,51,0.65));
+}
+
+.hero-content {
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 2.5rem 3rem;
+    border-radius: 20px;
+    max-width: 620px;
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    position: relative;
+    z-index: 10;
+    animation: slideIn 0.8s ease-out;
+    transition: all 0.4s ease;
+}
+.hero-content:hover {
+    transform: perspective(1000px) rotateY(1deg) translateY(-8px);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+}
+.hero-content h1 {
+    color: white;
+    font-size: clamp(1.8rem, 4.5vw, 3rem);
+    font-weight: 800;
+    margin-bottom: 1.2rem;
+    text-shadow: 2px 4px 12px rgba(0,0,0,0.5);
+    line-height: 1.2;
+}
+.hero-content p {
+    color: rgba(255,255,255,0.95);
+    font-size: clamp(1.1rem, 2.3vw, 1.4rem);
+    margin-bottom: 1.8rem;
+    text-shadow: 1px 2px 8px rgba(0,0,0,0.4);
+    line-height: 1.7;
+}
+.hero-content .btn {
+    position: relative;
+    overflow: hidden;
+    padding: 1rem 2.5rem;
+    font-weight: 700;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+.hero-content .btn::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 0; height: 0;
+    background: rgba(255,255,255,0.3);
+    border-radius: 50%;
+    transform: translate(-50%,-50%);
+    transition: all 0.5s ease;
+}
+.hero-content .btn:hover::before { width: 400px; height: 400px; }
+.hero-content .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+
+.carousel-indicators [data-bs-target] {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background-color: rgba(255,255,255,0.5);
+    border: none;
+    transition: all 0.3s ease;
+}
+.carousel-indicators .active {
+    width: 32px;
+    border-radius: 6px;
+    background-color: var(--accent);
+}
+
+/* ================================================
+   SECTION COMMON
+================================================ */
+.spacer-section {
+    height: 60px;
+    background: linear-gradient(to bottom, var(--bg), var(--bg-light));
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 3.5rem;
+    padding: 0 15px;
+    opacity: 0;
+    transform: translateY(25px);
+    transition: all 0.7s ease;
+}
+.section-header.visible { opacity: 1; transform: translateY(0); }
+
+.section-header h2 {
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 1.2rem;
+    position: relative;
+    display: inline-block;
+}
+.section-header h2::after {
+    content: '';
+    position: absolute;
+    bottom: -12px; left: 50%;
+    transform: translateX(-50%);
+    width: 90px; height: 5px;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    border-radius: 3px;
+}
+.section-header p {
+    font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+    color: var(--text-muted);
+    margin-top: 1.8rem;
+    line-height: 1.6;
+}
+
+/* مساعد للـ hover gradient المتكرر */
+.hover-gradient-card { position: relative; overflow: hidden; }
+.hover-gradient-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--hover-start, var(--hover-1)), var(--hover-end, var(--hover-2)));
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+}
+.hover-gradient-card:hover::before { opacity: 0.12; }
+.hover-gradient-card:hover {
+    transform: translateY(-12px);
+    animation: borderFlow 3s ease-in-out infinite;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.15),
+                0 25px 50px rgba(0,0,0,0.1),
+                0 0 40px rgba(107,142,35,0.5);
+    border-color: var(--primary);
+}
+
+/* ألوان الـ hover لكل ابن */
+:is(.stats-grid, .projects-grid, .categories-grid, .goals-grid, .board-grid, .partners-grid) > *:nth-child(1) { --hover-start: var(--hover-1); --hover-end: var(--hover-2); }
+:is(.stats-grid, .projects-grid, .categories-grid, .goals-grid, .board-grid, .partners-grid) > *:nth-child(2) { --hover-start: var(--hover-2); --hover-end: var(--hover-3); }
+:is(.stats-grid, .projects-grid, .categories-grid, .goals-grid, .board-grid, .partners-grid) > *:nth-child(3) { --hover-start: var(--hover-3); --hover-end: var(--hover-4); }
+:is(.stats-grid, .projects-grid, .categories-grid, .goals-grid, .board-grid, .partners-grid) > *:nth-child(4) { --hover-start: var(--hover-4); --hover-end: var(--hover-5); }
+
+/* كلاسات الـ reveal */
+.stat-item, .project-card, .category-card, .goal-item, .member-card, .partner-card {
+    opacity: 0;
+    transform: translateY(35px);
+    transition: all 0.6s ease;
+}
+.stat-item.visible, .project-card.visible, .category-card.visible,
+.goal-item.visible, .member-card.visible, .partner-card.visible {
+    opacity: 1; transform: translateY(0);
+}
+:nth-child(1).visible { transition-delay: 0.1s; }
+:nth-child(2).visible { transition-delay: 0.2s; }
+:nth-child(3).visible { transition-delay: 0.3s; }
+:nth-child(4).visible { transition-delay: 0.4s; }
+
+/* ================================================
+   ABOUT SECTION
+================================================ */
+.about-section {
+    background: linear-gradient(135deg, var(--bg-light), var(--bg));
+    padding: 5rem 0;
+    position: relative;
+    overflow-x: hidden;
+}
+.about-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+.about-image-container {
+    background: linear-gradient(135deg, rgba(107,142,35,0.1), rgba(255,215,0,0.08));
+    padding: 25px;
+    border-radius: 22px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+    opacity: 0;
+    transform: translateX(-50px) translateY(10px);
+    transition: all 1s cubic-bezier(0.215,0.61,0.355,1);
+}
+.about-image-container.visible {
+    opacity: 1;
+    transform: translateX(0) translateY(0);
+    box-shadow: 0 15px 45px rgba(0,0,0,0.2);
+}
+.about-image-container img {
+    width: 95%; height: auto;
+    margin: 0 auto; display: block;
+    border-radius: 18px;
+    transition: transform 0.5s ease;
+}
+.about-image-container:hover img { transform: scale(1.03); }
+
+.about-text {
+    opacity: 0;
+    transform: translateX(35px);
+    transition: all 0.9s ease 0.2s;
+}
+.about-text.visible { opacity: 1; transform: translateX(0); }
+.about-text h3 {
+    color: var(--primary);
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+.about-text h2 {
+    font-size: clamp(2rem, 3.8vw, 2.8rem);
+    color: var(--text);
+    font-weight: 800;
+    margin-bottom: 1.8rem;
+    line-height: 1.3;
+}
+.about-text p {
+    color: var(--text-muted);
+    font-size: 1.08rem;
+    line-height: 1.9;
+    margin-bottom: 1.7rem;
+    text-align: justify;
+    text-align-last: right;
+    direction: rtl;
+    word-spacing: 2px;
+}
+.about-features {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin: 2.5rem 0;
+}
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    padding: 1.3rem;
+    background: var(--card-bg);
+    border-radius: 14px;
+    border: 2px solid var(--border);
+    transition: all 0.4s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    position: relative;
+    overflow: hidden;
+}
+.feature-item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent, rgba(107,142,35,0.1), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+}
+.feature-item:hover::before { transform: translateX(100%); }
+.feature-item:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(107,142,35,0.15);
+    border-color: var(--primary);
+}
+.feature-item i {
+    font-size: 2.2rem;
+    color: var(--primary);
+    transition: all 0.4s ease;
+}
+.feature-item:hover i { transform: scale(1.15) rotate(10deg); }
+.feature-item span { color: var(--text); font-weight: 600; font-size: 1.05rem; }
+
+/* ================================================
+   STATS SECTION
+================================================ */
+.stats-section {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    padding: 5rem 0;
+    position: relative;
+    overflow-x: hidden;
+}
+.stats-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('data:image/svg+xml,<svg width="60" height="60" xmlns="http://www.w3.org/2000/svg"><circle cx="30" cy="30" r="1.5" fill="rgba(255,255,255,0.1)"/></svg>');
+    opacity: 0.4;
+}
+.stats-section .section-header h2,
+.stats-section .section-header p { color: white; }
+.stats-section .section-header h2::after {
+    background: linear-gradient(90deg, var(--accent), white);
+}
+.stats-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 15px;
+    position: relative;
+    z-index: 1;
+}
+.stat-item {
+    flex: 0 0 calc(25% - 2rem);
+    max-width: 300px;
+    min-height: 260px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(12px);
+    padding: 3rem 2rem;
+    border-radius: 18px;
+    text-align: center;
+    border: 2px solid rgba(255,255,255,0.25);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.2);
+    position: relative;
+    overflow: hidden;
+}
+.stat-item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent, rgba(255,255,255,0.2), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.7s ease;
+}
+.stat-item:hover::before { transform: translateX(100%); }
+.stat-item:hover {
+    transform: translateY(-12px);
+    background: rgba(255,255,255,0.22);
+    box-shadow: 0 18px 50px rgba(0,0,0,0.35);
+}
+.stat-item i {
+    font-size: 4rem;
+    margin-bottom: 1.8rem;
+    color: var(--accent);
+    text-shadow: 0 0 15px rgba(255,215,0,0.6);
+    animation: pulse 2s infinite ease-in-out;
+    transition: all 0.4s ease;
+}
+.stat-item:hover i { transform: scale(1.2) rotate(15deg); animation: none; }
+.stat-number {
+    font-size: clamp(3rem, 6vw, 4.5rem);
+    font-weight: 900;
+    margin-bottom: 0.8rem;
+    text-shadow: 3px 3px 10px rgba(0,0,0,0.45);
+}
+.stat-item p {
+    font-size: clamp(1.1rem, 2.3vw, 1.4rem);
+    font-weight: 600;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.35);
+}
+
+/* ================================================
+   PROJECTS SECTION
+================================================ */
+.projects-section {
+    background: linear-gradient(135deg, var(--bg), var(--bg-light));
+    padding: 5rem 0;
+}
+.projects-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+.project-card {
+    flex: 0 0 calc(25% - 2rem);
+    max-width: 320px;
+    min-height: 520px;
+    background: var(--card-bg);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.1);
+    border: 2px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+.project-card img {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+.project-card:hover img { transform: scale(1.08); }
+.project-card .card-body {
+    padding: 2rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 2;
+}
+.project-card h5 {
+    color: var(--text);
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    min-height: 60px;
+    line-height: 1.5;
+    transition: all 0.3s ease;
+}
+.project-card:hover h5 {
+    background: linear-gradient(135deg, var(--hover-start, var(--hover-1)), var(--hover-end, var(--hover-2)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.project-card .description {
+    color: var(--text-muted);
+    font-size: 1rem;
+    flex: 1;
+    margin-bottom: 1.5rem;
+    line-height: 1.7;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.project-card .card-footer {
+    padding-top: 1.5rem;
+    border-top: 2px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+}
+.project-card .btn {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    padding: 0.7rem 1.8rem;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+.project-card .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(107,142,35,0.4);
+}
+
+/* ================================================
+   CATEGORIES SECTION
+================================================ */
+.categories-section {
+    background: linear-gradient(135deg, var(--bg-light), var(--bg));
+    padding: 5rem 0;
+}
+.categories-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+.category-card {
+    flex: 0 0 calc(25% - 2rem);
+    max-width: 300px;
+    min-height: 280px;
+    background: var(--card-bg);
+    padding: 3rem 2rem;
+    border-radius: 18px;
+    text-align: center;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.1);
+    border: 2px solid var(--border);
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    transform: scale(0.95);
+    transition: all 0.6s ease;
+}
+.category-card.visible { transform: scale(1); }
+.category-icon {
+    width: 100px; height: 100px;
+    margin: 0 auto 2rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem;
+    position: relative;
+    z-index: 1;
+    transition: all 0.5s ease;
+}
+.category-card:hover .category-icon { transform: scale(1.2) rotate(360deg); }
+.category-card h5 {
+    color: var(--text);
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+.category-card:hover h5 {
+    background: linear-gradient(135deg, var(--hover-start, var(--hover-1)), var(--hover-end, var(--hover-2)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.category-card .count {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    font-weight: 600;
+    position: relative;
+    z-index: 1;
+}
+
+/* ================================================
+   GOALS SECTION
+================================================ */
+.goals-section {
+    background: linear-gradient(135deg, var(--bg), var(--bg-light));
+    padding: 5rem 0;
+}
+.goals-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+.goal-item {
+    flex: 0 0 calc(25% - 2rem);
+    max-width: 300px;
+    min-height: 320px;
+    background: var(--card-bg);
+    padding: 3rem 2rem;
+    border-radius: 18px;
+    text-align: center;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.1);
+    border: 2px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+.goal-item i {
+    font-size: 4.5rem;
+    margin-bottom: 2rem;
+    color: var(--accent);
+    text-shadow: 0 0 15px rgba(255,215,0,0.6);
+    animation: pulse 2s infinite ease-in-out;
+    position: relative;
+    z-index: 1;
+    transition: all 0.5s ease;
+}
+.goal-item:hover i { transform: scale(1.25) rotate(360deg); animation: none; }
+.goal-item h5 {
+    color: var(--text);
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+.goal-item:hover h5 {
+    background: linear-gradient(135deg, var(--hover-start, var(--hover-1)), var(--hover-end, var(--hover-2)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.goal-item p {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    position: relative;
+    z-index: 1;
+}
+
+/* ================================================
+   BOARD MEMBERS SECTION
+================================================ */
+.board-section {
+    background: linear-gradient(135deg, var(--bg-light), var(--bg));
+    padding: 5rem 0;
+    position: relative;
+}
+.board-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+.member-card {
+    flex: 0 0 calc(25% - 2rem);
+    max-width: 300px;
+    min-height: 480px;
+    background: var(--card-bg);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.1);
+    border: 2px solid var(--border);
+    text-align: center;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+.member-photo {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+.member-card:hover .member-photo { transform: scale(1.08); }
+.member-info {
+    padding: 2rem 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.member-info h5 {
+    color: var(--text);
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin-bottom: 0.6rem;
+    line-height: 1.4;
+    transition: all 0.3s ease;
+}
+.member-card:hover .member-info h5 {
+    background: linear-gradient(135deg, var(--hover-start, var(--hover-1)), var(--hover-end, var(--hover-2)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.member-info p { color: var(--primary); font-weight: 600; font-size: 1.05rem; margin-bottom: 1.5rem; }
+.member-social {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+.member-social a {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+.member-social a::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    transform: scale(0);
+    transition: transform 0.3s ease;
+}
+.member-social a:hover::before { transform: scale(1); }
+.member-social a:hover { transform: translateY(-5px) scale(1.1); color: white; }
+.member-social .facebook::before  { background: #3b5998; }
+.member-social .twitter::before   { background: #1da1f2; }
+.member-social .linkedin::before  { background: #0077b5; }
+.member-social .facebook:hover  { border-color: #3b5998; }
+.member-social .twitter:hover   { border-color: #1da1f2; }
+.member-social .linkedin:hover  { border-color: #0077b5; }
+.member-social a i { position: relative; z-index: 1; }
+
+/* ================================================
+   PARTNERS SECTION
+================================================ */
+.partners-section {
+    background: linear-gradient(135deg, var(--bg), var(--bg-light));
+    padding: 5rem 0;
+}
+.partners-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+.partner-card {
+    flex: 0 0 calc(25% - 2rem);
+    max-width: 300px;
+    min-height: 420px;
+    background: var(--card-bg);
+    padding: 2.5rem 2rem;
+    border-radius: 18px;
+    text-align: center;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.1);
+    border: 2px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: scale(0.95);
+    transition: all 0.6s ease;
+}
+.partner-card.visible { opacity: 1; transform: scale(1); }
+.partner-logo img {
+    max-width: 100%; height: auto; max-height: 100px;
+    object-fit: contain; margin-bottom: 1.5rem;
+    filter: grayscale(80%) brightness(1.2);
+    transition: all 0.4s ease;
+}
+.partner-card:hover .partner-logo img { filter: grayscale(0%) brightness(1); transform: scale(1.05); }
+.partner-card h5 {
+    color: var(--text);
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-bottom: 0.8rem;
+    line-height: 1.4;
+    transition: all 0.3s ease;
+}
+.partner-card:hover h5 {
+    background: linear-gradient(135deg, var(--hover-start, var(--hover-1)), var(--hover-end, var(--hover-2)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.partner-meta { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 0.5rem; }
+.partner-social {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+.partner-social a {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+.partner-social a::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    transform: scale(0);
+    transition: transform 0.3s ease;
+}
+.partner-social a:hover::before { transform: scale(1); }
+.partner-social a:hover { transform: translateY(-5px) scale(1.1); color: white; }
+.partner-social .website::before { background: var(--primary); }
+.partner-social .email::before   { background: #EA4335; }
+.partner-social .phone::before   { background: #25D366; }
+.partner-social a i { position: relative; z-index: 1; }
+
+/* ================================================
+   CTA SECTION
+================================================ */
+.cta-section {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    padding: 5rem 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+.cta-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, rgba(255,255,255,0.12) 1px, transparent 1px);
+    background-size: 50px 50px;
+    opacity: 0.5;
+    animation: backgroundMove 20s linear infinite;
+    z-index: 0;
+}
+.cta-section .container { position: relative; z-index: 1; }
+.cta-section h2 {
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+    font-weight: 800;
+    margin-bottom: 1.8rem;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+    animation: fadeInUp 0.8s ease-out;
+}
+.cta-section p {
+    font-size: clamp(1.15rem, 2.5vw, 1.35rem);
+    margin-bottom: 2.5rem;
+    opacity: 0.95;
+    line-height: 1.7;
+    animation: fadeInUp 0.8s ease-out 0.2s backwards;
+}
+.cta-section .btn-lg {
+    padding: 1rem 3rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    border-radius: 14px;
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: var(--text);
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.8s ease-out 0.4s backwards;
+}
+.cta-section .btn-lg:hover {
+    background-color: #FFC700;
+    border-color: #FFC700;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+/* ================================================
+   UTILITIES
+================================================ */
+.empty-state {
+    text-align: center;
+    padding: 4rem 0;
+    background: var(--bg-light);
+    border-radius: 18px;
+    margin: 3rem auto;
+    max-width: 90%;
+}
+.empty-state i {
+    font-size: 5rem;
+    margin-bottom: 2rem;
+    opacity: 0.6;
+    color: var(--text-muted);
+    animation: pulse 2s infinite ease-in-out;
+}
+.empty-state p {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+    font-weight: 600;
+}
+.center-3 { justify-content: center !important; }
+.view-all-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 3rem;
+    margin-bottom: 2rem;
+}
+
+/* ================================================
+   FIX: HERO SLIDER MOBILE SPACING (IMPORTANT)
+================================================ */
+/* إصلاح مشكلة التصاق الهيرو بالناف بار والمسافات الزائدة */
+@media (max-width: 991px) {
+    .hero-slider {
+        margin-top: 0 !important;
+    }
+
+    .spacer-section {
+        display: none !important;
+    }
+
+    .about-section {
+        padding-top: 2rem !important;
+        margin-top: -1rem !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-slider {
+        margin-top: -15px !important;
+        position: relative;
+        margin-bottom: -200px !important; /* يقلل المسافة بعد السلايدر */
+    }
+
+    .hero-slide {
+        height: 400px;
+    }
+
+    .spacer-section {
+        display: none !important;
+    }
+
+    /* القسم الذي بعد السلايدر مباشرة (about-section) */
+    .hero-slider + * {
+        margin-top: -50px !important;
+    }
+
+    .about-section {
+        padding-top: 0 !important;
+        margin-top: -80px !important;
+    }
+    .hero-content {
+        padding: 1.2rem !important;
+        max-width: 90% !important;
+    }
+    .hero-content h1 {
+        font-size: 1.6rem !important;
+    }
+    .hero-content p {
+        font-size: 0.9rem !important;
+    }
+    .hero-content .btn {
+        padding: 0.6rem 1.5rem !important;
+        font-size: 0.85rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-slider {
+        margin-top: -10px !important;
+    }
+
+    .hero-slide {
+        height: 350px;
+    }
+
+    .about-section {
+        margin-top: -1.5rem !important;
+        padding-top: 0.5rem !important;
+    }
+    .hero-content {
+        padding: 0.8rem !important;
+        max-width: 95% !important;
+        border-radius: 12px !important;
+    }
+    .hero-content h1 {
+        font-size: 1.1rem !important;
+    }
+    .hero-content p {
+        font-size: 0.7rem !important;
+    }
+    .hero-content .btn {
+        padding: 0.4rem 1rem !important;
+        font-size: 0.7rem !important;
+    }
+}
+
+/* ================================================
+   RESPONSIVE
+================================================ */
+@media (max-width: 1200px) {
+    .about-content { grid-template-columns: 1fr; gap: 3rem; }
+    .about-features { grid-template-columns: 1fr; }
+    .stat-item, .project-card, .category-card,
+    .goal-item, .member-card, .partner-card {
+        flex: 0 0 calc(50% - 2rem);
+    }
+}
+
+@media (max-width: 991px) {
+    .hero-slider { margin-top: -85px; }
+}
+
+@media (max-width: 768px) {
+    .hero-content { padding: 2rem 2.5rem; max-width: 90%; }
+    .stat-item, .project-card, .category-card,
+    .goal-item, .member-card, .partner-card {
+        flex: 0 0 100%;
+        max-width: 500px;
+    }
+    .stat-item, .goal-item { min-height: 240px; padding: 2.5rem 2rem; }
+    .project-card { min-height: 480px; }
+    .project-card img, .member-photo { height: 260px; }
+    .spacer-section { height: 45px; }
+    .section-header { margin-bottom: 3rem; }
+}
+
+@media (max-width: 480px) {
+    .hero-content {
+        padding: 1rem !important;
+        max-width: 95% !important;
+    }
+    .hero-content h1 {
+        font-size: 1.3rem !important;
+        margin-bottom: 0.8rem !important;
+    }
+    .hero-content p {
+        font-size: 0.8rem !important;
+        margin-bottom: 1rem !important;
+    }
+    .hero-content .btn {
+        padding: 0.5rem 1.2rem !important;
+        font-size: 0.8rem !important;
+    }
+}
+
+/* تصحيح لون زر CTA */
+.cta-section .btn-lg {
+    background-color: var(--accent) !important;
+    border-color: var(--accent) !important;
+    color: var(--text) !important;
+}
+
+.cta-section .btn-lg:hover {
+    background-color: #FFC700 !important;
+    border-color: #FFC700 !important;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- ======= Hero Section ======= -->
+<section class="hero-slider">
+    <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="6000">
+
+        <!-- Indicators -->
+        <div class="carousel-indicators">
+            {% for slide in slider_images %}
+            <button type="button"
+                    data-bs-target="#heroCarousel"
+                    data-bs-slide-to="{{ forloop.counter0 }}"
+                    class="{% if forloop.first %}active{% endif %}"
+                    aria-label="{% trans 'شريحة' %} {{ forloop.counter }}"></button>
+            {% endfor %}
+        </div>
+
+        <!-- Slides -->
+        <div class="carousel-inner">
+            {% for slide in slider_images %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <div class="hero-slide">
+                    <!-- ⭐ التغيير الرئيسي: استبدال background-image بـ <img loading="lazy"> -->
+                    {% if forloop.first %}
+                        <!-- الصورة الأولى: eager loading + high priority -->
+                        <img src="{{ slide.image.url }}"
+                             alt="{{ slide|translate_field:'title' }}"
+                             class="hero-background-image"
+                             loading="eager"
+                             fetchpriority="high">
+                    {% else %}
+                        <!-- باقي الصور: lazy loading -->
+                        <img src="{{ slide.image.url }}"
+                             alt="{{ slide|translate_field:'title' }}"
+                             class="hero-background-image"
+                             loading="lazy">
+                    {% endif %}
+
+                    <!-- المحتوى فوق الصورة -->
+                    <div class="hero-overlay"></div>
+                    <div class="container">
+                        <div class="hero-content">
+                            <h1>{{ slide|translate_field:"title" }}</h1>
+                            {% if slide.subtitle_ar %}
+                                <p>{{ slide|translate_field:"subtitle" }}</p>
+                            {% endif %}
+                            {% if slide.button_text_ar and slide.button_url %}
+                            <a href="{{ slide.button_url }}" class="btn btn-warning btn-lg">
+                                {{ slide|translate_field:"button_text" }}
+                                <i class="fas fa-arrow-left ms-2"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <!-- Fallback slide إذا لم توجد صور -->
+            <div class="carousel-item active">
+                <div class="hero-slide">
+                    <img src="{% static 'images/hero-bg.jpg' %}"
+                         alt="{{ site_settings|translate_field:'site_name' }}"
+                         class="hero-background-image"
+                         loading="eager"
+                         fetchpriority="high">
+                    <div class="hero-overlay"></div>
+                    <div class="container">
+                        <div class="hero-content">
+                            <h1>{{ site_settings|translate_field:"site_name" }}</h1>
+                            <p>{{ site_settings|translate_field:"about_summary"|truncatechars:120 }}</p>
+                            <a href="{% url 'main:about' %}" class="btn btn-warning btn-lg">
+                                {% trans "تعرف علينا" %}
+                                <i class="fas fa-arrow-left ms-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Navigation Controls -->
+        {% if slider_images|length > 1 %}
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">{% trans "السابق" %}</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">{% trans "التالي" %}</span>
+        </button>
+        {% endif %}
+
+    </div>
+</section>
+
+
+
+<!-- About Section -->
+<section class="about-section">
+    <div class="container">
+        <div class="section-header">
+            <h2>{% trans "عن جمعية نسائم فلسطين الخيرية" %}</h2>
+            <p>{% blocktrans with year=site_settings.established_year %}مؤسسة خيرية تنموية إنسانية تعمل على خدمة المجتمع الفلسطيني منذ {{ year }}{% endblocktrans %}</p>
+        </div>
+
+        <div class="about-content">
+            <div class="about-image-container">
+                {% if site_settings.logo %}
+                <img loading="lazy" src="{{ site_settings.logo.url }}" alt="{{ site_settings|translate_field:"site_name" }}">
+                {% else %}
+                <img loading="lazy" src="{% static 'images/logo.png' %}" alt="{{ site_settings|translate_field:"site_name" }}">
+                {% endif %}
+            </div>
+
+            <div class="about-text">
+    <h3>{% trans "من نحن" %}</h3>
+    <h2>{% trans "جمعية تنموية رائدة في خدمة المجتمع" %}</h2>
+
+    <p >
+        {% blocktrans with year=site_settings.established_year %}جمعية نسائم فلسطين الخيرية هي مؤسسة خيرية تنموية إنسانية تأسست عام {{ year }} في قطاع غزة - فلسطين، وتُعنى بتنفيذ البرامج والمشاريع التي تساهم في تحقيق التنمية المتكاملة في المجتمع الفلسطيني.{% endblocktrans %}
+    </p>
+
+    <p >
+        {% trans "نسعى لبناء مجتمع فلسطيني قوي ومتماسك من خلال العمل الخيري المؤسسي والشراكات الفاعلة مع المؤسسات المحلية والدولية، بما يحقق التنمية المستدامة ويعزز الصمود والثبات." %}
+    </p>
+
+    <div class="about-features">
+        <div class="feature-item">
+            <i class="fas fa-check-circle"></i>
+            <span>{% trans "عمل مؤسسي احترافي" %}</span>
+        </div>
+        <div class="feature-item">
+            <i class="fas fa-users"></i>
+            <span>{% trans "فريق متخصص وملتزم" %}</span>
+        </div>
+        <div class="feature-item">
+            <i class="fas fa-handshake"></i>
+            <span>{% trans "شراكات محلية ودولية" %}</span>
+        </div>
+        <div class="feature-item">
+            <i class="fas fa-chart-line"></i>
+            <span>{% trans "تنمية مستدامة" %}</span>
+        </div>
+    </div>
+
+    <a href="{% url 'main:about' %}" class="btn btn-primary btn-lg">
+        <i class="fas fa-arrow-left me-2"></i>{% trans "اقرأ المزيد عنا" %}
+    </a>
+</div>
+        </div>
+    </div>
+</section>
+
+<!-- Statistics Section -->
+<section class="stats-section">
+    <div class="container">
+        <div class="section-header">
+            <h2>{% trans "إنجازاتنا بالأرقام" %}</h2>
+            <p>{% trans "نفخر بما حققناه من إنجازات في خدمة المجتمع الفلسطيني" %}</p>
+        </div>
+
+        <div class="stats-grid {% if statistics|length == 3 %}center-3{% endif %}">
+            {% if statistics %}
+                {% for stat in statistics|slice:":4" %}
+                <div class="stat-item">
+                    <i class="{{ stat.icon }}" style="color: {{ stat.color|default:'#FFD700' }};"></i>
+                    <span class="stat-number" data-count="{{ stat.number }}">0</span>
+                    <p>{{ stat|translate_field:"title" }}</p>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="stat-item">
+                    <i class="fas fa-project-diagram" style="color: #FFD700;"></i>
+                    <span class="stat-number" data-count="50">0</span>
+                    <p>{% trans "مشروع" %}</p>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-users" style="color: #00CED1;"></i>
+                    <span class="stat-number" data-count="1000">0</span>
+                    <p>{% trans "مستفيد" %}</p>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-heart" style="color: #FF69B4;"></i>
+                    <span class="stat-number" data-count="25">0</span>
+                    <p>{% trans "متطوع" %}</p>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-calendar" style="color: #98FB98;"></i>
+                    <span class="stat-number" data-count="12">12</span>
+                    <p>{% trans "سنة من العطاء" %}</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+<!-- Projects Section -->
+<section class="projects-section">
+    <div class="container">
+        <div class="section-header">
+            <h2>{% trans "أحدث مشاريعنا" %}</h2>
+            <p>{% trans "تعرف على آخر المشاريع التي نفذتها الجمعية لخدمة المجتمع" %}</p>
+        </div>
+
+        {% if recent_projects %}
+        <div class="projects-grid {% if recent_projects|length == 3 %}center-3{% endif %}">
+            {% for project in recent_projects|slice:":4" %}
+            <div class="project-card">
+                {% if project.main_image %}
+                <img src="{{ project.main_image.url }}"
+                     alt="{{ project|translate_field:'title' }}"
+                     loading="lazy"
+                     width="600"
+                     height="400">
+                {% else %}
+                <img src="{% static 'images/project-default.jpg' %}"
+                     alt="{{ project|translate_field:'title' }}"
+                     loading="lazy"
+                     width="600"
+                     height="400">
+                {% endif %}
+                <div class="card-body">
+                    <h5>{{ project|translate_field:"title"|truncatechars:50 }}</h5>
+                    <p class="description">{{ project|translate_field:"summary"|truncatechars:85 }}</p>
+                    <div class="card-footer">
+                        <small class="text-muted"><i class="far fa-calendar-alt me-1"></i>{{ project.created_at|date:"d M Y" }}</small>
+                        <a href="{% url 'projects:project_detail' slug=project.slug %}" class="btn btn-sm">{% trans "المزيد" %}</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="view-all-wrapper">
+            <a href="{% url 'projects:all_projects' %}" class="btn btn-outline-primary btn-lg">
+                {% trans "عرض جميع المشاريع" %} <i class="fas fa-arrow-left ms-2"></i>
+            </a>
+        </div>
+
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-folder-open"></i>
+            <p>{% trans "لا توجد مشاريع متاحة حالياً" %}</p>
+            <a href="{% url 'main:about' %}" class="btn btn-primary btn-lg">{% trans "تعرف على الجمعية" %}</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Categories Section -->
+<section class="categories-section">
+    <div class="container">
+        <div class="section-header">
+            <h2>{% trans "فئات المشاريع" %}</h2>
+            <p>{% trans "تصفح مشاريعنا حسب الفئة" %}</p>
+        </div>
+
+        {% if top_categories %}
+        <div class="categories-grid {% if top_categories|length == 3 %}center-3{% endif %}">
+            {% for category in top_categories %}
+            <a href="{% url 'projects:category_projects' category.slug %}" class="category-card">
+                <div class="category-icon" style="background: linear-gradient(135deg, {{ category.color }}20, {{ category.color }}40); color: {{ category.color }};">
+                    <i class="{{ category.icon }}"></i>
+                </div>
+                <h5>{{ category|translate_field:"name" }}</h5>
+                <p class="count"><i class="fas fa-folder me-1"></i>{{ category.projects_count }} {% trans "مشروع" %}</p>
+            </a>
+            {% endfor %}
+        </div>
+
+        <div class="view-all-wrapper">
+            <a href="{% url 'projects:all_projects' %}" class="btn btn-outline-primary btn-lg">
+                {% trans "عرض جميع الفئات" %} <i class="fas fa-arrow-left ms-2"></i>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Goals Section -->
+<section class="goals-section">
+    <div class="container">
+        <div class="section-header">
+            <h2>{% trans "أهدافنا" %}</h2>
+            <p>{% trans "نسعى لتحقيق هذه الأهداف النبيلة في خدمة مجتمعنا" %}</p>
+        </div>
+
+        <div class="goals-grid {% if featured_goals|length == 3 %}center-3{% endif %}">
+            {% for goal in featured_goals|slice:":4" %}
+            <div class="goal-item">
+                <i class="{{ goal.icon }}" style="color: {{ goal.color|default:'#1E90FF' }};"></i>
+                <h5>{{ goal|translate_field:"title" }}</h5>
+                {% if goal.description_ar %}<p>{{ goal|translate_field:"description"|truncatechars:85 }}</p>{% endif %}
+            </div>
+            {% empty %}
+            <div class="goal-item">
+                <i class="fas fa-hands-helping" style="color: #1E90FF;"></i>
+                <h5>{% trans "مساعدة المحتاجين" %}</h5>
+                <p>{% trans "تقديم الدعم للفئات الأكثر احتياجاً" %}</p>
+            </div>
+            <div class="goal-item">
+                <i class="fas fa-graduation-cap" style="color: #32CD32;"></i>
+                <h5>{% trans "دعم التعليم" %}</h5>
+                <p>{% trans "تعزيز التعليم وتطوير القدرات" %}</p>
+            </div>
+            <div class="goal-item">
+                <i class="fas fa-heart" style="color: #FF4500;"></i>
+                <h5>{% trans "كفالة الأيتام" %}</h5>
+                <p>{% trans "رعاية الأيتام وتوفير حياة كريمة" %}</p>
+            </div>
+            <div class="goal-item">
+                <i class="fas fa-hand-holding-heart" style="color: #FF69B4;"></i>
+                <h5>{% trans "العمل الخيري" %}</h5>
+                <p>{% trans "نشر ثقافة العمل الخيري" %}</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if featured_goals %}
+        <div class="view-all-wrapper">
+            <a href="{% url 'main:goals' %}" class="btn btn-primary btn-lg">
+                {% trans "عرض جميع الأهداف" %} <i class="fas fa-arrow-left ms-2"></i>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+<!-- Board Members Section -->
+<section class="board-section">
+    <div class="container">
+        <div class="section-header">
+            <h2>{% trans "قيادة الجمعية" %}</h2>
+            <p>{% trans "تعرف على أعضاء مجلس الإدارة" %}</p>
+        </div>
+
+        {% if key_board_members %}
+        <div class="board-grid {% if key_board_members|length == 3 %}center-3{% endif %}">
+            {% for member in key_board_members %}
+            <div class="member-card">
+                {% if member.photo %}
+                <img src="{{ member.photo.url }}"
+                     alt="{{ member|translate_field:'name' }} - {{ member|translate_field:'position_type' }}"
+                     class="member-photo"
+                     loading="lazy"
+                     width="300"
+                     height="300">
+                {% else %}
+                <img src="{% static 'images/avatar-default.jpg' %}"
+                     alt="{{ member|translate_field:'name' }}"
+                     class="member-photo"
+                     loading="lazy"
+                     width="300"
+                     height="300">
+                {% endif %}
+                <div class="member-info">
+                    <h5>{{ member|translate_field:"name" }}</h5>
+                    <p class="position">{{ member|translate_field:"position_type" }}</p>
+                    {% if member.facebook_url or member.twitter_url or member.linkedin_url %}
+                    <div class="member-social">
+                        {% if member.facebook_url %}
+                        <a href="{{ member.facebook_url }}"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           class="facebook"
+                           title="Facebook - {{ member|translate_field:'name' }}"
+                           aria-label="Facebook {{ member|translate_field:'name' }}">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        {% endif %}
+                        {% if member.twitter_url %}
+                        <a href="{{ member.twitter_url }}"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           class="twitter"
+                           title="Twitter - {{ member|translate_field:'name' }}"
+                           aria-label="Twitter {{ member|translate_field:'name' }}">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        {% endif %}
+                        {% if member.linkedin_url %}
+                        <a href="{{ member.linkedin_url }}"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           class="linkedin"
+                           title="LinkedIn - {{ member|translate_field:'name' }}"
+                           aria-label="LinkedIn {{ member|translate_field:'name' }}">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="view-all-wrapper">
+            <a href="{% url 'main:board' %}" class="btn btn-outline-primary btn-lg">
+                {% trans "عرض جميع الأعضاء" %} <i class="fas fa-arrow-left ms-2"></i>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+<!-- Partners Section -->
+<section class="partners-section">
+    <div class="container">
+        <div class="section-header">
+            <h2>{% trans "شركاؤنا" %}</h2>
+            <p>{% trans "نفخر بشراكاتنا مع المؤسسات المحلية والدولية" %}</p>
+        </div>
+
+        {% if top_partners %}
+        <div class="partners-grid {% if top_partners|length == 3 %}center-3{% endif %}">
+            {% for partner in top_partners %}
+            <div class="partner-card">
+                <div class="partner-logo">
+                    {% if partner.logo %}
+                    <img src="{{ partner.logo.url }}"
+                         alt="{% trans 'شعار' %} {{ partner|translate_field:'name' }}"
+                         loading="lazy"
+                         width="200"
+                         height="200">
+                    {% endif %}
+                </div>
+                <h5>{{ partner|translate_field:"name" }}</h5>
+                <p class="partner-meta">
+                    <i class="far fa-calendar-alt me-1"></i>
+                    {% trans "منذ" %} {{ partner.partnership_date|date:"Y" }}
+                </p>
+                <p class="partner-meta">
+                    <i class="fas fa-project-diagram me-1"></i>
+                    {{ partner.projects_count }} {% trans "مشروع مشترك" %}
+                </p>
+
+                {% if partner.website or partner.email or partner.phone %}
+                <div class="partner-social">
+                    {% if partner.website %}
+                    <a href="{{ partner.website }}"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="website"
+                       title="{% trans 'الموقع الإلكتروني' %} - {{ partner|translate_field:'name' }}"
+                       aria-label="{% trans 'زيارة موقع' %} {{ partner|translate_field:'name' }}">
+                        <i class="fas fa-globe"></i>
+                    </a>
+                    {% endif %}
+                    {% if partner.email %}
+                    <a href="mailto:{{ partner.email }}"
+                       class="email"
+                       title="{% trans 'البريد الإلكتروني' %} - {{ partner|translate_field:'name' }}"
+                       aria-label="{% trans 'مراسلة' %} {{ partner|translate_field:'name' }}">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                    {% endif %}
+                    {% if partner.phone %}
+                    <a href="tel:{{ partner.phone }}"
+                       class="phone"
+                       title="{% trans 'الهاتف' %} - {{ partner|translate_field:'name' }}"
+                       aria-label="{% trans 'الاتصال بـ' %} {{ partner|translate_field:'name' }}">
+                        <i class="fas fa-phone"></i>
+                    </a>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="view-all-wrapper">
+            <a href="{% url 'main:partners' %}" class="btn btn-outline-primary btn-lg">
+                {% trans "عرض جميع الشركاء" %} <i class="fas fa-arrow-left ms-2"></i>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <h2>{% trans "كن جزءاً من رحلة العطاء" %}</h2>
+        <p>{% trans "انضم إلينا في رحلة العطاء والتنمية، وساهم في بناء مستقبل أفضل لمجتمعنا الفلسطيني" %}</p>
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+
+    <a href="{% url 'contact:contact' %}" class="btn btn-lg" style="
+        background-color: var(--accent-color); /* اللون الأساسي: ذهبي */
+        border-color: var(--accent-color);
+        color: var(--secondary-color); /* لون النص الأساسي: بني داكن */
+        font-weight: 700;
+        padding: 0.8rem 2rem;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    "
+    onmouseover="
+        this.style.backgroundColor='#ffffff';
+        this.style.borderColor='#ffffff';
+        this.style.color='var(--secondary-color)'; /* يصبح النص بني داكن على الخلفية البيضاء */
+        this.style.transform='translateY(-4px)';
+        this.style.boxShadow='0 8px 20px rgba(255, 255, 255, 0.9)'; /* ظل أبيض قوي */
+    "
+    onmouseout="
+        this.style.backgroundColor='var(--accent-color)';
+        this.style.borderColor='var(--accent-color)';
+        this.style.color='var(--secondary-color)'; /* يعود إلى لون النص الأساسي */
+        this.style.transform='none';
+        this.style.boxShadow='none';
+    ">
+        <i class="fas fa-phone me-2"></i>{% trans "تواصل معنا" %}
+    </a>
+
+    <a href="{% url 'projects:all_projects' %}" class="btn btn-lg" style="
+        background-color: var(--primary-color); /* #6B8E23 */
+        border-color: var(--primary-color);
+        color: white; /* لون النص أبيض */
+        font-weight: 700;
+        padding: 0.8rem 2rem;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    "
+    onmouseover="this.style.backgroundColor='#5A7A1F'; this.style.borderColor='#5A7A1F'; this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 20px rgba(107, 142, 35, 0.5)'"
+    onmouseout="this.style.backgroundColor='var(--primary-color)'; this.style.borderColor='var(--primary-color)'; this.style.transform='none'; this.style.boxShadow='none'">
+        <i class="fas fa-eye me-2"></i>{% trans "تصفح مشاريعنا" %}
+    </a>
+</div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+console.log("V2 14/12/2025")
+// Counter Animation
+function animateCounters() {
+    const counters = document.querySelectorAll('.stat-number');
+    counters.forEach(counter => {
+        if (counter.classList.contains('counted')) return;
+        const target = parseInt(counter.getAttribute('data-count'));
+        if (!target || isNaN(target)) return;
+
+        const duration = 2200;
+        const increment = target / (duration / 16);
+        let current = 0;
+
+        const update = () => {
+            if (current < target) {
+                current += increment;
+                counter.textContent = Math.floor(current).toLocaleString('ar-EG');
+                requestAnimationFrame(update);
+            } else {
+                counter.textContent = target.toLocaleString('ar-EG');
+                counter.classList.add('counted');
+            }
+        };
+        update();
+    });
+}
+
+// Intersection Observer for Elements
+const observerOptions = {
+    threshold: 0.15,
+    rootMargin: '0px 0px -60px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+        }
+    });
+}, observerOptions);
+
+// Stats Observer
+const statsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const statItems = entry.target.querySelectorAll('.stat-item');
+            statItems.forEach(item => item.classList.add('visible'));
+            setTimeout(() => animateCounters(), 350);
+            statsObserver.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.25 });
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    // Observe elements for animation
+    document.querySelectorAll('.section-header, .project-card, .goal-item, .category-card, .member-card, .partner-card, .about-image-container, .about-text').forEach(el => {
+        observer.observe(el);
+    });
+
+    // Observe stats section
+    const statsSection = document.querySelector('.stats-section');
+    if (statsSection) statsObserver.observe(statsSection);
+
+    // Lazy load images
+    if ('loading' in HTMLImageElement.prototype) {
+        document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+            if (img.dataset.src) img.src = img.dataset.src;
+        });
+    }
+
+    // Service Worker for PWA
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js')
+                .then(registration => {
+                    console.log('✅ SW registered:', registration.scope);
+                })
+                .catch(err => {
+                    console.log('❌ SW registration failed:', err);
+                });
+        });
+    }
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href !== '#' && href !== '#!') {
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            }
+        });
+    });
+
+    // Parallax hero
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                const scrolled = window.pageYOffset;
+                const hero = document.querySelector('.hero-slide');
+                if (hero && scrolled < window.innerHeight) {
+                    hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+                }
+                ticking = false;
+            });
+            ticking = true;
+        }
+    }, { passive: true });
+
+    // Touch swipe carousel
+    const carousel = document.getElementById('heroCarousel');
+    if (carousel) {
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        carousel.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        carousel.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            const diff = touchStartX - touchEndX;
+            if (Math.abs(diff) > 50) {
+                const btn = diff > 0 ? '.carousel-control-next' : '.carousel-control-prev';
+                carousel.querySelector(btn)?.click();
+            }
+        }, { passive: true });
+    }
+
+    // Performance optimization for low-end devices
+    if (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) {
+        document.querySelectorAll('.project-card, .stat-item, .member-card').forEach(el => {
+            el.style.transition = 'all 0.3s';
+        });
+    }
+});
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', () => {
+    observer.disconnect();
+    statsObserver.disconnect();
+});
+// كود جافاسكريبت للمساعدة في فحص المشكلة
+document.addEventListener('DOMContentLoaded', () => {
+    const fixedElements = document.querySelectorAll('.page-loader, .navbar');
+
+    fixedElements.forEach(el => {
+        let current = el.parentElement;
+        while (current && current.tagName !== 'BODY') {
+            const overflowStyle = window.getComputedStyle(current).overflow;
+            const positionStyle = window.getComputedStyle(current).position;
+
+            if (overflowStyle.includes('hidden') && positionStyle !== 'static') {
+                console.error("⛔️ تم اكتشاف عنصر يسبب مشكلة!:", current);
+                console.error("⛔️ الإعدادات المسببة للمشكلة:", { overflow: overflowStyle, position: positionStyle });
+
+                // current.style.overflow = 'visible';
+            }
+            current = current.parentElement;
+        }
+    });
+});
+// Console branding
+
+console.log('%cGitHub: github.com/AlaaAlhoot', 'color: #333; font-size: 14px;');
+</script>
+{% endblock %}
+
+
+
+

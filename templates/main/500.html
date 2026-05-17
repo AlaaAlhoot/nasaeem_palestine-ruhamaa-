@@ -1,0 +1,284 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load custom_filters %}
+{% block title %}{% trans "خطأ في الخادم" %} - 500{% endblock %}
+{% block description %}{% trans "حدث خطأ داخلي في الخادم، نعمل على حل المشكلة" %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .error-page {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .error-content {
+        text-align: center;
+        max-width: 600px;
+        padding: 40px;
+        background: rgba(255,255,255,0.95);
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        position: relative;
+        z-index: 2;
+        backdrop-filter: blur(10px);
+    }
+
+    .error-number {
+        font-size: 8rem;
+        font-weight: 900;
+        color: #ff6b6b;
+        line-height: 1;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        animation: shake 2s infinite;
+    }
+
+    .error-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--accent-color);
+        margin-bottom: 20px;
+    }
+
+    .error-message {
+        font-size: 1.2rem;
+        color: #666;
+        margin-bottom: 30px;
+        line-height: 1.6;
+    }
+
+    .error-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 30px;
+    }
+
+    .floating-shape {
+        position: absolute;
+        opacity: 0.2;
+        color: white;
+        font-size: 4rem;
+        animation: float 8s ease-in-out infinite;
+    }
+
+    .floating-shape:nth-child(1) {
+        top: 10%;
+        left: 15%;
+        animation-delay: 0s;
+    }
+
+    .floating-shape:nth-child(2) {
+        top: 70%;
+        right: 10%;
+        animation-delay: 3s;
+    }
+
+    .floating-shape:nth-child(3) {
+        bottom: 20%;
+        left: 25%;
+        animation-delay: 6s;
+    }
+
+    .status-indicator {
+        background: #ff6b6b;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 20px;
+        display: inline-block;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+        20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0px) rotate(0deg);
+        }
+        50% {
+            transform: translateY(-30px) rotate(180deg);
+        }
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+
+    .retry-btn {
+        background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .retry-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(255,107,107,0.4);
+        color: white;
+    }
+
+    @media (max-width: 768px) {
+        .error-number {
+            font-size: 5rem;
+        }
+        .error-title {
+            font-size: 2rem;
+        }
+        .error-actions {
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="error-page">
+    <!-- Floating Shapes -->
+    <div class="floating-shape">
+        <i class="fas fa-exclamation-triangle"></i>
+    </div>
+    <div class="floating-shape">
+        <i class="fas fa-tools"></i>
+    </div>
+    <div class="floating-shape">
+        <i class="fas fa-cog"></i>
+    </div>
+
+    <div class="error-content" data-aos="zoom-in">
+        <div class="status-indicator">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            {% trans "خطأ في الخادم" %}
+        </div>
+
+        <div class="error-number">500</div>
+        <h1 class="error-title">{% trans "عذراً! حدث خطأ" %}</h1>
+        <p class="error-message">
+            {% trans "حدث خطأ داخلي في الخادم ونحن نعمل على حل هذه المشكلة بأسرع وقت ممكن." %}
+            <br>
+            {% trans "يرجى المحاولة مرة أخرى بعد قليل، أو العودة إلى الصفحة الرئيسية." %}
+        </p>
+
+        <!-- Action Buttons -->
+        <div class="error-actions">
+            <a href="javascript:window.location.reload()" class="retry-btn">
+                <i class="fas fa-redo me-2"></i>{% trans "إعادة المحاولة" %}
+            </a>
+            <a href="{% url 'main:home' %}" class="btn btn-primary btn-lg">
+                <i class="fas fa-home me-2"></i>{% trans "الصفحة الرئيسية" %}
+            </a>
+            <a href="{% url 'contact:contact' %}" class="btn btn-outline-primary btn-lg">
+                <i class="fas fa-envelope me-2"></i>{% trans "تواصل معنا" %}
+            </a>
+        </div>
+
+        <!-- Error Details -->
+        <div class="mt-5 p-3" style="background: var(--bg-light); border-radius: 10px;">
+            <h6 class="mb-2">
+                <i class="fas fa-info-circle me-2" style="color: var(--primary-color);"></i>
+                {% trans "معلومات إضافية:" %}
+            </h6>
+            <small class="text-muted">
+                {% trans "إذا استمر هذا الخطأ، يرجى التواصل معنا وإرفاق الوقت الحالي:" %}
+                <br>
+                <strong id="currentTime"></strong>
+                <br>
+                {% trans "رقم المرجع:" %} <code>ERR-500-{{ request.META.REQUEST_TIME|default:"UNKNOWN" }}</code>
+            </small>
+        </div>
+
+        <!-- Contact Support -->
+        <div class="mt-4">
+            <p class="mb-2">
+                <strong>{% trans "للدعم الفني:" %}</strong>
+            </p>
+            <div class="d-flex flex-wrap justify-content-center gap-3">
+                <a href="tel:{{ site_settings.phone }}" class="btn btn-sm btn-outline-danger">
+                    <i class="fas fa-phone me-1"></i>{{ site_settings.phone }}
+                </a>
+                <a href="mailto:{{ site_settings.email }}" class="btn btn-sm btn-outline-danger">
+                    <i class="fas fa-envelope me-1"></i>{{ site_settings.email }}
+                </a>
+                {% if site_settings.whatsapp_number %}
+                <a href="https://wa.me/{{ site_settings.whatsapp_number }}" target="_blank" class="btn btn-sm btn-outline-danger">
+                    <i class="fab fa-whatsapp me-1"></i>{% trans "واتساب" %}
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // تعريف النص المترجم
+    const retryText = "{% trans 'إعادة المحاولة' %}";
+
+    // عرض الوقت الحالي
+    const timeElement = document.getElementById('currentTime');
+    if (timeElement) {
+        const now = new Date();
+        timeElement.textContent = now.toLocaleString('ar-EG', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+    }
+
+    // العد التنازلي لإعادة المحاولة
+    let retryCountdown = 30;
+    const retryBtn = document.querySelector('.retry-btn');
+    const originalText = retryBtn.innerHTML;
+
+    function updateRetryButton() {
+        retryBtn.innerHTML = `<i class="fas fa-redo me-2"></i>${retryText} (${retryCountdown})`;
+        retryCountdown--;
+
+        if (retryCountdown < 0) {
+            retryBtn.innerHTML = originalText;
+            retryBtn.click(); // إعادة المحاولة تلقائيًا
+        } else {
+            setTimeout(updateRetryButton, 1000);
+        }
+    }
+
+    // بدء العد التنازلي بعد 5 ثوانٍ
+    setTimeout(() => {
+        updateRetryButton();
+    }, 5000);
+
+    // تتبع أخطاء 500 لأغراض المراقبة
+    if (typeof gtag !== 'undefined') {
+        gtag('event', 'exception', {
+            'description': '500_server_error',
+            'fatal': false
+        });
+    }
+});
+</script>
+{% endblock %}

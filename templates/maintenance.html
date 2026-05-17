@@ -1,0 +1,470 @@
+{% load static %}
+{% load i18n %}
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:'ar' }}" dir="{% if LANGUAGE_CODE == 'en' %}ltr{% else %}rtl{% endif %}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>{% trans "الموقع تحت الصيانة" %} - {{ site_name_ar }}</title>
+    
+{% if LANGUAGE_CODE == 'ar' %}
+    <link href="{% static 'bootstrap/bootstrap.rtl.min.css' %}" rel="stylesheet">
+{% else %}
+    <link href="{% static 'bootstrap/bootstrap.min.css' %}" rel="stylesheet">
+{% endif %}
+
+<link rel="stylesheet" href="{% static 'bootstrap/all.min.css' %}">
+<link href="{% static 'fonts/cairo/cairo.css' %}" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6B8E23;
+            --secondary-color: #FFD700;
+            --accent-color: #5C4033;
+            --light-color: #FFFFFF;
+            --dark-color: #000000;
+            --text-color: #333;
+            --bg-light: #f8f9fa;
+            --shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .maintenance-container {
+            background: var(--light-color);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            max-width: 700px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* اللوجو */
+        .site-logo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1.5rem;
+            background: var(--light-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(107, 142, 35, 0.4);
+            animation: pulse 2s ease-in-out infinite;
+            overflow: hidden;
+            padding: 10px;
+        }
+
+        .site-logo img { width: 100%; height: 100%; object-fit: contain; }
+        .site-logo i { color: var(--primary-color); font-size: 3rem; }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 10px 30px rgba(107, 142, 35, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 15px 40px rgba(107, 142, 35, 0.6); }
+        }
+
+        /* حالة الصيانة */
+        .status-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: linear-gradient(135deg, var(--secondary-color) 0%, #FFA500 100%);
+            color: var(--dark-color);
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        /* اسم الموقع */
+        .site-name {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        /* أيقونة الصيانة */
+        .maintenance-icon {
+            font-size: 4rem;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* الرسائل */
+        .maintenance-message {
+            font-size: 1.2rem;
+            color: var(--text-color);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            font-weight: 600;
+        }
+
+        .maintenance-message.en { font-size: 1rem; color: #555; }
+
+        /* Spinner */
+        .spinner-container { margin: 2rem auto; width: 70px; height: 70px; }
+        .spinner {
+            width: 100%;
+            height: 100%;
+            border: 4px solid #e2e8f0;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1.2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* قسم الاستفسارات */
+        .contact-section {
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .contact-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 1.2rem;
+        }
+
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0.8rem;
+            background: var(--bg-light);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .contact-item:hover {
+            background: #e8f5e9;
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .contact-item i { 
+            color: var(--primary-color); 
+            font-size: 1.3rem; 
+            min-width: 22px; 
+        }
+
+        .contact-item-content {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: right;
+            flex: 1;
+        }
+
+        .contact-item-label {
+            font-size: 0.8rem;
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+
+        .contact-item-value {
+            font-size: 0.95rem;
+            color: var(--text-color);
+            font-weight: 600;
+            word-break: break-word;
+        }
+
+        /* روابط التواصل الاجتماعي */
+        .social-links {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: center;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #e2e8f0;
+            flex-wrap: wrap;
+        }
+
+        .social-links a {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 1.4rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .social-links a:hover {
+            transform: translateY(-8px) scale(1.15);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ألوان المنصات */
+        .social-facebook { background: linear-gradient(135deg, #1877f2 0%, #0d5dbf 100%); }
+        .social-twitter { background: linear-gradient(135deg, #000000 0%, #434343 100%); }
+        .social-instagram { background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+        .social-linkedin { background: linear-gradient(135deg, #0077b5 0%, #005885 100%); }
+        .social-youtube { background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%); }
+        .social-tiktok { background: linear-gradient(135deg, #000000 0%, #69c9d0 50%, #ee1d52 100%); }
+        .social-snapchat { background: linear-gradient(135deg, #fffc00 0%, #f7d917 100%); color: #000; }
+        .social-whatsapp { background: linear-gradient(135deg, #25d366 0%, #1da851 100%); }
+        .social-telegram { background: linear-gradient(135deg, #0088cc 0%, #006699 100%); }
+        .social-pinterest { background: linear-gradient(135deg, #e60023 0%, #bd001a 100%); }
+        .social-github { background: linear-gradient(135deg, #333333 0%, #181717 100%); }
+        .social-discord { background: linear-gradient(135deg, #5865f2 0%, #4752c4 100%); }
+
+        /* Footer المطور */
+        .developer-footer {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .developer-text {
+            font-size: 0.95rem;
+            color: var(--text-color);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .developer-text i.fa-heart {
+            color: #e74c3c;
+            animation: heartbeat 1.5s ease-in-out infinite;
+            font-size: 1rem;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.3); }
+            50% { transform: scale(1); }
+        }
+
+        .developer-text i.fa-code {
+            color: var(--primary-color);
+            font-size: 1rem;
+        }
+
+        .developer-name {
+            font-size: 1rem;
+            color: var(--text-color);
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .developer-name strong {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .developer-name i.fa-heart {
+            color: #e74c3c;
+        }
+
+        .developer-icons {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .developer-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 1.4rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .developer-icon:hover {
+            transform: translateY(-5px) scale(1.15);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .developer-icon.whatsapp {
+            background: linear-gradient(135deg, #25d366 0%, #1da851 100%);
+        }
+
+        .developer-icon.github {
+            background: linear-gradient(135deg, #333333 0%, #181717 100%);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .maintenance-container { padding: 2rem 1.5rem; }
+            .site-name { font-size: 1.8rem; }
+            .site-logo { width: 100px; height: 100px; }
+            .site-logo i { font-size: 2.5rem; }
+            .maintenance-icon { font-size: 3.5rem; }
+            .contact-info { grid-template-columns: 1fr; }
+            .social-links a { width: 45px; height: 45px; font-size: 1.2rem; }
+            .developer-icon { width: 40px; height: 40px; font-size: 1.2rem; }
+            .developer-text, .developer-name { font-size: 0.85rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="maintenance-container">
+        <!-- اللوجو -->
+        <div class="site-logo">
+            {% if logo_exists %}
+                <img loading="lazy" src="{% static 'images/logo.png' %}" alt="{{ site_name_ar }}">
+            {% else %}
+                <i class="fas fa-hands-helping"></i>
+            {% endif %}
+        </div>
+
+        <!-- حالة الصيانة -->
+        <div class="status-badge">
+            <i class="fas fa-wrench"></i> وضع الصيانة | Maintenance Mode
+        </div>
+
+        <!-- اسم الموقع -->
+        <h1 class="site-name">{{ site_name_ar }} | {{ site_name_en }}</h1>
+
+        <!-- أيقونة الصيانة -->
+        <div class="maintenance-icon">
+            <i class="fas fa-tools"></i>
+        </div>
+
+        <!-- الرسالة بالعربي -->
+        <div class="maintenance-message">{{ message_ar }}</div>
+
+        <!-- Spinner -->
+        <div class="spinner-container">
+            <div class="spinner"></div>
+        </div>
+
+        <!-- الرسالة بالإنجليزي -->
+        <div class="maintenance-message en">{{ message_en }}</div>
+
+        <!-- معلومات الاتصال -->
+        {% if contact_info %}
+        <div class="contact-section">
+            <h3 class="contact-title">
+                <i class="fas fa-address-book"></i> للاستفسارات | For Inquiries
+            </h3>
+
+            <div class="contact-info">
+                {% for contact in contact_info %}
+                    <div class="contact-item">
+                        <i class="{{ contact.icon }}"></i>
+                        <div class="contact-item-content">
+                            <span class="contact-item-label">{{ contact.label }}</span>
+                            <span class="contact-item-value">{{ contact.value }}</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- روابط التواصل الاجتماعي -->
+        {% if social_media %}
+        <div class="social-links">
+            {% for social in social_media %}
+                <a href="{{ social.url }}" 
+                   class="social-{{ social.platform }}"
+                   title="{{ social.name }}" 
+                   aria-label="{{ social.name }}" 
+                   target="_blank" 
+                   rel="noopener noreferrer">
+                    <i class="{{ social.icon }}"></i>
+                </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- قسم المطور -->
+        <div class="developer-footer">
+            <div class="developer-text">
+                <i class="fas fa-heart"></i>
+                <span>طُوِّر بكل حب بواسطة | Developed with love by</span>
+                <i class="fas fa-code"></i>
+            </div>
+            <div class="developer-name">
+                <i class="fas fa-code"></i>
+                <strong>علاء عماد الحوت | Alaa Emad Al-Hout</strong>
+                <i class="fas fa-heart"></i>
+            </div>
+            <div class="developer-icons">
+                <a href="https://wa.me/972598964850" 
+                   class="developer-icon whatsapp" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   title="تواصل عبر واتساب | WhatsApp"
+                   aria-label="WhatsApp">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+                <a href="https://github.com/AlaaAlhoot" 
+                   class="developer-icon github" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   title="GitHub Profile | حساب جيت هاب"
+                   aria-label="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

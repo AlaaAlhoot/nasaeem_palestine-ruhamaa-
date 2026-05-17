@@ -1,0 +1,989 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load custom_filters %}
+{% block title %}{{ page_title }} - {{ site_settings.site_name_ar }}{% endblock %}
+{% block description %}{{ meta_description }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Breadcrumb Enhanced */
+    .breadcrumb-section {
+        background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(248,249,250,0.98));
+        backdrop-filter: blur(15px);
+        padding: 25px 0;
+        margin-top: 20px;
+        margin-bottom: 30px;
+        border-radius: 20px;
+        box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .breadcrumb-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(107,142,35,0.1), transparent);
+        animation: shimmerBreadcrumb 3s infinite;
+    }
+
+    @keyframes shimmerBreadcrumb {
+        0% { left: -100%; }
+        100% { left: 100%; }
+    }
+
+    .breadcrumb-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        position: relative;
+        z-index: 1;
+    }
+
+    .breadcrumb-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        padding: 8px 18px;
+        border-radius: 25px;
+        background: white;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-decoration: none;
+        color: #666;
+    }
+
+    .breadcrumb-item i {
+        font-size: 1.1rem;
+        transition: transform 0.3s ease;
+    }
+
+    .breadcrumb-item:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 20px rgba(107,142,35,0.3);
+        text-decoration: none;
+    }
+
+    .breadcrumb-item:hover i {
+        transform: scale(1.15) rotate(5deg);
+    }
+
+    .breadcrumb-item.active {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        font-weight: 700;
+        box-shadow: 0 5px 20px rgba(107,142,35,0.3);
+    }
+
+    .breadcrumb-separator {
+        color: var(--primary-color);
+        font-size: 0.9rem;
+        opacity: 0.5;
+    }
+
+    /* Category Hero */
+    .category-hero {
+        background: linear-gradient(135deg, {{ category.color }}DD, var(--accent-color));
+        color: white;
+        padding: 100px 0 50px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .category-icon {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        margin: 0 auto 30px;
+        backdrop-filter: blur(10px);
+        animation: pulseIcon 3s infinite;
+    }
+    
+    @keyframes pulseIcon {
+        0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,255,255,0.4); }
+        50% { transform: scale(1.1); box-shadow: 0 0 0 20px rgba(255,255,255,0); }
+    }
+    
+    .floating-elements {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        overflow: hidden;
+        opacity: 0.1;
+    }
+    
+    .floating-element {
+        position: absolute;
+        color: white;
+        font-size: 2rem;
+        animation: floatElement 8s ease-in-out infinite;
+    }
+    
+    .floating-element:nth-child(1) {
+        top: 20%;
+        left: 10%;
+        animation-delay: 0s;
+    }
+    
+    .floating-element:nth-child(2) {
+        top: 60%;
+        right: 15%;
+        animation-delay: 3s;
+    }
+    
+    .floating-element:nth-child(3) {
+        bottom: 30%;
+        left: 20%;
+        animation-delay: 6s;
+    }
+    
+    @keyframes floatElement {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-30px) rotate(180deg); }
+    }
+    
+    /* Stats Section */
+    .stats-section {
+        background: linear-gradient(145deg, rgba(255,255,255,0.98), rgba(248,249,250,0.98));
+        backdrop-filter: blur(20px);
+        margin-top: -40px;
+        position: relative;
+        z-index: 2;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+        padding: 30px;
+        border: 1px solid rgba(255,255,255,0.6);
+    }
+    
+    .stat-card {
+        text-align: center;
+        padding: 25px;
+        border-radius: 15px;
+        background: white;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        height: 100%;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, {{ category.color }}20, transparent);
+        transition: left 0.6s ease;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        background: {{ category.color }}08;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    }
+
+    .stat-card:hover::before {
+        left: 100%;
+    }
+    
+    .stat-number {
+        font-size: 2.8rem;
+        font-weight: 900;
+        color: {{ category.color }};
+        display: block;
+        margin-bottom: 10px;
+        animation: countUpAnim 2s ease-out;
+    }
+    
+    @keyframes countUpAnim {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .stat-label {
+        color: #666;
+        font-weight: 600;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    /* Category Description Box */
+    .category-description {
+        background: linear-gradient(145deg, rgba(255,255,255,0.98), rgba(248,249,250,0.98));
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        padding: 35px;
+        margin: 30px 0;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        border: 2px solid {{ category.color }}30;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .category-description::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 5px;
+        height: 100%;
+        background: linear-gradient(180deg, {{ category.color }}, var(--secondary-color));
+    }
+
+    .category-description h3 {
+        color: {{ category.color }};
+        font-weight: 800;
+        margin-bottom: 20px;
+        font-size: 1.5rem;
+    }
+
+    .category-description p {
+        color: #444;
+        line-height: 1.8;
+        font-size: 1.05rem;
+        margin-bottom: 0;
+    }
+    
+    /* Filter Section */
+    .filter-section {
+        background: linear-gradient(145deg, rgba(255,255,255,0.98), rgba(248,249,250,0.98));
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 35px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        border: 1px solid rgba(255,255,255,0.6);
+    }
+    
+    .search-form {
+        position: relative;
+        max-width: 600px;
+        margin: 0 auto 30px;
+    }
+    
+    .search-input {
+        width: 100%;
+        padding: 18px 60px 18px 25px;
+        border: 2px solid {{ category.color }}50;
+        border-radius: 50px;
+        font-size: 1rem;
+        outline: none;
+        transition: all 0.3s ease;
+        background: white;
+        text-align: center;
+    }
+    
+    .search-input:focus {
+        border-color: {{ category.color }};
+        box-shadow: 0 0 0 6px {{ category.color }}20;
+        transform: translateY(-2px);
+    }
+
+    .search-input::placeholder {
+        text-align: center;
+    }
+    
+    .search-btn {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: linear-gradient(135deg, {{ category.color }}, var(--secondary-color));
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        box-shadow: 0 5px 15px {{ category.color }}50;
+    }
+    
+    .search-btn:hover {
+        background: var(--secondary-color);
+        transform: translateY(-50%) scale(1.1) rotate(5deg);
+        box-shadow: 0 8px 25px {{ category.color }}70;
+    }
+    
+    .filter-btn {
+        background: white;
+        border: 2px solid {{ category.color }}50;
+        color: {{ category.color }};
+        padding: 12px 24px;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+        margin: 5px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    }
+    
+    .filter-btn:hover, .filter-btn.active {
+        background: linear-gradient(135deg, {{ category.color }}, var(--secondary-color));
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 20px {{ category.color }}50;
+        text-decoration: none;
+    }
+    
+    /* Project Card */
+    .project-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        border-top: 4px solid {{ category.color }};
+        text-decoration: none;
+        color: inherit;
+    }
+    
+    .project-card:hover {
+        transform: translateY(-12px);
+        box-shadow: 0 25px 60px rgba(0,0,0,0.18);
+        border-top-color: var(--secondary-color);
+        text-decoration: none;
+    }
+    
+    .project-image {
+        height: 220px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .project-image::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.3) 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .project-card:hover .project-image::after {
+        opacity: 1;
+    }
+    
+    .project-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+    
+    .project-card:hover .project-image img {
+        transform: scale(1.15);
+    }
+    
+    .project-status {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        backdrop-filter: blur(10px);
+        text-transform: uppercase;
+        z-index: 2;
+        letter-spacing: 0.5px;
+    }
+    
+    .status-active { background: rgba(40, 167, 69, 0.95); color: white; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4); }
+    .status-completed { background: rgba(23, 162, 184, 0.95); color: white; box-shadow: 0 4px 15px rgba(23, 162, 184, 0.4); }
+    .status-planning { background: rgba(255, 193, 7, 0.95); color: #000; box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4); }
+    .status-suspended { background: rgba(253, 126, 20, 0.95); color: white; box-shadow: 0 4px 15px rgba(253, 126, 20, 0.4); }
+    
+    .project-content {
+        padding: 25px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .project-title {
+        color: var(--primary-color);
+        font-size: 1.35rem;
+        font-weight: 800;
+        margin-bottom: 15px;
+        line-height: 1.4;
+        text-decoration: none;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        min-height: 75px;
+    }
+    
+    .project-title:hover {
+        color: {{ category.color }};
+    }
+    
+    .project-summary {
+        color: #666;
+        font-size: 0.95rem;
+        line-height: 1.7;
+        margin-bottom: 20px;
+        flex-grow: 1;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        min-height: 80px;
+    }
+    
+    .project-progress {
+        margin-bottom: 20px;
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        padding: 18px;
+        border-radius: 15px;
+        border: 1px solid #e0e0e0;
+    }
+
+    .progress-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+
+    .progress-label {
+        font-weight: 700;
+        color: #555;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .progress-percentage {
+        font-weight: 800;
+        color: {{ category.color }};
+        font-size: 1.25rem;
+        background: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+
+
+    
+    @keyframes shimmerProgress {
+        0% { left: -100%; }
+        100% { left: 100%; }
+    }
+
+    .progress-amounts {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .amount-box {
+        flex: 1;
+        background: white;
+        padding: 12px;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+    }
+
+    .amount-box:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    }
+
+    .amount-label {
+        font-size: 0.7rem;
+        color: #999;
+        margin-bottom: 4px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .amount-value {
+        font-weight: 800;
+        color: {{ category.color }};
+        font-size: 1.1rem;
+        display: block;
+    }
+    
+    .project-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding-top: 18px;
+        border-top: 2px solid #f0f0f0;
+        margin-top: auto;
+    }
+    
+    .project-stats {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+    
+    .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.9rem;
+        color: #666;
+        font-weight: 600;
+        padding: 6px 12px;
+        background: #f8f9fa;
+        border-radius: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .stat-item:hover {
+        background: {{ category.color }};
+        color: white;
+        transform: scale(1.05);
+    }
+
+    .stat-item:hover i {
+        color: white !important;
+    }
+    
+    .stat-item i {
+        font-size: 1.1rem;
+    }
+
+    .project-date {
+        font-size: 0.85rem;
+        color: #999;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        width: 100%;
+    }
+    
+    /* No Projects */
+    .no-projects {
+        text-align: center;
+        padding: 100px 20px;
+        color: #666;
+    }
+
+    .no-projects i {
+        animation: pulseNoProjects 2s infinite;
+    }
+
+    @keyframes pulseNoProjects {
+        0%, 100% { transform: scale(1); opacity: 0.3; }
+        50% { transform: scale(1.05); opacity: 0.5; }
+    }
+    
+    /* Pagination */
+    .pagination {
+        gap: 8px;
+    }
+    
+    .page-link {
+        border-radius: 12px;
+        border: 2px solid #e0e0e0;
+        color: #666;
+        font-weight: 700;
+        padding: 10px 18px;
+        transition: all 0.3s ease;
+        background: white;
+    }
+    
+    .page-link:hover {
+        background: {{ category.color }};
+        border-color: {{ category.color }};
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px {{ category.color }}50;
+    }
+    
+    .page-item.active .page-link {
+        background: {{ category.color }};
+        border-color: {{ category.color }};
+        color: white;
+        box-shadow: 0 5px 15px {{ category.color }}50;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .breadcrumb-section {
+            margin-top: 15px;
+            padding: 20px 0;
+        }
+
+        .breadcrumb-item {
+            font-size: 0.85rem;
+            padding: 6px 14px;
+        }
+
+        .category-hero {
+            padding: 70px 0 40px;
+        }
+
+        .category-icon {
+            width: 90px;
+            height: 90px;
+            font-size: 2.2rem;
+        }
+
+        .stats-section {
+            padding: 20px;
+        }
+
+        .stat-card {
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .stat-number {
+            font-size: 2.2rem;
+        }
+
+        .category-description {
+            padding: 25px;
+        }
+
+        .filter-section {
+            padding: 25px;
+        }
+
+        .search-input {
+            padding: 15px 55px 15px 20px;
+        }
+
+        .project-card {
+            margin-bottom: 25px;
+        }
+    }
+
+    /* Animation for card entrance */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .project-card {
+        animation: fadeInUp 0.6s ease-out;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Breadcrumb Section -->
+<div class="breadcrumb-section">
+    <div class="container">
+        <nav class="breadcrumb-container" aria-label="{% trans 'مسار التنقل' %}">
+            <a href="{% url 'main:home' %}" class="breadcrumb-item">
+                <i class="fas fa-home"></i>
+                <span>{% trans "الرئيسية" %}</span>
+            </a>
+            <span class="breadcrumb-separator">
+                <i class="fas fa-chevron-left"></i>
+            </span>
+            <a href="{% url 'projects:all_projects' %}" class="breadcrumb-item">
+                <i class="fas fa-project-diagram"></i>
+                <span>{% trans "المشاريع" %}</span>
+            </a>
+            <span class="breadcrumb-separator">
+                <i class="fas fa-chevron-left"></i>
+            </span>
+            <span class="breadcrumb-item active">
+                <i class="{{ category.icon }}"></i>
+                <span>{{ category|translate_field:"name" }}</span>
+            </span>
+        </nav>
+    </div>
+</div>
+
+<!-- Hero Section -->
+<section class="category-hero text-center">
+    <div class="floating-elements">
+        <i class="{{ category.icon }} floating-element"></i>
+        <i class="{{ category.icon }} floating-element"></i>
+        <i class="{{ category.icon }} floating-element"></i>
+    </div>
+    
+    <div class="container">
+        <div class="category-icon" data-aos="zoom-in">
+            <i class="{{ category.icon }}"></i>
+        </div>
+        
+        <h1 class="display-4 fw-bold mb-4" data-aos="fade-up">
+            {{ category|translate_field:"name" }}
+        </h1>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        
+        <!-- Stats Section -->
+        <div class="stats-section mb-4" data-aos="fade-up">
+            <div class="row g-4">
+                <div class="col-md-3 col-6">
+                    <div class="stat-card">
+                        <span class="stat-number">{{ category_stats.total }}</span>
+                        <div class="stat-label">{% trans "إجمالي المشاريع" %}</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-card">
+                        <span class="stat-number">{{ category_stats.active }}</span>
+                        <div class="stat-label">{% trans "مشروع نشط" %}</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-card">
+                        <span class="stat-number">{{ category_stats.completed  }}</span>
+                        <div class="stat-label">{% trans "مشروع مكتمل" %}</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-card">
+                        <span class="stat-number">{{ category_stats.planning  }}</span>
+                        <div class="stat-label">{% trans "في التخطيط" %}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Description -->
+        {% if category.description_ar or category.description_en %}
+        <div class="category-description" data-aos="fade-up">
+            <h3>
+                <i class="fas fa-info-circle me-2"></i>
+                {% trans "عن هذا القسم" %}
+            </h3>
+            <p>{{ category|translate_field:"description" }}</p>
+        </div>
+        {% endif %}
+        
+        <!-- Filter Section -->
+        <div class="filter-section" data-aos="fade-up">
+            <form method="GET" class="search-form" id="searchForm">
+                <input type="text" name="q" class="search-input" 
+                       placeholder="{% trans 'ابحث في مشاريع' %} {{ category|translate_field:'name' }}..." 
+                       value="{{ search }}">
+                <button type="submit" class="search-btn">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+            
+            <div class="text-center">
+                <a href="?{% if search %}q={{ search }}&{% endif %}{% if current_sort %}sort={{ current_sort }}{% endif %}" 
+                   class="filter-btn {% if not current_status %}active{% endif %}">
+                    <i class="fas fa-list me-2"></i>{% trans "الكل" %}
+                </a>
+                <a href="?status=active{% if search %}&q={{ search }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}" 
+                   class="filter-btn {% if current_status == 'active' %}active{% endif %}">
+                    <i class="fas fa-play-circle me-2"></i>{% trans "نشط" %}
+                </a>
+                <a href="?status=completed{% if search %}&q={{ search }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}" 
+                   class="filter-btn {% if current_status == 'completed' %}active{% endif %}">
+                    <i class="fas fa-check-circle me-2"></i>{% trans "مكتمل" %}
+                </a>
+                <a href="?status=planning{% if search %}&q={{ search }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}" 
+                   class="filter-btn {% if current_status == 'planning' %}active{% endif %}">
+                    <i class="fas fa-clock me-2"></i>{% trans "قيد التخطيط" %}
+                </a>
+            </div>
+        </div>
+        
+        <!-- Projects Grid -->
+        {% if projects %}
+        <div class="row g-4" id="projectsGrid">
+            {% for project in projects %}
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|mul:100 }}">
+                <a href="{{ project.get_absolute_url }}" class="project-card">
+                    <div class="project-image">
+                        {% if project.main_image %}
+                        <img src="{{ project.main_image.url }}" alt="{{ project|translate_field:'title' }}" loading="lazy">
+                        {% else %}
+                        <img src="{% static 'images/project-default.jpg' %}" alt="{{ project|translate_field:'title' }}" loading="lazy">
+                        {% endif %}
+                        <div class="project-status status-{{ project.status }}">
+                            {{ project.get_status_display }}
+                        </div>
+                    </div>
+                    
+                    <div class="project-content">
+                        <h3 class="project-title">
+                            {{ project|translate_field:"title" }}
+                        </h3>
+                        
+                        <p class="project-summary">{{ project|translate_field:"summary" }}</p>
+                        
+                        {% if project.target_amount > 0 %}
+                        <div class="project-progress">
+                            <div class="progress-header">
+                                <span class="progress-label">{% trans "التقدم" %}</span>
+                                <span class="progress-percentage">{{ project.get_progress_percentage|floatformat:1 }}%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-fill" style="width: {{ project.get_progress_percentage }}%"></div>
+                            </div>
+                            <div class="progress-amounts">
+                                <div class="amount-box">
+                                    <span class="amount-label">{% trans "المجموع" %}</span>
+                                    <span class="amount-value">${{ project.raised_amount|floatformat:0|format_number }}</span>
+                                </div>
+                                <div class="amount-box">
+                                    <span class="amount-label">{% trans "الهدف" %}</span>
+                                    <span class="amount-value">${{ project.target_amount|floatformat:0|format_number }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="project-meta">
+                            <div class="project-stats">
+                                <div class="stat-item">
+                                    <i class="fas fa-eye text-primary"></i>
+                                    <span>{{ project.views_count|format_number }}</span>
+                                </div>
+                                <div class="stat-item">
+                                    <i class="fas fa-heart text-danger"></i>
+                                    <span>{{ project.likes_count|format_number }}</span>
+                                </div>
+                                {% if project.beneficiaries_count %}
+                                <div class="stat-item">
+                                    <i class="fas fa-users text-success"></i>
+                                    <span>{{ project.beneficiaries_count|format_number }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <small class="project-date">
+                                <i class="far fa-calendar-alt"></i>
+                                {{ project.created_at|date:"d M Y" }}
+                            </small>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Pagination -->
+        {% if projects.has_other_pages %}
+        <div class="d-flex justify-content-center mt-5" data-aos="fade-up">
+            <nav aria-label="{% trans 'ترقيم المشاريع' %}">
+                <ul class="pagination">
+                    {% if projects.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{% if search %}q={{ search }}&{% endif %}{% if current_status %}status={{ current_status }}&{% endif %}{% if current_sort %}sort={{ current_sort }}&{% endif %}page={{ projects.previous_page_number }}">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                    {% endif %}
+                    
+                    {% for num in projects.paginator.page_range %}
+                    {% if num == projects.number %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                    {% elif num > projects.number|add:'-3' and num < projects.number|add:'3' %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{% if search %}q={{ search }}&{% endif %}{% if current_status %}status={{ current_status }}&{% endif %}{% if current_sort %}sort={{ current_sort }}&{% endif %}page={{ num }}">{{ num }}</a>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+                    
+                    {% if projects.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{% if search %}q={{ search }}&{% endif %}{% if current_status %}status={{ current_status }}&{% endif %}{% if current_sort %}sort={{ current_sort }}&{% endif %}page={{ projects.next_page_number }}">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+        
+        {% else %}
+        <!-- No Projects -->
+        <div class="no-projects" data-aos="fade-up">
+            <i class="fas fa-search fa-5x mb-4" style="color: {{ category.color }};"></i>
+            <h3 class="mb-3">{% trans "لا توجد مشاريع" %}</h3>
+            <p class="mb-4">
+                {% if search %}
+                    {% trans "لم يتم العثور على مشاريع تطابق البحث" %} "{{ search }}"
+                {% else %}
+                    {% trans "لا توجد مشاريع متاحة حالياً في هذه الفئة" %}
+                {% endif %}
+            </p>
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <a href="{% url 'projects:all_projects' %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-project-diagram me-2"></i>
+                    {% trans "عرض جميع المشاريع" %}
+                </a>
+                <a href="{% url 'main:home' %}" class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-home me-2"></i>
+                    {% trans "العودة للرئيسية" %}
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate progress bars on scroll
+    const progressBars = document.querySelectorAll('.progress-fill');
+    const progressObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const progressBar = entry.target;
+                const width = progressBar.style.width;
+                progressBar.style.width = '0%';
+                setTimeout(() => {
+                    progressBar.style.width = width;
+                }, 100);
+                progressObserver.unobserve(progressBar);
+            }
+        });
+    }, { threshold: 0.3 });
+
+    progressBars.forEach(bar => {
+        progressObserver.observe(bar);
+    });
+});
+</script>
+{% endblock %}
